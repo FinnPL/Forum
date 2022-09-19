@@ -3,9 +3,11 @@ package de.ghse.forum.api;
 import de.ghse.forum.model.Post;
 import de.ghse.forum.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +25,7 @@ public class PostController {
     }
 
     @PostMapping
-    public void addPost(@RequestBody Post post){
+    public void addPost(@Valid @NonNull @RequestBody Post post){
         postService.addPost(post);
     }
 
@@ -45,7 +47,7 @@ public class PostController {
     }
 
     @PutMapping(path = "{id}")
-    public void updatePost(@PathVariable("id") UUID id, @RequestBody Post post){
+    public void updatePost(@PathVariable("id") UUID id,@Valid @NonNull @RequestBody Post post){
         postService.updatePost(id, post);
     }
 

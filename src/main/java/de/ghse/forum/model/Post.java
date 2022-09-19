@@ -1,19 +1,20 @@
 package de.ghse.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.NotNull;
 
+
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 public class Post {
     private final UUID id;
-    @NotNull
+    @NotBlank
     private final String title;
-    @NotNull
+    @NotBlank
     private final String content;
-    @NotNull
+    @NotBlank
     private final String author;
-    @NotNull
+    @NotBlank
     private final String date;
 
     public Post(@JsonProperty("id") UUID id,
@@ -28,19 +29,19 @@ public class Post {
         this.date = date;
     }
 
-    public @NotNull String getTitle() {
+    public @NotBlank String getTitle() {
         return title;
     }
 
-    public @NotNull String getContent() {
+    public @NotBlank String getContent() {
         return content;
     }
 
-    public @NotNull String getAuthor() {
+    public @NotBlank String getAuthor() {
         return author;
     }
 
-    public @NotNull String getDate() {
+    public @NotBlank String getDate() {
         return date;
     }
 

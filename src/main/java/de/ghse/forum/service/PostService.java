@@ -16,7 +16,7 @@ public class PostService {
     private final PostDao postDao;
 
     @Autowired
-    public PostService(@Qualifier("fakeDao") PostDao postDao) {
+    public PostService(@Qualifier("postgres") PostDao postDao) {
         this.postDao = postDao;
     }
 
