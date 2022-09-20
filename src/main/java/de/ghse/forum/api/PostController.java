@@ -1,7 +1,7 @@
 package de.ghse.forum.api;
 
 import de.ghse.forum.model.Post;
-import de.ghse.forum.service.PostService;
+import de.ghse.forum.service.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +17,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestController
 public class PostController {
 
-    private final PostService postService;
+    private final PostServiceImpl postService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostServiceImpl postService) {
         this.postService = postService;
     }
 
@@ -37,7 +37,7 @@ public class PostController {
     @GetMapping(path = "{id}")
     public Post getPostById(@PathVariable("id") UUID id){
         //Return Post by ID or throw exception (404)
-        return postService.getPostById(id)
+        return postService.findPostById(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource"));
     }
 
@@ -51,8 +51,8 @@ public class PostController {
         postService.updatePost(id, post);
     }
 
-    @GetMapping(path = "author/{author}")
-    public void getPostByAuthor(@PathVariable("author") String author){
-
+    @GetMapping(path = "author/{author}/all")
+    public void findPostsByAuthor(@PathVariable("author") String author){
+        postService.findPostsByAuthor(author);
     }
 }
