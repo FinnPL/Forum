@@ -14,7 +14,7 @@ import java.util.UUID;
 @Entity
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private final UUID id;
     @NotBlank
     private final String title;

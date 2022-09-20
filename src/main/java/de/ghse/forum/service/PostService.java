@@ -37,8 +37,5 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public  void getPostByAuthor(String author){
-        postRepository.findByAuthor(author);
-    }
 
 }

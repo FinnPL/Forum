@@ -53,6 +53,6 @@ public class PostController {
 
     @GetMapping(path = "author/{author}")
     public void getPostByAuthor(@PathVariable("author") String author){
-        postService.getPostByAuthor(author);
+
     }
 }
