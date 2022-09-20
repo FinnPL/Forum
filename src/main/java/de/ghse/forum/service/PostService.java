@@ -2,6 +2,7 @@ package de.ghse.forum.service;
 
 import de.ghse.forum.dao.PostDao;
 import de.ghse.forum.model.Post;
+import de.ghse.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -13,30 +14,31 @@ import java.util.UUID;
 @Service
 public class PostService {
 
-    private final PostDao postDao;
-
     @Autowired
-    public PostService(@Qualifier("postgres") PostDao postDao) {
-        this.postDao = postDao;
-    }
+    private PostRepository postRepository;
 
-    public int addPost(Post post){
-        return postDao.insertPost(post);
+    public Post addPost(Post post){
+        return postRepository.save(post);
     }
     public List<Post> getAllPosts(){
-        return postDao.selectAllPosts();
+        return postRepository.findAll();
     }
-
     public Optional<Post> getPostById(UUID id){
-        return postDao.selectPostById(id);
+        return postRepository.findById(id);
     }
 
-    public int deletePost(UUID id){
-        return postDao.deletePostById(id);
+    public void deletePost(UUID id){
+        System.out.println("Delete Post with ID: " + id);
+        postRepository.deleteById(id);
     }
 
-    public int updatePost(UUID id, Post post){
-        return postDao.updatePostById(id, post);
+    public void updatePost(UUID id, Post post){
+        postRepository.deleteById(id);
+        postRepository.save(post);
+    }
+
+    public  void getPostByAuthor(String author){
+        postRepository.findByAuthor(author);
     }
 
 }

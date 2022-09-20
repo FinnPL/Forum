@@ -51,4 +51,8 @@ public class PostController {
         postService.updatePost(id, post);
     }
 
+    @GetMapping(path = "author/{author}")
+    public void getPostByAuthor(@PathVariable("author") String author){
+        postService.getPostByAuthor(author);
+    }
 }

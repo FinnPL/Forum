@@ -1,12 +1,20 @@
 package de.ghse.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
+@Entity
 public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final UUID id;
     @NotBlank
     private final String title;
@@ -27,6 +35,14 @@ public class Post {
         this.content = content;
         this.author = author;
         this.date = date;
+    }
+
+    public Post() {
+        this.id = null;
+        this.title = null;
+        this.content = null;
+        this.author = null;
+        this.date = null;
     }
 
     public @NotBlank String getTitle() {
