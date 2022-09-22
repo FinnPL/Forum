@@ -25,7 +25,7 @@ public class PostService {
     public Optional<Post> getPostById(UUID id){
         return postRepository.findById(id);
     }
-    public List<Post> getAllByTitleContaining(String title){ return postRepository.getAllByTitleContaining(title); }
+    public List<Post> getAllByTitleContaining(String title){ return postRepository.findAllByTitleContaining(title); }
     public void deletePost(UUID id){
         System.out.println("Delete Post with ID: " + id);
         postRepository.deleteById(id);
