@@ -50,9 +50,4 @@ public class PostController {
     public void updatePost(@PathVariable("id") UUID id,@Valid @NonNull @RequestBody Post post){
         postService.updatePost(id, post);
     }
-
-    @GetMapping(path = "author/{author}")
-    public void getPostByAuthor(@PathVariable("author") String author){
-
-    }
 }

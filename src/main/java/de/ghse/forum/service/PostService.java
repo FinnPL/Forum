@@ -1,6 +1,6 @@
 package de.ghse.forum.service;
 
-import de.ghse.forum.dao.PostDao;
+
 import de.ghse.forum.model.Post;
 import de.ghse.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
