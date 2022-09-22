@@ -50,5 +50,5 @@ public class PostController {
         postService.updatePost(id, post);
     }
     @GetMapping(path = "title/{title}")
-    public List<Post> getPostByTitle(@PathVariable("title") String title){ return postService.getPostsByTitle(title); }
+    public List<Post> getAllByTitleContaining(@PathVariable("title") String title){ return postService.getAllByTitleContaining(title); }
 }

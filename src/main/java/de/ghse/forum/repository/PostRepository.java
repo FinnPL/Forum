@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
-    List<Post> getPostsByTitle(String title);
+    List<Post> getAllByTitleContaining(String title);
 }
