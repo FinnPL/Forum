@@ -1,6 +1,7 @@
 package de.ghse.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 
@@ -11,7 +12,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
-@Entity
+@Entity @Data
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
