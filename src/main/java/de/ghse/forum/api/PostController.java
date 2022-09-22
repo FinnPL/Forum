@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-@RequestMapping("api/v1/post")
+@RequestMapping("api/v1")
 @RestController
 public class PostController {
 
@@ -24,30 +24,31 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping
+    @PostMapping(path = "/post")
     public void addPost(@Valid @NonNull @RequestBody Post post){
         postService.addPost(post);
     }
 
-    @GetMapping
+    @GetMapping(path = "/post")
     public List<Post> getAllPosts(){
         return postService.getAllPosts();
     }
 
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "/post/{id}")
     public Post getPostById(@PathVariable("id") UUID id){
-        //Return Post by ID or throw exception (404)
         return postService.getPostById(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource"));
     }
 
-    @DeleteMapping(path = "{id}")
+    @DeleteMapping(path = "/post/{id}")
     public void deletePost(@PathVariable("id") UUID id){
         postService.deletePost(id);
     }
 
-    @PutMapping(path = "{id}")
+    @PutMapping(path = "/post/{id}")
     public void updatePost(@PathVariable("id") UUID id,@Valid @NonNull @RequestBody Post post){
         postService.updatePost(id, post);
     }
+    @GetMapping(path = "title/{title}")
+    public List<Post> getPostByTitle(@PathVariable("title") String title){ return postService.getPostsByTitle(title); }
 }
