@@ -9,8 +9,7 @@ import java.util.UUID;
 
 @Service
 public interface PostService {
-    Optional<Post> findPostById(UUID id);
-    Post findPostByTitle(String title);
-
+    Optional<Post> getPostById(UUID id);
     List<Post> findPostsByAuthor(String author);
+    List<Post> findPostsByTitle(String title);
 }

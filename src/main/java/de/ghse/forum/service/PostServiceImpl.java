@@ -35,19 +35,19 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
     }
 
-
     @Override
-    public Optional<Post> findPostById(UUID id) {
-        return postRepository.findById(id);
+    public Optional<Post> getPostById(UUID id) {
+        return postRepository.getPostById(id);
     }
 
     @Override
-    public Post findPostByTitle(String title) {
-        return postRepository.findPostByTitle(title);
+    public List<Post> findPostsByTitle(String title) {
+        return postRepository.findPostsByTitle(title);
     }
 
     @Override
     public List<Post> findPostsByAuthor(String author) {
         return postRepository.findPostsByAuthor(author);
     }
+
 }
