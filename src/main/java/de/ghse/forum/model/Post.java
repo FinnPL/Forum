@@ -5,36 +5,37 @@ import lombok.Data;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity @Data
 public class Post {
     @Id
+    @Column(name = "id", columnDefinition = "BINARY(16)")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private final UUID id;
     @NotBlank
     private final String title;
     @NotBlank
     private final String content;
-    @NotBlank
-    private final String author;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+        private User user;
+
     @NotBlank
     private final String date;
 
     public Post(@JsonProperty("id") UUID id,
                 @JsonProperty("title") String title,
                 @JsonProperty("content") String content,
-                @JsonProperty("author") String author,
+                @JsonProperty("user") User user,
                 @JsonProperty("date") String date) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.author = author;
+        this.user = user;
         this.date = date;
     }
 
@@ -42,7 +43,6 @@ public class Post {
         this.id = null;
         this.title = null;
         this.content = null;
-        this.author = null;
         this.date = null;
     }
 
@@ -54,8 +54,8 @@ public class Post {
         return content;
     }
 
-    public @NotBlank String getAuthor() {
-        return author;
+    public  User getUser() {
+        return user;
     }
 
     public @NotBlank String getDate() {
