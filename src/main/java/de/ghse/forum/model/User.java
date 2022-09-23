@@ -18,11 +18,15 @@ public class User {
     @Column(name = "id", columnDefinition = "BINARY(16)")
     private final UUID id;
 
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Collection<Post> posts;
 
     @JsonProperty("username")
     private final String username;
 
+    public User(@JsonProperty("id") UUID id,
+                @JsonProperty("username") String username) {
+        this.id = id;
+        this.username = username;
+    }
 }
