@@ -1,12 +1,13 @@
 package de.ghse.forum.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity @Data
@@ -16,22 +17,17 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private final UUID id;
     @NotBlank
-    private final String title;
+    private  String title;
     @NotBlank
-    private final String content;
+    private  String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-        private User user;
+    private User user;
 
-    @NotBlank
-    private final String date;
+    private final Date date;
 
-    public Post(@JsonProperty("id") UUID id,
-                @JsonProperty("title") String title,
-                @JsonProperty("content") String content,
-                @JsonProperty("user") User user,
-                @JsonProperty("date") String date) {
+    public Post(UUID id, String title, String content, User user, Date date) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -46,6 +42,8 @@ public class Post {
         this.date = null;
     }
 
+
+
     public @NotBlank String getTitle() {
         return title;
     }
@@ -58,12 +56,16 @@ public class Post {
         return user;
     }
 
-    public @NotBlank String getDate() {
+    public @NotBlank Date getDate() {
         return date;
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
 }

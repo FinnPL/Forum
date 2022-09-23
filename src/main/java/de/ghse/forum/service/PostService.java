@@ -16,7 +16,7 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public void addPost(Post post){
+    public void addPost( Post post) {
         postRepository.save(post);
     }
     public List<Post> getAllPosts(){
