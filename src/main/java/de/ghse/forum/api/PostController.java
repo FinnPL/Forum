@@ -31,7 +31,7 @@ public class PostController {
 
     @PostMapping(path = "/post")
     public void addPost( @RequestBody  PostRequest postRequest){
-        Post post = new Post(UUID.randomUUID(), postRequest.getTitle(), postRequest.getContent(), userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow() , new Date());
+        Post post = new Post(UUID.randomUUID(), postRequest.getTitle(), postRequest.getContent(), userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow() , new Date().toString());
         postService.addPost(post);
     }
 

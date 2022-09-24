@@ -25,9 +25,9 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private final Date date;
+    private final String date;
 
-    public Post(UUID id, String title, String content, User user, Date date) {
+    public Post(UUID id, String title, String content, User user, String date) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -56,7 +56,7 @@ public class Post {
         return user;
     }
 
-    public @NotBlank Date getDate() {
+    public @NotBlank String getDate() {
         return date;
     }
 
