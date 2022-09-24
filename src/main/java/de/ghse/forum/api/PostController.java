@@ -40,14 +40,13 @@ public class PostController {
 
 
     @GetMapping(path = "/post")
-    public List<Post> getAllPosts(){
-        return postService.getAllPosts();
+    public List<PostResponse> getAllPosts(){
+        return new PostResponse().convert(postService.getAllPosts());
     }
 
     @GetMapping(path = "/post/{id}")
-    public Post getPostById(@PathVariable("id") UUID id){
-        return postService.getPostById(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource"));
+    public PostResponse getPostById(@PathVariable("id") UUID id){
+        return new PostResponse().convert(postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource")));
     }
 
     @DeleteMapping(path = "/post/{id}")
@@ -60,7 +59,7 @@ public class PostController {
         postService.updatePost(id, post);
     }
     @GetMapping(path = "title/{title}")
-    public List<Post> getAllByTitleContaining(@PathVariable("title") String title){ return postService.getAllByTitleContaining(title); }
+    public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title){ return new PostResponse().convert(postService.getAllByTitleContaining(title)); }
 
     @RequestMapping(path = "/user/{id}/posts")
     public List<PostResponse> getAllByUser(@PathVariable("id") UUID id){
@@ -96,6 +95,17 @@ public class PostController {
                 postResponses.add(postResponse);
             }
             return postResponses;
+        }
+
+        public PostResponse convert(Post post) {
+            PostResponse postResponse = new PostResponse();
+            postResponse.setId(post.getId());
+            postResponse.setTitle(post.getTitle());
+            postResponse.setContent(post.getContent());
+            postResponse.setUser_id(post.getUser().getId());
+            postResponse.setUser_name(post.getUser().getUsername());
+            postResponse.setDate(post.getDate());
+            return postResponse;
         }
     }
 

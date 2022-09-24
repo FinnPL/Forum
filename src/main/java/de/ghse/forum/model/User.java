@@ -19,13 +19,5 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Collection<Post> posts;
 
-    @JsonProperty("username")
     private  String username;
-
-    public User(@JsonProperty("id") UUID id,
-                @JsonProperty("username") String username) {
-        this.id = id;
-        this.username = username;
-    }
-
 }

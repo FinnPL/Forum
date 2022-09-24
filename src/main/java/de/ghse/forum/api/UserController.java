@@ -2,10 +2,15 @@ package de.ghse.forum.api;
 
 import de.ghse.forum.model.User;
 import de.ghse.forum.service.UserService;
+import lombok.Data;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @RequestMapping("api/v1/user")
@@ -19,17 +24,47 @@ public class UserController {
     }
 
     @PostMapping
-    public void addUser(@Valid @NonNull @RequestBody User user){
+    public void addUser(@Valid @NonNull @RequestBody UserRequest userRequest){
+        User user = new User();
+        user.setUsername(userRequest.getUsername());
+        user.setId(UUID.randomUUID());
         userService.addUser(user);
     }
 
-    @GetMapping(path = "{username}")
-    public String getUUID(@PathVariable("username") String username){
-        return userService.findUserByUsername(username).get().getId().toString();
+    @GetMapping(path = "{id}")
+    public UserResponse getUser(@PathVariable("id") UUID id){
+        return  new UserResponse().convert(userService.findUserById(id).orElseThrow());
     }
 
     @GetMapping
-    public Iterable<User> getAllUsers(){
-        return userService.getAllUsers();
+    public Iterable<UserResponse> getAllUsers(){
+        return new UserResponse().convert(userService.getAllUsers());
+    }
+
+    @Data
+    public static class UserResponse {
+        private String username;
+        private UUID id;
+
+        public Iterable<UserResponse> convert(Iterable<User> allUsers) {
+            List<UserResponse> userResponses = new ArrayList<>();
+            for (User user : allUsers) {
+                UserResponse userResponse = new UserResponse();
+                userResponse.setUsername(user.getUsername());
+                userResponse.setId(user.getId());
+                userResponses.add(userResponse);
+            }
+            return userResponses;
+        }
+        public UserResponse convert(User user){
+            UserResponse userResponse = new UserResponse();
+            userResponse.setUsername(user.getUsername());
+            userResponse.setId(user.getId());
+            return userResponse;
+        }
+    }
+    @Data
+    public static class UserRequest {
+        private String username;
     }
 }
