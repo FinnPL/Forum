@@ -3,6 +3,7 @@ package de.ghse.forum.api;
 import de.ghse.forum.model.Post;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -35,12 +37,7 @@ public class PostController {
         postService.addPost(post);
     }
 
-    @Data
-    public static class PostRequest {
-        private String title;
-        private String content;
-        private String user_id;
-    }
+
 
     @GetMapping(path = "/post")
     public List<Post> getAllPosts(){
@@ -64,4 +61,42 @@ public class PostController {
     }
     @GetMapping(path = "title/{title}")
     public List<Post> getAllByTitleContaining(@PathVariable("title") String title){ return postService.getAllByTitleContaining(title); }
+
+    @RequestMapping(path = "/user/{id}/posts")
+    public List<PostResponse> getAllByUser(@PathVariable("id") UUID id){
+        return new PostResponse().convert(postService.getAllByUser(userService.findUserById(id).orElseThrow()));
+    }
+
+    @Data
+    public static class PostRequest {
+        private String title;
+        private String content;
+        private String user_id;
+    }
+
+    @Data
+    public static class PostResponse {
+        private UUID id;
+        private String title;
+        private String content;
+        private UUID user_id;
+        private String user_name;
+        private String date;
+
+        public List<PostResponse> convert(List<Post> allByUser) {
+            List<PostResponse> postResponses = new ArrayList<>();
+            for (Post post : allByUser) {
+                PostResponse postResponse = new PostResponse();
+                postResponse.setId(post.getId());
+                postResponse.setTitle(post.getTitle());
+                postResponse.setContent(post.getContent());
+                postResponse.setUser_id(post.getUser().getId());
+                postResponse.setUser_name(post.getUser().getUsername());
+                postResponse.setDate(post.getDate());
+                postResponses.add(postResponse);
+            }
+            return postResponses;
+        }
+    }
+
 }

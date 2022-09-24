@@ -2,6 +2,7 @@ package de.ghse.forum.service;
 
 
 import de.ghse.forum.model.Post;
+import de.ghse.forum.model.User;
 import de.ghse.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,4 +36,7 @@ public class PostService {
         postRepository.deleteById(id);
         postRepository.save(post);
     }
+
+    public List<Post> getAllByUser(User user){ return postRepository.findAllByUser(user); }
+
 }
