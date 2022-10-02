@@ -3,14 +3,16 @@ package de.ghse.forum.api;
 import de.ghse.forum.model.Post;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/post")
 @RestController
 public class PostController {
 
@@ -31,34 +33,41 @@ public class PostController {
         this.userService = userService;
     }
 
-    @PostMapping(path = "/post")
-    public void addPost( @RequestBody  PostRequest postRequest){
-        Post post = new Post(UUID.randomUUID(), postRequest.getTitle(), postRequest.getContent(), userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow() , new Date().toString());
-        postService.addPost(post);
-    }
+    //debug Requests: **************************************************************************************************************************************************
 
-
-
-    @GetMapping(path = "/post")
+    @GetMapping(path = "/all")
     public List<PostResponse> getAllPosts(){
         return new PostResponse().convert(postService.getAllPosts());
     }
 
-    @GetMapping(path = "/post/{id}")
-    public PostResponse getPostById(@PathVariable("id") UUID id){
-        return new PostResponse().convert(postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource")));
+
+    //API Requests: ****************************************************************************************************************************************************
+
+    @PostMapping(path = "/add")
+    public ResponseEntity<Post> addPost(@RequestBody  PostRequest postRequest){
+        Post post = new Post(UUID.randomUUID(), postRequest.getTitle(), postRequest.getContent(),
+                userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not add Post: User not found")),
+                new Date().toString());
+        postService.addPost(post);
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/post/add").toUriString());
+        return ResponseEntity.created(uri).body(post);
     }
 
-    @DeleteMapping(path = "/post/{id}")
-    public void deletePost(@PathVariable("id") UUID id){
-        postService.deletePost(id);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable("id") UUID id){
+        return ResponseEntity.ok().body(postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found")));
     }
 
-    @PutMapping(path = "/post/{id}")
+    @DeleteMapping(path = "del/{id}")
+    public ResponseEntity<Post> deletePost(@PathVariable("id") UUID id){
+        return ResponseEntity.ok().body(postService.deletePost(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found")));
+    }
+
+    @PutMapping(path = "/{id}")
     public void updatePost(@PathVariable("id") UUID id,@Valid @NonNull @RequestBody Post post){
         postService.updatePost(id, post);
     }
-    @GetMapping(path = "title/{title}")
+    @GetMapping(path = "search/{title}")
     public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title){ return new PostResponse().convert(postService.getAllByTitleContaining(title)); }
 
     @RequestMapping(path = "/user/{id}/posts")
@@ -66,6 +75,7 @@ public class PostController {
         return new PostResponse().convert(postService.getAllByUser(userService.findUserById(id).orElseThrow()));
     }
 
+    //Response and Request Classes: ********************************************************************************************************************************************
     @Data
     public static class PostRequest {
         private String title;

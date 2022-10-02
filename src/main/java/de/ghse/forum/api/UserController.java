@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -23,6 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    //debug Requests: **************************************************************************************************************************************************
     @PostMapping
     public void addUser(@Valid @NonNull @RequestBody UserRequest userRequest){
         User user = new User();
@@ -31,16 +31,20 @@ public class UserController {
         userService.addUser(user);
     }
 
-    @GetMapping(path = "{id}")
-    public UserResponse getUser(@PathVariable("id") UUID id){
-        return  new UserResponse().convert(userService.findUserById(id).orElseThrow());
-    }
-
     @GetMapping
     public Iterable<UserResponse> getAllUsers(){
         return new UserResponse().convert(userService.getAllUsers());
     }
 
+
+    //API Requests: ****************************************************************************************************************************************************
+    @GetMapping(path = "{id}")
+    public UserResponse getUser(@PathVariable("id") UUID id){
+        return  new UserResponse().convert(userService.findUserById(id).orElseThrow());
+    }
+
+
+    //Response and Request Classes: *************************************************************************************************************************************
     @Data
     public static class UserResponse {
         private String username;
