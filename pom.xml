@@ -14,7 +14,7 @@
     <name>Forum</name>
     <description>Forum</description>
     <properties>
-        <java.version>18</java.version>
+        <java.version>18.0.1</java.version>
     </properties>
     <dependencies>
         <dependency>
