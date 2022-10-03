@@ -44,13 +44,13 @@ public class PostController {
     //API Requests: ****************************************************************************************************************************************************
 
     @PostMapping(path = "/add")
-    public ResponseEntity<Post> addPost(@RequestBody  PostRequest postRequest){
+    public ResponseEntity<PostResponse> addPost(@RequestBody  PostRequest postRequest){
         Post post = new Post(UUID.randomUUID(), postRequest.getTitle(), postRequest.getContent(),
                 userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not add Post: User not found")),
                 new Date().toString());
         postService.addPost(post);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/post/add").toUriString());
-        return ResponseEntity.created(uri).body(post);
+        return ResponseEntity.created(uri).body(new PostResponse().convert(post));
     }
 
     @GetMapping(path = "/{id}")
