@@ -11,14 +11,14 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity @Data
-public class Post {
-    @Id
-    @Column(name = "id", columnDefinition = "BINARY(16)")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private final UUID id;
-    @NotBlank
-    private  String title;
-    @NotBlank
+    public class Post {
+        @Id
+        @Column(name = "id", columnDefinition = "BINARY(16)")
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private final UUID id;
+        @NotBlank
+        private  String title;
+        @NotBlank
     private  String content;
 
     @ManyToOne

@@ -54,13 +54,13 @@ public class PostController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable("id") UUID id){
-        return ResponseEntity.ok().body(postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found")));
+    public ResponseEntity<PostResponse> getPostById(@PathVariable("id") UUID id){
+        return ResponseEntity.ok().body(new PostResponse().convert(postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found"))));
     }
 
     @DeleteMapping(path = "del/{id}")
-    public ResponseEntity<Post> deletePost(@PathVariable("id") UUID id){
-        return ResponseEntity.ok().body(postService.deletePost(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found")));
+    public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id){
+        return ResponseEntity.ok().body(new PostResponse().convert(postService.deletePost(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found"))));
     }
 
     @PutMapping(path = "/{id}")
