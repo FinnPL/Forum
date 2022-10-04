@@ -1,9 +1,10 @@
 package de.ghse.forum.service;
 
-import de.ghse.forum.dao.PostDao;
+
 import de.ghse.forum.model.Post;
+import de.ghse.forum.model.User;
+import de.ghse.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,30 +14,33 @@ import java.util.UUID;
 @Service
 public class PostService {
 
-    private final PostDao postDao;
-
     @Autowired
-    public PostService(@Qualifier("postgres") PostDao postDao) {
-        this.postDao = postDao;
-    }
+    private PostRepository postRepository;
 
-    public int addPost(Post post){
-        return postDao.insertPost(post);
+    public void addPost( Post post) {
+        postRepository.save(post);
     }
     public List<Post> getAllPosts(){
-        return postDao.selectAllPosts();
+        return postRepository.findAll();
     }
-
     public Optional<Post> getPostById(UUID id){
-        return postDao.selectPostById(id);
+        return postRepository.findById(id);
+    }
+    public List<Post> getAllByTitleContaining(String title){ return postRepository.findAllByTitleContaining(title); }
+    public Optional<Post> deletePost(UUID id){
+        Optional<Post> post = postRepository.findById(id);
+        postRepository.deleteById(id);
+        return post;
     }
 
-    public int deletePost(UUID id){
-        return postDao.deletePostById(id);
+    public Optional<Post> updatePost(UUID id, Post post){
+        Optional<Post> post1 = postRepository.findById(id);
+        post1.get().setTitle(post.getTitle());
+        post1.get().setContent(post.getContent());
+        postRepository.save(post1.get());
+        return post1;
     }
 
-    public int updatePost(UUID id, Post post){
-        return postDao.updatePostById(id, post);
-    }
+    public List<Post> getAllByUser(User user){ return postRepository.findAllByUser(user); }
 
 }
