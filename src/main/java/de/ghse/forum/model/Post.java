@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,9 +26,10 @@ import java.util.UUID;
     @JoinColumn(name = "user_id")
     private User user;
 
-    private final String date;
 
-    public Post(UUID id, String title, String content, User user, String date) {
+    private Timestamp date;
+
+    public Post(UUID id, String title, String content, User user, Timestamp date) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -39,7 +41,7 @@ import java.util.UUID;
         this.id = null;
         this.title = null;
         this.content = null;
-        this.date = null;
+        this.date = new Timestamp(new Date().getTime());
     }
 
 
@@ -56,7 +58,7 @@ import java.util.UUID;
         return user;
     }
 
-    public @NotBlank String getDate() {
+    public  Timestamp getDate() {
         return date;
     }
 

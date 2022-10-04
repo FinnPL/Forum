@@ -13,8 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,9 +45,10 @@ public class PostController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<PostResponse> addPost(@RequestBody  PostRequest postRequest){
-        Post post = new Post(UUID.randomUUID(), postRequest.getTitle(), postRequest.getContent(),
-                userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not add Post: User not found")),
-                new Date().toString());
+        Post post = new Post();
+        post.setUser(userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow());
+        post.setTitle(postRequest.getTitle());
+        post.setContent(postRequest.getContent());
         postService.addPost(post);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/post/add").toUriString());
         return ResponseEntity.created(uri).body(new PostResponse().convert(post));
@@ -90,7 +91,7 @@ public class PostController {
         private String content;
         private UUID user_id;
         private String user_name;
-        private String date;
+        private Timestamp date;
 
         public List<PostResponse> convert(List<Post> allByUser) {
             List<PostResponse> postResponses = new ArrayList<>();
