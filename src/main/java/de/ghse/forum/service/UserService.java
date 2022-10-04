@@ -15,7 +15,11 @@ public class UserService {
     private UserRepository UserRepository;
 
     public void addUser(User user) { UserRepository.save(user); }
-    public  @NotNull Optional<User> findUserByUsername(String username){ return Optional.ofNullable(UserRepository.findByUsername(username)); }
+
     public  @NotNull Optional<User> findUserById(UUID id){ return UserRepository.findById(id); }
     public  @NotNull Iterable<User> getAllUsers(){ return UserRepository.findAll(); }
+
+    public Iterable<User> getAllByUsernameContaining(String name) {
+        return UserRepository.findAllByUsernameContaining(name);
+    }
 }

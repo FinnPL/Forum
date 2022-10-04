@@ -43,6 +43,11 @@ public class UserController {
         return  new UserResponse().convert(userService.findUserById(id).orElseThrow());
     }
 
+    @GetMapping(path = "/search/{name}")
+    public Iterable<UserResponse> getAllByUsernameContaining(@PathVariable("name") String name){
+        return new UserResponse().convert(userService.getAllByUsernameContaining(name));
+    }
+
 
     //Response and Request Classes: *************************************************************************************************************************************
     @Data
