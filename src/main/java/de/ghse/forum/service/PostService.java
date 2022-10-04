@@ -33,9 +33,12 @@ public class PostService {
         return post;
     }
 
-    public void updatePost(UUID id, Post post){
-        postRepository.deleteById(id);
-        postRepository.save(post);
+    public Optional<Post> updatePost(UUID id, Post post){
+        Optional<Post> post1 = postRepository.findById(id);
+        post1.get().setTitle(post.getTitle());
+        post1.get().setContent(post.getContent());
+        postRepository.save(post1.get());
+        return post1;
     }
 
     public List<Post> getAllByUser(User user){ return postRepository.findAllByUser(user); }

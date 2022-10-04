@@ -55,17 +55,17 @@ public class PostController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable("id") UUID id){
-        return ResponseEntity.ok().body(new PostResponse().convert(postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found"))));
+        return ResponseEntity.ok().body(new PostResponse().convert(postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not get Post: \nPost not found"))));
     }
 
     @DeleteMapping(path = "del/{id}")
     public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id){
-        return ResponseEntity.ok().body(new PostResponse().convert(postService.deletePost(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Post not found"))));
+        return ResponseEntity.ok().body(new PostResponse().convert(postService.deletePost(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found"))));
     }
 
     @PutMapping(path = "/{id}")
-    public void updatePost(@PathVariable("id") UUID id,@Valid @NonNull @RequestBody Post post){
-        postService.updatePost(id, post);
+    public ResponseEntity<PostResponse> updatePost(@PathVariable("id") UUID id,@Valid @NonNull @RequestBody Post post){
+       return ResponseEntity.ok().body(new PostResponse().convert(postService.updatePost(id, post).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not update Post: \nPost not found"))));
     }
     @GetMapping(path = "search/{title}")
     public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title){ return new PostResponse().convert(postService.getAllByTitleContaining(title)); }
