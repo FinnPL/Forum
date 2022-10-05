@@ -273,9 +273,22 @@ public class PostController {
     private String user_name;
     private Timestamp date;
 
-    public List<PostResponse> convert(List<Post> allByUser) {
+    /**
+     *
+     *
+     * <pre>
+     * Converts a List of Posts to a List of PostResponses
+     * </pre>
+     *
+     * @param posts List of Post Objects
+     * @return PostResponse List of PostResponse Objects
+     * @see Post
+     * @see PostResponse
+     * @since 1.0
+     */
+    public List<PostResponse> convert(List<Post> posts) {
       List<PostResponse> postResponses = new ArrayList<>();
-      for (Post post : allByUser) {
+      for (Post post : posts) {
         PostResponse postResponse = new PostResponse();
         postResponse.setId(post.getId());
         postResponse.setTitle(post.getTitle());
@@ -288,6 +301,14 @@ public class PostController {
       return postResponses;
     }
 
+    /**
+     * Converts a Post Object to a PostResponse Object
+     * @param post Post Object
+     * @return PostResponse Object
+     * @see Post
+     * @see PostResponse
+     * @since 1.0
+     */
     public PostResponse convert(Post post) {
       PostResponse postResponse = new PostResponse();
       postResponse.setId(post.getId());

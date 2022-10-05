@@ -143,6 +143,19 @@ public class UserController {
     private String username;
     private UUID id;
 
+    /**
+     *
+     *
+     * <pre>
+     * Convert List of Users to UserResponse
+     * </pre>
+     *
+     * @param allUsers List of Users to convert to UserResponses
+     * @return UserResponse List of UserResponses
+     * @see UserResponse
+     * @see User
+     * @since 1.0
+     */
     public Iterable<UserResponse> convert(Iterable<User> allUsers) {
       List<UserResponse> userResponses = new ArrayList<>();
       for (User user : allUsers) {
@@ -154,6 +167,14 @@ public class UserController {
       return userResponses;
     }
 
+    /**
+     * Convert User to UserResponse
+     * @param user User to convert
+     * @return UserResponse
+     * @see User
+     * @see UserResponse
+     * @since 1.0
+     */
     public UserResponse convert(User user) {
       UserResponse userResponse = new UserResponse();
       userResponse.setUsername(user.getUsername());

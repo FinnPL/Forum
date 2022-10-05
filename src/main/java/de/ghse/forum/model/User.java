@@ -5,11 +5,19 @@ import java.util.UUID;
 import javax.persistence.*;
 import lombok.Data;
 
+/**
+ *
+ *
+ * <pre>
+ * User Model in Database
+ * </pre>
+ *
+ * @version 1.0
+ * @since 1.0
+ */
 @Entity
 @Data
 public class User {
-  public User() {}
-
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", columnDefinition = "BINARY(16)")
