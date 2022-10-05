@@ -6,9 +6,7 @@ enabled = true
 
   [analyzers.meta]
   runtime_version = "11"
-  
-  test_patterns = [
-  "ForumApplicationTests.java",
-  "test.java"
-]
 
+[[transformers]]
+name = "google-java-format"
+enabled = true
