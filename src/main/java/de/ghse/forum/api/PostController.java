@@ -181,6 +181,7 @@ public class PostController {
      * </pre>
      * @since 1.0
      * @see Post
+     * @see PostController
      */
     @Data
     public static class PostRequest {
@@ -195,6 +196,7 @@ public class PostController {
      * </pre>
      * @since 1.0
      * @see Post
+     * @see PostController
      */
     @Data
     public static class PostResponse {

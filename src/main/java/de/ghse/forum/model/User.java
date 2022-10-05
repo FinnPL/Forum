@@ -1,10 +1,7 @@
 package de.ghse.forum.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
-
-
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.UUID;

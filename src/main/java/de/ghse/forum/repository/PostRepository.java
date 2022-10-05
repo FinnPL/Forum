@@ -8,9 +8,38 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * <pre>
+ *Post Repository Interface extends JpaRepository
+ * </pre>
+ * @version 1.0
+ * @since 1.0
+ */
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
+
+    /**
+     * <pre>
+     *Find all Posts by Title Containing a String
+     * </pre>
+     * @param title String to search for in Title
+     * @return List of Posts
+     * @see User
+     * @see Post
+     * @since 1.0
+     */
     List<Post> findAllByTitleContaining(String title);
+
+    /**
+     *<pre>
+     *Find all Posts by User
+     *</pre>
+     * @param user User to search for
+     * @return List of Posts
+     * @see User
+     * @see Post
+     * @since 1.0
+     */
     List<Post> findAllByUser(User user);
 
 }
