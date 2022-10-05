@@ -1,23 +1,22 @@
 package de.ghse.forum.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
-
-
-import javax.persistence.*;
 import java.util.Collection;
 import java.util.UUID;
+import javax.persistence.*;
+import lombok.Data;
 
-@Entity @Data
+@Entity
+@Data
 public class User {
-    public User() {}
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "BINARY(16)")
-    private  UUID id;
+  public User() {}
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Collection<Post> posts;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id", columnDefinition = "BINARY(16)")
+  private UUID id;
 
-    private  String username;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private Collection<Post> posts;
+
+  private String username;
 }
