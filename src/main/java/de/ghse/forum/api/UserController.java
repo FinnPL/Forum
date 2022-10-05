@@ -169,6 +169,7 @@ public class UserController {
 
     /**
      * Convert User to UserResponse
+     *
      * @param user User to convert
      * @return UserResponse
      * @see User

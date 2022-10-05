@@ -303,6 +303,7 @@ public class PostController {
 
     /**
      * Converts a Post Object to a PostResponse Object
+     *
      * @param post Post Object
      * @return PostResponse Object
      * @see Post
