@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.ghse.forum"},{"l":"de.ghse.forum.api"},{"l":"de.ghse.forum.model"},{"l":"de.ghse.forum.repository"},{"l":"de.ghse.forum.service"}]
