@@ -1,0 +1,17 @@
+{
+  "posts": [
+    {
+      "title": "Erster Post!",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pellentesque elit eget gravida cum sociis. Ut diam quam nulla porttitor.",
+      "author": "User1",
+      "id": 1
+    },
+    {
+      "title": "Zweiter Post!",
+      "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pellentesque elit eget gravida cum sociis. Ut diam quam nulla porttitor.",
+      "author": "User2",
+      "id": 2
+    }
+
+  ]
+}
