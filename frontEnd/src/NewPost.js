@@ -62,7 +62,7 @@ const NewPost = () => {
         {" "}
         Submit{" "}
       </Button>
-      <br></br>
+      <br />
       <p>{title}</p>
       <p>{body}</p>
       <p>{author}</p>

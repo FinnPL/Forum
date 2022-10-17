@@ -10,7 +10,7 @@ const PostList = ({ posts }) => {
           <Link to={`/post/${post.id}`}>
             <h2>{post.title}</h2>
             <p>Gepostet von {post.author}</p>
-            <br></br>
+            <br />
             <p>{post.body}</p>
           </Link>
         </div>
