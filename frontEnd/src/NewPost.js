@@ -18,7 +18,7 @@ const NewPost = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(post),
     }).then(() => {
-      console.log("New Post added");
+      
     });
   };
 
