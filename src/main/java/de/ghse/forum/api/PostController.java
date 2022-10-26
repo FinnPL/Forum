@@ -206,9 +206,28 @@ public class PostController {
    * @see PostService#getAllByTitleContaining(String)
    * @since 1.0
    */
-  @GetMapping(path = "search/{title}")
+  @GetMapping(path = "searchTitle/{title}")
   public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title) {
     return new PostResponse().convert(postService.getAllByTitleContaining(title));
+  }
+
+  /**
+   *
+   *
+   * <pre>
+   * Api Get Request for 20 Posts Containing a String
+   * Location: <a href="http://localhost:8080/api/v1/post/search/{title}">/search/{title}</a>
+   * </pre>
+   *
+   * @param query Title of Post as String
+   * @return List of all Posts with Title in Database as PostResponse Objects in JSON Format
+   * @see PostResponse
+   * @see PostService#getAllByTitleContaining(String)
+   * @since 1.0
+   */
+  @GetMapping(path = "search/{query}")
+  public List<PostResponse> search(@PathVariable("query") String query) {
+    return new PostResponse().convert(postService.find20ByTitleOrContentContaining(query));
   }
 
   /**
