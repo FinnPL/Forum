@@ -50,18 +50,19 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
    */
   List<Post> findAllByUser(User user);
 
-    /**
-     *
-     *
-     * <pre>
-     * Find 20 posts by Title or Content containing a String
-     * </pre>
-     *
-     * @param title String to search for in Title
-     * @param content String to search for in Content
-     * @return List of Posts (max 20)
-     * @see Post
-     * @since 1.0
-     */
-    List<Post> findTop20ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByDate(String title, String content);
+  /**
+   *
+   *
+   * <pre>
+   * Find 20 posts by Title or Content containing a String
+   * </pre>
+   *
+   * @param title String to search for in Title
+   * @param content String to search for in Content
+   * @return List of Posts (max 20)
+   * @see Post
+   * @since 1.0
+   */
+  List<Post> findTop20ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByDate(
+      String title, String content);
 }
