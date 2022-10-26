@@ -121,4 +121,17 @@ public class PostService {
   public List<Post> getAllByUser(User user) {
     return postRepository.findAllByUser(user);
   }
+
+    /**
+     * Find 20 posts by Title or Content containing a String
+     *
+     * @param search String to search for
+     * @return List of Posts
+     * @see Post
+     * @see PostRepository
+     * @since 1.0
+     */
+    public List<Post> find20ByTitleOrContentContaining(String search) {
+      return postRepository.findTop20ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByDate(search, search);
+    }
 }
