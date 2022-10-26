@@ -50,7 +50,7 @@ public class PostService {
   }
 
   /**
-   * get Post By Id from Database
+   * get Post By ID from Database
    *
    * @param id UUID of Post
    * @return Post
