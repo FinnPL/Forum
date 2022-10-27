@@ -85,6 +85,6 @@ public class UserService {
      * @since 1.0
      */
     public List<User> find20ByUsernameContaining(String username) {
-      return UserRepository.findTop20ByUsernameContainingIgnoreCaseOrderByUsername(username);
+      return UserRepository.findTop20ByUsernameContainingIgnoreCaseOrderByUsernameDesc(username);
     }
 }

@@ -75,6 +75,25 @@ public class PostController {
     return new PostResponse().convert(postService.getAllPosts());
   }
 
+  /**
+   *
+   *
+   * <pre>
+   * Api Get Request for all Posts Containing a String
+   * Location: <a href="http://localhost:8080/api/v1/post/search/{title}">/search/{title}</a>
+   * </pre>
+   *
+   * @param title Title of Post as String
+   * @return List of all Posts with Title in Database as PostResponse Objects in JSON Format
+   * @see PostResponse
+   * @see PostService#getAllByTitleContaining(String)
+   * @since 1.0
+   */
+  @GetMapping(path = "searchTitle/{title}")
+  public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title) {
+    return new PostResponse().convert(postService.getAllByTitleContaining(title));
+  }
+
   // API Requests:
   // ****************************************************************************************************************************************************
 
@@ -192,24 +211,7 @@ public class PostController {
                                     NOT_FOUND, "Can not update Post: \nPost not found"))));
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * Api Get Request for all Posts Containing a String
-   * Location: <a href="http://localhost:8080/api/v1/post/search/{title}">/search/{title}</a>
-   * </pre>
-   *
-   * @param title Title of Post as String
-   * @return List of all Posts with Title in Database as PostResponse Objects in JSON Format
-   * @see PostResponse
-   * @see PostService#getAllByTitleContaining(String)
-   * @since 1.0
-   */
-  @GetMapping(path = "searchTitle/{title}")
-  public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title) {
-    return new PostResponse().convert(postService.getAllByTitleContaining(title));
-  }
+
 
   /**
    *
@@ -250,6 +252,29 @@ public class PostController {
     return new PostResponse()
         .convert(postService.getAllByUser(userService.findUserById(id).orElseThrow()));
   }
+
+  /**
+   *
+   *
+   * <pre>
+   *     Api Get Request for the next 20 Posts sorted by date (null for newest 20 Posts)
+   *     Location: <a href="http://localhost:8080/api/v1/post/homepage">/homepage</a>
+   *</pre>
+   *
+   * @param date Date of last Post
+   * @return List the next 20 Posts in Database as PostResponse Objects in JSON Format
+   * @see PostResponse
+   * @see PostService#find20ByOrderByDateDesc()
+   * @since 1.0
+   */
+    @GetMapping(path = "/homepage")
+    public List<PostResponse> get20ByDate(@RequestParam("date") Timestamp date) {
+        if(date == null) {
+            return new PostResponse().convert(postService.find20ByOrderByDateDesc());
+        } else {
+            return new PostResponse().convert(postService.find20ByDateAfterOrderByDateDesc(date));
+        }
+    }
 
   // Response and Request Classes:
   // ********************************************************************************************************************************************

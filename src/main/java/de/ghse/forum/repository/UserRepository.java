@@ -76,5 +76,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @see User
      * @since 1.0
      */
-    List<User> findTop20ByUsernameContainingIgnoreCaseOrderByUsername(String username);
+    List<User> findTop20ByUsernameContainingIgnoreCaseOrderByUsernameDesc(String username);
 }
