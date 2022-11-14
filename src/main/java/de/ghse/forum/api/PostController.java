@@ -259,23 +259,38 @@ public class PostController {
    *
    *
    * <pre>
-   *     Api Get Request for the next 20 Posts sorted by date (null for newest 20 Posts)
+   *     Api Get Request for the newest 20 Posts sorted by date 
    *     Location: <a href="http://localhost:8080/api/v1/post/homepage">/homepage</a>
    *</pre>
    *
-   * @param date Date of last Post
    * @return List the next 20 Posts in Database as PostResponse Objects in JSON Format
    * @see PostResponse
    * @see PostService#find20ByOrderByDateDesc()
    * @since 1.0
    */
-    @GetMapping(path = "/homepage")
-    public List<PostResponse> get20ByDate(@RequestParam("date") Timestamp date) {
-        if(date == null) {
-            return new PostResponse().convert(postService.find20ByOrderByDateDesc());
-        } else {
-            return new PostResponse().convert(postService.find20ByDateAfterOrderByDateDesc(date));
-        }
+    @GetMapping(path = "/homepage/")
+    public List<PostResponse> get20ByDate() {
+        return new PostResponse().convert(postService.find20ByOrderByDateDesc());
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     *     Api Get Request for the next 20 Posts sorted by date.
+     *     Timestamp format must be yyyy-mm-dd hh:mm:ss
+     *     Location: <a href="http://localhost:8080/api/v1/post/homepage">/homepage</a>
+     *</pre>
+     *
+     * @param date Date of last Post
+     * @return List the next 20 Posts in Database as PostResponse Objects in JSON Format
+     * @see PostResponse
+     * @see PostService#find20ByDateAfterOrderByDateDesc(Timestamp) 
+     * @since 1.0
+     */
+    @GetMapping(path = "/dynLoad/{date}")
+    public List<PostResponse> get20ByDate(@PathVariable("date") String date) {
+        return new PostResponse().convert(postService.find20ByDateAfterOrderByDateDesc(Timestamp.valueOf(date)));
     }
 
   // Response and Request Classes:
@@ -317,7 +332,7 @@ public class PostController {
     private String content;
     private String user_id;
     private String user_name;
-    private Timestamp date;
+    private  Timestamp date;
 
     /**
      *
