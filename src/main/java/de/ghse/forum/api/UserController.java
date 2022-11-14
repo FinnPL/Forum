@@ -139,9 +139,9 @@ public class UserController {
    * @since 1.0
    */
   @GetMapping(path = "search/{query}")
-    public Iterable<UserResponse> search(@PathVariable("query") String query) {
-        return new UserResponse().convert(userService.find20ByUsernameContaining(query));
-    }
+  public Iterable<UserResponse> search(@PathVariable("query") String query) {
+    return new UserResponse().convert(userService.find20ByUsernameContaining(query));
+  }
 
   // Response and Request Classes:
   // *************************************************************************************************************************************

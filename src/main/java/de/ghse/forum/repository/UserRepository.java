@@ -64,17 +64,17 @@ public interface UserRepository extends JpaRepository<User, UUID> {
    */
   Iterable<User> findAllByUsernameContaining(String name);
 
-    /**
-     *
-     *
-     * <pre>
-     * Find 20 User by Name containing a String
-     * </pre>
-     *
-     * @param username String to search for in username
-     * @return List of Users
-     * @see User
-     * @since 1.0
-     */
-    List<User> findTop20ByUsernameContainingIgnoreCaseOrderByUsernameDesc(String username);
+  /**
+   *
+   *
+   * <pre>
+   * Find 20 User by Name containing a String
+   * </pre>
+   *
+   * @param username String to search for in username
+   * @return List of Users
+   * @see User
+   * @since 1.0
+   */
+  List<User> findTop20ByUsernameContainingIgnoreCaseOrderByUsernameDesc(String username);
 }
