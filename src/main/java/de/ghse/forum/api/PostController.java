@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -228,7 +230,7 @@ public class PostController {
    * @since 1.0
    */
   @GetMapping(path = "search/{query}")
-  public List<PostResponse> search(@PathVariable("query") String query) {
+  public List<PostResponse> search(@NotBlank @PathVariable("query") String query) {
     return new PostResponse().convert(postService.find20ByTitleOrContentContaining(query));
   }
 
@@ -310,10 +312,10 @@ public class PostController {
    */
   @Data
   public static class PostResponse {
-    private UUID id;
+    private String id;
     private String title;
     private String content;
-    private UUID user_id;
+    private String user_id;
     private String user_name;
     private Timestamp date;
 
@@ -334,10 +336,10 @@ public class PostController {
       List<PostResponse> postResponses = new ArrayList<>();
       for (Post post : posts) {
         PostResponse postResponse = new PostResponse();
-        postResponse.setId(post.getId());
+        postResponse.setId(String.valueOf(post.getId()));
         postResponse.setTitle(post.getTitle());
         postResponse.setContent(post.getContent());
-        postResponse.setUser_id(post.getUser().getId());
+        postResponse.setUser_id(String.valueOf(post.getUser().getId()));
         postResponse.setUser_name(post.getUser().getUsername());
         postResponse.setDate(post.getDate());
         postResponses.add(postResponse);
@@ -356,10 +358,10 @@ public class PostController {
      */
     public PostResponse convert(Post post) {
       PostResponse postResponse = new PostResponse();
-      postResponse.setId(post.getId());
+      postResponse.setId(String.valueOf(post.getId()));
       postResponse.setTitle(post.getTitle());
       postResponse.setContent(post.getContent());
-      postResponse.setUser_id(post.getUser().getId());
+      postResponse.setUser_id(String.valueOf(post.getUser().getId()));
       postResponse.setUser_name(post.getUser().getUsername());
       postResponse.setDate(post.getDate());
       return postResponse;
