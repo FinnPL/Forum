@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,25 @@ public class PostController {
   @GetMapping(path = "/all")
   public List<PostResponse> getAllPosts() {
     return new PostResponse().convert(postService.getAllPosts());
+  }
+
+  /**
+   *
+   *
+   * <pre>
+   * Api Get Request for all Posts Containing a String
+   * Location: <a href="http://localhost:8080/api/v1/post/search/{title}">/search/{title}</a>
+   * </pre>
+   *
+   * @param title Title of Post as String
+   * @return List of all Posts with Title in Database as PostResponse Objects in JSON Format
+   * @see PostResponse
+   * @see PostService#getAllByTitleContaining(String)
+   * @since 1.0
+   */
+  @GetMapping(path = "searchTitle/{title}")
+  public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title) {
+    return new PostResponse().convert(postService.getAllByTitleContaining(title));
   }
 
   // API Requests:
@@ -196,25 +216,6 @@ public class PostController {
    *
    *
    * <pre>
-   * Api Get Request for all Posts Containing a String
-   * Location: <a href="http://localhost:8080/api/v1/post/search/{title}">/search/{title}</a>
-   * </pre>
-   *
-   * @param title Title of Post as String
-   * @return List of all Posts with Title in Database as PostResponse Objects in JSON Format
-   * @see PostResponse
-   * @see PostService#getAllByTitleContaining(String)
-   * @since 1.0
-   */
-  @GetMapping(path = "searchTitle/{title}")
-  public List<PostResponse> getAllByTitleContaining(@PathVariable("title") String title) {
-    return new PostResponse().convert(postService.getAllByTitleContaining(title));
-  }
-
-  /**
-   *
-   *
-   * <pre>
    * Api Get Request for 20 Posts Containing a String
    * Location: <a href="http://localhost:8080/api/v1/post/search/{title}">/search/{title}</a>
    * </pre>
@@ -226,7 +227,7 @@ public class PostController {
    * @since 1.0
    */
   @GetMapping(path = "search/{query}")
-  public List<PostResponse> search(@PathVariable("query") String query) {
+  public List<PostResponse> search(@NotBlank @PathVariable("query") String query) {
     return new PostResponse().convert(postService.find20ByTitleOrContentContaining(query));
   }
 
@@ -249,6 +250,45 @@ public class PostController {
   public List<PostResponse> getAllByUser(@PathVariable("id") UUID id) {
     return new PostResponse()
         .convert(postService.getAllByUser(userService.findUserById(id).orElseThrow()));
+  }
+
+  /**
+   *
+   *
+   * <pre>
+   *     Api Get Request for the newest 20 Posts sorted by date
+   *     Location: <a href="http://localhost:8080/api/v1/post/homepage">/homepage</a>
+   * </pre>
+   *
+   * @return List the next 20 Posts in Database as PostResponse Objects in JSON Format
+   * @see PostResponse
+   * @see PostService#find20ByOrderByDateDesc()
+   * @since 1.0
+   */
+  @GetMapping(path = "/homepage/")
+  public List<PostResponse> get20ByDate() {
+    return new PostResponse().convert(postService.find20ByOrderByDateDesc());
+  }
+
+  /**
+   *
+   *
+   * <pre>
+   *     Api Get Request for the next 20 Posts sorted by date.
+   *     Timestamp format must be yyyy-mm-dd hh:mm:ss
+   *     Location: <a href="http://localhost:8080/api/v1/post/homepage">/homepage</a>
+   * </pre>
+   *
+   * @param date Date of last Post
+   * @return List the next 20 Posts in Database as PostResponse Objects in JSON Format
+   * @see PostResponse
+   * @see PostService#find20ByDateAfterOrderByDateDesc(Timestamp)
+   * @since 1.0
+   */
+  @GetMapping(path = "/dynLoad/{date}")
+  public List<PostResponse> get20ByDate(@PathVariable("date") String date) {
+    return new PostResponse()
+        .convert(postService.find20ByDateAfterOrderByDateDesc(Timestamp.valueOf(date)));
   }
 
   // Response and Request Classes:
@@ -285,10 +325,10 @@ public class PostController {
    */
   @Data
   public static class PostResponse {
-    private UUID id;
+    private String id;
     private String title;
     private String content;
-    private UUID user_id;
+    private String user_id;
     private String user_name;
     private Timestamp date;
 
@@ -309,10 +349,10 @@ public class PostController {
       List<PostResponse> postResponses = new ArrayList<>();
       for (Post post : posts) {
         PostResponse postResponse = new PostResponse();
-        postResponse.setId(post.getId());
+        postResponse.setId(String.valueOf(post.getId()));
         postResponse.setTitle(post.getTitle());
         postResponse.setContent(post.getContent());
-        postResponse.setUser_id(post.getUser().getId());
+        postResponse.setUser_id(String.valueOf(post.getUser().getId()));
         postResponse.setUser_name(post.getUser().getUsername());
         postResponse.setDate(post.getDate());
         postResponses.add(postResponse);
@@ -331,10 +371,10 @@ public class PostController {
      */
     public PostResponse convert(Post post) {
       PostResponse postResponse = new PostResponse();
-      postResponse.setId(post.getId());
+      postResponse.setId(String.valueOf(post.getId()));
       postResponse.setTitle(post.getTitle());
       postResponse.setContent(post.getContent());
-      postResponse.setUser_id(post.getUser().getId());
+      postResponse.setUser_id(String.valueOf(post.getUser().getId()));
       postResponse.setUser_name(post.getUser().getUsername());
       postResponse.setDate(post.getDate());
       return postResponse;

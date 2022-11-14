@@ -119,9 +119,28 @@ public class UserController {
    * @see UserService#getAllByUsernameContaining(String)
    * @since 1.0
    */
-  @GetMapping(path = "/search/{name}")
+  @GetMapping(path = "/searchName/{name}")
   public Iterable<UserResponse> getAllByUsernameContaining(@PathVariable("name") String name) {
     return new UserResponse().convert(userService.getAllByUsernameContaining(name));
+  }
+
+  /**
+   *
+   *
+   * <pre>
+   * Api Get Request for 20 Users Containing a String
+   * Location: <a href="http://localhost:8080/api/v1/user/search/{name}">/user/{name}</a>
+   * </pre>
+   *
+   * @param query name of User as String
+   * @return List of all Posts with Title in Database as PostResponse Objects in JSON Format
+   * @see UserController#getAllByUsernameContaining(String)
+   * @see UserResponse
+   * @since 1.0
+   */
+  @GetMapping(path = "search/{query}")
+  public Iterable<UserResponse> search(@PathVariable("query") String query) {
+    return new UserResponse().convert(userService.find20ByUsernameContaining(query));
   }
 
   // Response and Request Classes:

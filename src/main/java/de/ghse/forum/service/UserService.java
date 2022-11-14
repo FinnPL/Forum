@@ -2,6 +2,7 @@ package de.ghse.forum.service;
 
 import de.ghse.forum.model.User;
 import de.ghse.forum.repository.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
@@ -71,5 +72,18 @@ public class UserService {
    */
   public Iterable<User> getAllByUsernameContaining(String name) {
     return UserRepository.findAllByUsernameContaining(name);
+  }
+
+  /**
+   * Find 20 Users by Username containing a String
+   *
+   * @param username Username to search for
+   * @return list of User
+   * @see User
+   * @see UserRepository
+   * @since 1.0
+   */
+  public List<User> find20ByUsernameContaining(String username) {
+    return UserRepository.findTop20ByUsernameContainingIgnoreCaseOrderByUsernameDesc(username);
   }
 }

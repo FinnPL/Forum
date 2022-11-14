@@ -2,6 +2,7 @@ package de.ghse.forum.repository;
 
 import de.ghse.forum.model.Post;
 import de.ghse.forum.model.User;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -63,6 +64,33 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
    * @see Post
    * @since 1.0
    */
-  List<Post> findTop20ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByDate(
+  List<Post> findTop20ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByDateDesc(
       String title, String content);
+
+  /**
+   *
+   *
+   * <pre>
+   * Find newest 20 Posts from Database
+   * </pre>
+   *
+   * @return List of Posts (max 20)
+   * @see Post
+   * @since 1.0
+   */
+  List<Post> findTop20ByOrderByDateDesc();
+
+  /**
+   *
+   *
+   * <pre>
+   * Find newest 20 Posts after a given time from Database
+   * </pre>
+   *
+   * @param date Date to search after
+   * @return List of Posts (max 20)
+   * @see Post
+   * @since 1.0
+   */
+  List<Post> findTop20ByDateAfterOrderByDateDesc(Timestamp date);
 }

@@ -3,6 +3,7 @@ package de.ghse.forum.service;
 import de.ghse.forum.model.Post;
 import de.ghse.forum.model.User;
 import de.ghse.forum.repository.PostRepository;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public class PostService {
   }
 
   /**
-   * get Post By Id from Database
+   * get Post By ID from Database
    *
    * @param id UUID of Post
    * @return Post
@@ -133,7 +134,32 @@ public class PostService {
    */
   public List<Post> find20ByTitleOrContentContaining(String search) {
     return postRepository
-        .findTop20ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByDate(
+        .findTop20ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByDateDesc(
             search, search);
+  }
+
+  /**
+   * Find newest 20 Posts after a given time from Database
+   *
+   * @param date Date to search for
+   * @return List of Posts
+   * @see Post
+   * @see PostRepository
+   * @since 1.0
+   */
+  public List<Post> find20ByDateAfterOrderByDateDesc(Timestamp date) {
+    return postRepository.findTop20ByDateAfterOrderByDateDesc(date);
+  }
+
+  /**
+   * Find newest 20 Posts from Database
+   *
+   * @return List of Posts
+   * @see Post
+   * @see PostRepository
+   * @since 1.0
+   */
+  public List<Post> find20ByOrderByDateDesc() {
+    return postRepository.findTop20ByOrderByDateDesc();
   }
 }
