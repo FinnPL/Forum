@@ -33,7 +33,7 @@ public class Post {
   @JoinColumn(name = "user_id")
   private User user;
 
-  private Timestamp date;
+  private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 
   /**
    *
