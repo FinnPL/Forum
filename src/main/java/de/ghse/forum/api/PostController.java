@@ -330,7 +330,7 @@ public class PostController {
     private String content;
     private String user_id;
     private String user_name;
-    private Timestamp date;
+    private String date;
 
     /**
      *
@@ -354,7 +354,7 @@ public class PostController {
         postResponse.setContent(post.getContent());
         postResponse.setUser_id(String.valueOf(post.getUser().getId()));
         postResponse.setUser_name(post.getUser().getUsername());
-        postResponse.setDate(post.getDate());
+        postResponse.setDate(String.valueOf(post.getDate()));
         postResponses.add(postResponse);
       }
       return postResponses;
@@ -376,7 +376,7 @@ public class PostController {
       postResponse.setContent(post.getContent());
       postResponse.setUser_id(String.valueOf(post.getUser().getId()));
       postResponse.setUser_name(post.getUser().getUsername());
-      postResponse.setDate(post.getDate());
+      postResponse.setDate(String.valueOf(post.getDate()));
       return postResponse;
     }
   }
