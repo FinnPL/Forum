@@ -1,6 +1,7 @@
 package de.ghse.forum.model;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +33,10 @@ public class Post {
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
+
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+  @JoinColumn(name = "post_id")
+  private Collection<Comment> comment;
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 
