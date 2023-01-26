@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -138,28 +140,7 @@ public class PostService {
             search, search);
   }
 
-  /**
-   * Find newest 20 Posts after a given time from Database
-   *
-   * @param date Date to search for
-   * @return List of Posts
-   * @see Post
-   * @see PostRepository
-   * @since 1.0
-   */
-  public List<Post> find20ByDateAfterOrderByDateDesc(Timestamp date) {
-    return postRepository.findTop20ByDateAfterOrderByDateDesc(date);
-  }
-
-  /**
-   * Find newest 20 Posts from Database
-   *
-   * @return List of Posts
-   * @see Post
-   * @see PostRepository
-   * @since 1.0
-   */
-  public List<Post> find20ByOrderByDateDesc() {
-    return postRepository.findTop20ByOrderByDateDesc();
+  public List<Post> getAllByPage(int page) {
+    return postRepository.findAllByDateOrderByDateDesc(new Timestamp(System.currentTimeMillis()), PageRequest.of(page, 20));
   }
 }
