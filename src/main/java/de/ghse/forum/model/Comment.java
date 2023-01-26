@@ -1,11 +1,13 @@
 package de.ghse.forum.model;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.util.UUID;
-
+@Data
 @Entity
 public class Comment {
     @Id

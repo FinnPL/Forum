@@ -350,6 +350,7 @@ public class PostController {
       for (Post post : posts) {
         PostResponse postResponse = new PostResponse();
         postResponse.setId(String.valueOf(post.getId()));
+        postResponse.setId(String.valueOf(post.getId()));
         postResponse.setTitle(post.getTitle());
         postResponse.setContent(post.getContent());
         postResponse.setUser_id(String.valueOf(post.getUser().getId()));
