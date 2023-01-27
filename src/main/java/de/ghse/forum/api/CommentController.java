@@ -20,7 +20,8 @@ public class CommentController {
   private final PostService postService;
 
   @Autowired
-  public CommentController(CommentService commentService, UserService userService, PostService postService) {
+  public CommentController(
+      CommentService commentService, UserService userService, PostService postService) {
     this.commentService = commentService;
     this.userService = userService;
     this.postService = postService;
@@ -32,9 +33,9 @@ public class CommentController {
     comment.setTitle(commentRequest.getTitle());
     comment.setContent(commentRequest.getText());
     comment.setUser(
-            userService.findUserById(UUID.fromString(commentRequest.getUser_id())).orElseThrow());
+        userService.findUserById(UUID.fromString(commentRequest.getUser_id())).orElseThrow());
     comment.setPost(
-            postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow());
+        postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow());
     commentService.addComment(comment);
   }
 
