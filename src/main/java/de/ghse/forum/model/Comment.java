@@ -18,11 +18,9 @@ public class Comment {
   @NotBlank private String content;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
   private User user;
 
   @ManyToOne
-  @JoinColumn(name = "post_id")
   private Post post;
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());

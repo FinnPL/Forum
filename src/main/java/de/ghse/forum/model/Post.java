@@ -35,7 +35,6 @@ public class Post {
   private User user;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-  @JoinColumn(name = "post_id")
   private Collection<Comment> comment;
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
