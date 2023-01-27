@@ -26,5 +26,8 @@ public class User {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private Collection<Post> posts;
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private Collection<Comment> comments;
+
   private String username;
 }
