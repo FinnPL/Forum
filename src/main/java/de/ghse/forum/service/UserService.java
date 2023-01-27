@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService {
-  private final int PAGE_SIZE = 3;
+  @Value("${page.size}")
+  private int PAGE_SIZE;
   @Autowired private UserRepository UserRepository;
 
   public void addUser(User user) {

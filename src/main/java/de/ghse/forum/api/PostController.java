@@ -88,13 +88,17 @@ public class PostController {
 
   @PutMapping(path = "/{id}")
   public ResponseEntity<PostResponse> updatePost(
-      @PathVariable("id") UUID id, @Valid @NonNull @RequestBody Post post) {
+      @PathVariable("id") UUID id, @Valid @NonNull @RequestBody PostRequest postRequest) {
+    Post post = new Post();
+    post.setUser(userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow());
+    post.setTitle(postRequest.getTitle());
+    post.setContent(postRequest.getContent());
     return ResponseEntity.ok()
         .body(
             new PostResponse()
                 .convert(
                     postService
-                        .updatePost(id, post)
+                        .updatePost(id,post)
                         .orElseThrow(
                             () ->
                                 new ResponseStatusException(
@@ -107,7 +111,7 @@ public class PostController {
     return new PostResponse().convert(postService.getSearchPage(query, page));
   }
 
-  @RequestMapping(path = "/user/{id}/{page}")
+  @GetMapping(path = "/user/{id}/{page}")
   public List<PostResponse> getByUserByPage(
       @PathVariable("id") UUID id, @PathVariable("page") int page) {
     return new PostResponse()
