@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -21,60 +23,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-  /**
-   *
-   *
-   * <pre>
-   * Find User by ID
-   * </pre>
-   *
-   * @param uuid ID of User
-   * @return Optional of User
-   * @see User
-   * @since 1.0
-   */
   @NotNull
   Optional<User> findById(@NotNull UUID uuid);
 
-  /**
-   *
-   *
-   * <pre>
-   * Find all Users
-   * </pre>
-   *
-   * @return List of Users
-   * @see User
-   * @since 1.0
-   */
-  @NotNull
-  List<User> findAll();
-
-  /**
-   *
-   *
-   * <pre>
-   * Find User by Username Containing a String
-   * </pre>
-   *
-   * @param name String to search for in Username
-   * @return Optional of User
-   * @see User
-   * @since 1.0
-   */
-  Iterable<User> findAllByUsernameContaining(String name);
-
-  /**
-   *
-   *
-   * <pre>
-   * Find 20 User by Name containing a String
-   * </pre>
-   *
-   * @param username String to search for in username
-   * @return List of Users
-   * @see User
-   * @since 1.0
-   */
-  List<User> findTop20ByUsernameContainingIgnoreCaseOrderByUsernameDesc(String username);
+  @Query("SELECT u FROM User u WHERE u.username LIKE %?1% ORDER BY u.username DESC")
+  List<User> search(String username, Pageable pageable);
 }

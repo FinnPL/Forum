@@ -40,24 +40,6 @@ public class UserController {
     this.userService = userService;
   }
 
-  // debug Requests:
-  // **************************************************************************************************************************************************
-
-  /**
-   *
-   *
-   * <pre>
-   * Debug Request Only!
-   * Api Post Request to create a new User
-   * Location: <a href="http://localhost:8080/api/v1/user">/</a>
-   * </pre>
-   *
-   * @param userRequest User to create
-   * @see UserRequest
-   * @see UserService#addUser(User)
-   * @deprecated Debug Request Only!
-   * @since 1.0
-   */
   @PostMapping
   public void addUser(@Valid @NonNull @RequestBody UserRequest userRequest) {
     User user = new User();
@@ -65,82 +47,15 @@ public class UserController {
     userService.addUser(user);
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * Debug Request Only!
-   * Get all Users from Database
-   * Location: <a href="http://localhost:8080/api/v1/user/all">/all</a>
-   * </pre>
-   *
-   * @return List of all Users
-   * @deprecated Debug Request Only!
-   * @since 1.0
-   */
-  @GetMapping(path = "/all")
-  public Iterable<UserResponse> getAllUsers() {
-    return new UserResponse().convert(userService.getAllUsers());
-  }
-
-  // API Requests:
-  // ****************************************************************************************************************************************************
-
-  /**
-   *
-   *
-   * <pre>
-   * Api Get Request to get a User by Id
-   * Location: <a href="http://localhost:8080/api/v1/user/{id}">/{id}</a>
-   * </pre>
-   *
-   * @param id id of the User
-   * @return UserResponse
-   * @see UserResponse
-   * @see UserService#findUserById(UUID)
-   * @since 1.0
-   */
   @GetMapping(path = "{id}")
   public UserResponse getUser(@PathVariable("id") UUID id) {
     return new UserResponse().convert(userService.findUserById(id).orElseThrow());
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * Api Get Request to get a User by Username containing String
-   * Location: <a href="http://localhost:8080/api/v1/user/search/{username}">/search/{username}</a>
-   * </pre>
-   *
-   * @param name search query as String
-   * @return Iterable UserResponse
-   * @see UserResponse
-   * @see UserService#getAllByUsernameContaining(String)
-   * @since 1.0
-   */
-  @GetMapping(path = "/searchName/{name}")
-  public Iterable<UserResponse> getAllByUsernameContaining(@PathVariable("name") String name) {
-    return new UserResponse().convert(userService.getAllByUsernameContaining(name));
-  }
-
-  /**
-   *
-   *
-   * <pre>
-   * Api Get Request for 20 Users Containing a String
-   * Location: <a href="http://localhost:8080/api/v1/user/search/{name}">/user/{name}</a>
-   * </pre>
-   *
-   * @param query name of User as String
-   * @return List of all Posts with Title in Database as PostResponse Objects in JSON Format
-   * @see UserController#getAllByUsernameContaining(String)
-   * @see UserResponse
-   * @since 1.0
-   */
-  @GetMapping(path = "search/{query}")
-  public Iterable<UserResponse> search(@PathVariable("query") String query) {
-    return new UserResponse().convert(userService.find20ByUsernameContaining(query));
+  @GetMapping(path = "search/{query}/{page}")
+  public Iterable<UserResponse> search(
+      @PathVariable("query") String query, @PathVariable("page") int page) {
+    return new UserResponse().convert(userService.search(query, page));
   }
 
   // Response and Request Classes:
