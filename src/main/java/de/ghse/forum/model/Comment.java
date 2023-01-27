@@ -1,30 +1,29 @@
 package de.ghse.forum.model;
 
-
-import lombok.Data;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.util.UUID;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import lombok.Data;
+
 @Data
 @Entity
 public class Comment {
-    @Id
-    @Column(name = "id", columnDefinition = "BINARY(16)")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
-    @NotBlank
-    private String title;
-    @NotBlank private String content;
+  @Id
+  @Column(name = "id", columnDefinition = "BINARY(16)")
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @NotBlank private String title;
+  @NotBlank private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
+  @ManyToOne
+  @JoinColumn(name = "post_id")
+  private Post post;
+
+  private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 }
