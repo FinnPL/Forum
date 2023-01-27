@@ -32,14 +32,10 @@ public class CommentController {
         commentService.addComment(comment);
     }
 
-    @PostMapping(path = "/get")
-    public List<CommentResponse> getComments(@RequestBody CommentRequest commentRequest) {
-        return new CommentResponse().convert(commentService.getTop20Comments());
-    }
-
-    @PostMapping(path = "/dynload/{date}")
-    public List<CommentResponse> getCommentsAfter(@PathVariable("date") String date) {
-       return new CommentResponse().convert(commentService.getTop20CommentsAfter(Timestamp.valueOf(date)));
+    @GetMapping(path = "/get/{post_id}/{page}")
+    public List<CommentResponse> getCommentsByPostByPage(
+            @PathVariable("post_id") UUID post_id, @PathVariable("page") int page) {
+        return new CommentResponse().convert(commentService.findCommentByPostByPage(post_id, page));
     }
 
     @Data
@@ -84,5 +80,4 @@ public class CommentController {
             return commentResponse;
         }
     }
-
 }
