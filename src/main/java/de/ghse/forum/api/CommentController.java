@@ -2,6 +2,7 @@ package de.ghse.forum.api;
 
 import de.ghse.forum.model.Comment;
 import de.ghse.forum.service.CommentService;
+import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +17,24 @@ public class CommentController {
   private final CommentService commentService;
   private final UserService userService;
 
+  private final PostService postService;
+
   @Autowired
-  public CommentController(CommentService commentService, UserService userService) {
+  public CommentController(CommentService commentService, UserService userService, PostService postService) {
     this.commentService = commentService;
     this.userService = userService;
+    this.postService = postService;
   }
 
-  @PostMapping(path = "/add")
+  @PostMapping(path = "/add/")
   public void addComment(@RequestBody CommentRequest commentRequest) {
     Comment comment = new Comment();
-    comment.setUser(
-        userService.findUserById(UUID.fromString(commentRequest.getUser_id())).orElseThrow());
     comment.setTitle(commentRequest.getTitle());
     comment.setContent(commentRequest.getText());
+    comment.setUser(
+            userService.findUserById(UUID.fromString(commentRequest.getUser_id())).orElseThrow());
+    comment.setPost(
+            postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow());
     commentService.addComment(comment);
   }
 
