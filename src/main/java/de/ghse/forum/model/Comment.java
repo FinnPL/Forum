@@ -17,11 +17,9 @@ public class Comment {
   @NotBlank private String title;
   @NotBlank private String content;
 
-  @ManyToOne
-  private User user;
+  @ManyToOne private User user;
 
-  @ManyToOne
-  private Post post;
+  @ManyToOne private Post post;
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 }
