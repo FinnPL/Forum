@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
   @Value("${page.size}")
   private int PAGE_SIZE;
+
   @Autowired private UserRepository UserRepository;
 
   public void addUser(User user) {

@@ -26,6 +26,7 @@ public class PostService {
 
   @Value("${page.size}")
   private int PAGE_SIZE;
+
   @Autowired private PostRepository postRepository;
 
   public void addPost(Post post) {

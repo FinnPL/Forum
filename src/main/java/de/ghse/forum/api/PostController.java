@@ -98,7 +98,7 @@ public class PostController {
             new PostResponse()
                 .convert(
                     postService
-                        .updatePost(id,post)
+                        .updatePost(id, post)
                         .orElseThrow(
                             () ->
                                 new ResponseStatusException(
