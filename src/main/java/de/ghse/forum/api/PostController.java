@@ -6,7 +6,6 @@ import de.ghse.forum.model.Post;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +42,6 @@ public class PostController {
     this.postService = postService;
     this.userService = userService;
   }
-
 
   @PostMapping(path = "/add")
   public ResponseEntity<PostResponse> addPost(@RequestBody PostRequest postRequest) {
@@ -103,23 +101,24 @@ public class PostController {
                                     NOT_FOUND, "Can not update Post: \nPost not found"))));
   }
 
-
   @GetMapping(path = "search/{query}/{page}")
-  public List<PostResponse> search(@NotBlank @PathVariable("query") String query, @PathVariable("page") int page) {
-    return new PostResponse().convert(postService.getSearchPage(query,page));
+  public List<PostResponse> search(
+      @NotBlank @PathVariable("query") String query, @PathVariable("page") int page) {
+    return new PostResponse().convert(postService.getSearchPage(query, page));
   }
 
   @RequestMapping(path = "/user/{id}/{page}")
-  public List<PostResponse> getByUserByPage(@PathVariable("id") UUID id, @PathVariable("page") int page) {
+  public List<PostResponse> getByUserByPage(
+      @PathVariable("id") UUID id, @PathVariable("page") int page) {
     return new PostResponse()
-        .convert(postService.getPostsByUserByPage(userService.findUserById(id).orElseThrow(), page));
+        .convert(
+            postService.getPostsByUserByPage(userService.findUserById(id).orElseThrow(), page));
   }
 
-  @GetMapping(path="/page/{page}")
+  @GetMapping(path = "/page/{page}")
   public List<PostResponse> getAllByPage(@PathVariable("page") int page) {
     return new PostResponse().convert(postService.getNewestByPage(page));
   }
-
 
   // Response and Request Classes:
   // ********************************************************************************************************************************************

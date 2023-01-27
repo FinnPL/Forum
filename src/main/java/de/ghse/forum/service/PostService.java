@@ -3,13 +3,11 @@ package de.ghse.forum.service;
 import de.ghse.forum.model.Post;
 import de.ghse.forum.model.User;
 import de.ghse.forum.repository.PostRepository;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,7 +25,6 @@ public class PostService {
 
   private final int PAGE_SIZE = 3;
   @Autowired private PostRepository postRepository;
-
 
   public void addPost(Post post) {
     postRepository.save(post);
@@ -51,8 +48,8 @@ public class PostService {
     return post1;
   }
 
-  public List<Post> getPostsByUserByPage(User user,int page) {
-    return postRepository.findPostsByUserByPage(user,PageRequest.of(page, PAGE_SIZE));
+  public List<Post> getPostsByUserByPage(User user, int page) {
+    return postRepository.findPostsByUserByPage(user, PageRequest.of(page, PAGE_SIZE));
   }
 
   public List<Post> getSearchPage(String query, int page) {

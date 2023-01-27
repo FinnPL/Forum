@@ -33,7 +33,7 @@ public class UserService {
     return UserRepository.findById(id);
   }
 
-  public List<User> search(String username ,int page) {
+  public List<User> search(String username, int page) {
     return UserRepository.search(username, PageRequest.of(page, PAGE_SIZE));
   }
 }

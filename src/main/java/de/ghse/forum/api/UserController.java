@@ -40,7 +40,6 @@ public class UserController {
     this.userService = userService;
   }
 
-
   @PostMapping
   public void addUser(@Valid @NonNull @RequestBody UserRequest userRequest) {
     User user = new User();
@@ -52,8 +51,10 @@ public class UserController {
   public UserResponse getUser(@PathVariable("id") UUID id) {
     return new UserResponse().convert(userService.findUserById(id).orElseThrow());
   }
+
   @GetMapping(path = "search/{query}/{page}")
-  public Iterable<UserResponse> search(@PathVariable("query") String query, @PathVariable("page") int page) {
+  public Iterable<UserResponse> search(
+      @PathVariable("query") String query, @PathVariable("page") int page) {
     return new UserResponse().convert(userService.search(query, page));
   }
 
