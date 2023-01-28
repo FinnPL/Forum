@@ -1,4 +1,4 @@
-package de.ghse.forum.api;
+package de.ghse.forum.api.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class AuthenticationRequest {
   private String user_name;
   private String password;
 }

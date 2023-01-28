@@ -1,8 +1,8 @@
 package de.ghse.forum.service;
 
-import de.ghse.forum.api.AuthenticationRequest;
-import de.ghse.forum.api.AuthenticationResponse;
-import de.ghse.forum.api.RegisterRequest;
+import de.ghse.forum.api.request.AuthenticationRequest;
+import de.ghse.forum.api.request.RegisterRequest;
+import de.ghse.forum.api.response.AuthenticationResponse;
 import de.ghse.forum.model.Role;
 import de.ghse.forum.model.User;
 import de.ghse.forum.repository.UserRepository;
