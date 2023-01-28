@@ -1,5 +1,8 @@
 package de.ghse.forum.api;
 
+import de.ghse.forum.api.request.AuthenticationRequest;
+import de.ghse.forum.api.request.RegisterRequest;
+import de.ghse.forum.api.response.AuthenticationResponse;
 import de.ghse.forum.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

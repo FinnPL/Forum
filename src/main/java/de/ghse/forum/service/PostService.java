@@ -6,6 +6,8 @@ import de.ghse.forum.repository.PostRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -22,12 +24,13 @@ import org.springframework.stereotype.Service;
  * @since 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
   @Value("${page.size}")
   private int PAGE_SIZE;
 
-  @Autowired private PostRepository postRepository;
+  private final PostRepository postRepository;
 
   public void addPost(Post post) {
     postRepository.save(post);
