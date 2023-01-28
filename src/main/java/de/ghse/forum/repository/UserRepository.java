@@ -23,6 +23,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
+  Optional<User> findByUsername(@NotNull String username);
+
   @NotNull
   Optional<User> findById(@NotNull UUID uuid);
 
