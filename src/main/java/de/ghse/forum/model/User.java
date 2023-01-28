@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,6 +41,7 @@ public class User implements UserDetails {
 
   private String username;
   private String password;
+
   @Enumerated(EnumType.STRING)
   private Role role;
 
@@ -62,7 +62,7 @@ public class User implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return  true;
+    return true;
   }
 
   @Override
