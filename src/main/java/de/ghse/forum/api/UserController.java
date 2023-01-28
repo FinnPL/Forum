@@ -2,13 +2,9 @@ package de.ghse.forum.api;
 
 import de.ghse.forum.api.response.UserResponse;
 import de.ghse.forum.service.UserService;
-
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 @RequiredArgsConstructor
 @RequestMapping("api/v1/user")
@@ -27,5 +23,4 @@ public class UserController {
       @PathVariable("query") String query, @PathVariable("page") int page) {
     return new UserResponse().convert(userService.search(query, page));
   }
-
 }

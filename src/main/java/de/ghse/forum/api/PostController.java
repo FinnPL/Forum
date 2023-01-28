@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -109,5 +107,4 @@ public class PostController {
   public List<PostResponse> getAllByPage(@PathVariable("page") int page) {
     return new PostResponse().convert(postService.getNewestByPage(page));
   }
-
 }

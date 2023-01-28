@@ -4,9 +4,7 @@ import de.ghse.forum.model.Comment;
 import de.ghse.forum.repository.CommentRepository;
 import java.util.List;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

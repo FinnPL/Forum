@@ -5,6 +5,8 @@ import de.ghse.forum.model.Post;
 import lombok.Data;
 
 /**
+ *
+ *
  * <pre>
  * PostRequest Class for API Requests
  * </pre>
@@ -15,7 +17,7 @@ import lombok.Data;
  */
 @Data
 public class PostRequest {
-    private String title;
-    private String content;
-    private String user_id;
+  private String title;
+  private String content;
+  private String user_id;
 }

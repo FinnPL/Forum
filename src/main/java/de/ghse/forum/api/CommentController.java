@@ -6,12 +6,9 @@ import de.ghse.forum.model.Comment;
 import de.ghse.forum.service.CommentService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
-
 import java.util.List;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api/v1/comment")
@@ -40,5 +37,4 @@ public class CommentController {
       @PathVariable("post_id") UUID post_id, @PathVariable("page") int page) {
     return new CommentResponse().convert(commentService.findCommentByPostByPage(post_id, page));
   }
-
 }
