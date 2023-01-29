@@ -41,7 +41,7 @@ public class UserService {
     return UserRepository.search(username, PageRequest.of(page, PAGE_SIZE));
   }
 
-    public void deleteUser(UUID id) {
-        UserRepository.deleteById(id);
-    }
+  public void deleteUser(UUID id) {
+    UserRepository.deleteById(id);
+  }
 }
