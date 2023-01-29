@@ -29,8 +29,8 @@ public class UserService {
 
   private final UserRepository UserRepository;
 
-  public void addUser(User user) {
-    UserRepository.save(user);
+public @NotNull Optional<User> findbyUsername(String username) {
+    return UserRepository.findByUsername(username);
   }
 
   public @NotNull Optional<User> findUserById(UUID id) {

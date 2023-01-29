@@ -5,7 +5,11 @@ import java.util.Collection;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
@@ -19,6 +23,9 @@ import lombok.Data;
  */
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Post {
 
   @Id
@@ -39,14 +46,4 @@ public class Post {
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 
-  /**
-   *
-   *
-   * <pre>
-   * No Args Constructor for Post
-   * </pre>
-   *
-   * @since 1.0
-   */
-  public Post() {}
 }

@@ -8,6 +8,7 @@ import de.ghse.forum.model.Post;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 import javax.validation.Valid;
@@ -28,9 +29,9 @@ public class PostController {
   private final UserService userService;
 
   @PostMapping(path = "/add")
-  public ResponseEntity<PostResponse> addPost(@RequestBody PostRequest postRequest) {
+  public ResponseEntity<PostResponse> addPost(@RequestBody PostRequest postRequest, Principal principal) {
     Post post = new Post();
-    post.setUser(userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow());
+    post.setUser(userService.findbyUsername(principal.getName()).orElseThrow());
     post.setTitle(postRequest.getTitle());
     post.setContent(postRequest.getContent());
     postService.addPost(post);
@@ -57,36 +58,28 @@ public class PostController {
   }
 
   @DeleteMapping(path = "del/{id}")
-  public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id) {
-    return ResponseEntity.ok()
-        .body(
-            new PostResponse()
-                .convert(
-                    postService
-                        .deletePost(id)
-                        .orElseThrow(
-                            () ->
-                                new ResponseStatusException(
-                                    NOT_FOUND, "Can not delete Post: \nPost not found"))));
+  public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id,Principal principal) {
+    Post post = postService.getPostById(id).orElseThrow();
+    if (post.getUser().getUsername().equals(principal.getName())) {
+      postService.deletePost(id);
+      return ResponseEntity.ok().body(new PostResponse().convert(post));
+    } else {
+      throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");
+    }
   }
 
   @PutMapping(path = "/{id}")
   public ResponseEntity<PostResponse> updatePost(
-      @PathVariable("id") UUID id, @Valid @NonNull @RequestBody PostRequest postRequest) {
-    Post post = new Post();
-    post.setUser(userService.findUserById(UUID.fromString(postRequest.getUser_id())).orElseThrow());
-    post.setTitle(postRequest.getTitle());
-    post.setContent(postRequest.getContent());
-    return ResponseEntity.ok()
-        .body(
-            new PostResponse()
-                .convert(
-                    postService
-                        .updatePost(id, post)
-                        .orElseThrow(
-                            () ->
-                                new ResponseStatusException(
-                                    NOT_FOUND, "Can not update Post: \nPost not found"))));
+      @PathVariable("id") UUID id, @Valid @NonNull @RequestBody PostRequest postRequest,Principal principal) {
+    Post post = postService.getPostById(id).orElseThrow();
+    if (post.getUser().getUsername().equals(principal.getName())) {
+      post.setTitle(postRequest.getTitle());
+      post.setContent(postRequest.getContent());
+      postService.updatePost(id,post);
+      return ResponseEntity.ok().body(new PostResponse().convert(post));
+    } else {
+      throw new ResponseStatusException(NOT_FOUND, "Can not update Post: \nPost not found");
+    }
   }
 
   @GetMapping(path = "search/{query}/{page}")
