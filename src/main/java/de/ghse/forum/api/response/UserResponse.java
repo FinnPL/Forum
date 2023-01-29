@@ -1,11 +1,9 @@
 package de.ghse.forum.api.response;
 
-import de.ghse.forum.api.UserController;
 import de.ghse.forum.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,9 +26,6 @@ public class UserResponse {
   }
 
   public UserResponse convert(User user) {
-    return UserResponse.builder()
-        .id(user.getId())
-        .username(user.getUsername())
-        .build();
+    return UserResponse.builder().id(user.getId()).username(user.getUsername()).build();
   }
 }

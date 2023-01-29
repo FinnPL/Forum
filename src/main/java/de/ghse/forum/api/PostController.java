@@ -29,8 +29,10 @@ public class PostController {
   private final UserService userService;
 
   @PostMapping(path = "/add")
-  public ResponseEntity<PostResponse> addPost(@RequestBody PostRequest postRequest, Principal principal) {
-    Post post = Post.builder()
+  public ResponseEntity<PostResponse> addPost(
+      @RequestBody PostRequest postRequest, Principal principal) {
+    Post post =
+        Post.builder()
             .title(postRequest.getTitle())
             .content(postRequest.getContent())
             .user(userService.findbyUsername(principal.getName()).orElseThrow())
@@ -60,7 +62,7 @@ public class PostController {
   }
 
   @DeleteMapping(path = "del/{id}")
-  public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id,Principal principal) {
+  public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id, Principal principal) {
     Post post = postService.getPostById(id).orElseThrow();
     if (post.getUser().getUsername().equals(principal.getName())) {
       postService.deletePost(id);
@@ -72,12 +74,14 @@ public class PostController {
 
   @PutMapping(path = "/{id}")
   public ResponseEntity<PostResponse> updatePost(
-      @PathVariable("id") UUID id, @Valid @NonNull @RequestBody PostRequest postRequest,Principal principal) {
+      @PathVariable("id") UUID id,
+      @Valid @NonNull @RequestBody PostRequest postRequest,
+      Principal principal) {
     Post post = postService.getPostById(id).orElseThrow();
     if (post.getUser().getUsername().equals(principal.getName())) {
       post.setTitle(postRequest.getTitle());
       post.setContent(postRequest.getContent());
-      postService.updatePost(id,post);
+      postService.updatePost(id, post);
       return ResponseEntity.ok().body(new PostResponse().convert(post));
     } else {
       throw new ResponseStatusException(NOT_FOUND, "Can not update Post: \nPost not found");

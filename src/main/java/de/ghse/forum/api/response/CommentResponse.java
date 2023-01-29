@@ -3,7 +3,6 @@ package de.ghse.forum.api.response;
 import de.ghse.forum.model.Comment;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,14 +23,15 @@ public class CommentResponse {
   public List<CommentResponse> convert(List<Comment> comments) {
     List<CommentResponse> commentResponses = new ArrayList<>();
     for (Comment comment : comments) {
-      commentResponses.add(CommentResponse.builder()
-          .id(comment.getId().toString())
-          .title(comment.getTitle())
-          .content(comment.getContent())
-          .user_id(comment.getUser().getId().toString())
-          .user_name(comment.getUser().getUsername())
-          .date(comment.getDate().toString())
-          .build());
+      commentResponses.add(
+          CommentResponse.builder()
+              .id(comment.getId().toString())
+              .title(comment.getTitle())
+              .content(comment.getContent())
+              .user_id(comment.getUser().getId().toString())
+              .user_name(comment.getUser().getUsername())
+              .date(comment.getDate().toString())
+              .build());
     }
     return commentResponses;
   }

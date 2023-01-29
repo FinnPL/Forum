@@ -3,7 +3,6 @@ package de.ghse.forum.api.response;
 import de.ghse.forum.model.Post;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +27,7 @@ public class PostResponse {
     }
     return postResponses;
   }
+
   public PostResponse convert(Post post) {
     return PostResponse.builder()
         .id(post.getId().toString())

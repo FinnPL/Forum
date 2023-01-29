@@ -2,8 +2,6 @@ package de.ghse.forum.api;
 
 import de.ghse.forum.api.response.UserResponse;
 import de.ghse.forum.service.UserService;
-
-import java.security.Principal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
