@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
-  private String username;
+  private String user_name;
   private UUID id;
 
   public Iterable<UserResponse> convert(Iterable<User> allUsers) {
@@ -26,6 +26,6 @@ public class UserResponse {
   }
 
   public UserResponse convert(User user) {
-    return UserResponse.builder().id(user.getId()).username(user.getUsername()).build();
+    return UserResponse.builder().id(user.getId()).user_name(user.getUsername()).build();
   }
 }
