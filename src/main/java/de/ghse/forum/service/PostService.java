@@ -38,18 +38,16 @@ public class PostService {
     return postRepository.findById(id);
   }
 
-  public Optional<Post> deletePost(UUID id) {
-    Optional<Post> post = postRepository.findById(id);
+  public void deletePost(UUID id) {
     postRepository.deleteById(id);
-    return post;
   }
 
-  public Optional<Post> updatePost(UUID id, Post post) {
+  public void updatePost(UUID id, Post post) {
     Optional<Post> post1 = postRepository.findById(id);
+    if (post1.isEmpty()) return;
     post1.get().setTitle(post.getTitle());
     post1.get().setContent(post.getContent());
     postRepository.save(post1.get());
-    return post1;
   }
 
   public List<Post> getPostsByUserByPage(User user, int page) {
