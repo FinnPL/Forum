@@ -40,4 +40,8 @@ public class UserService {
   public List<User> search(String username, int page) {
     return UserRepository.search(username, PageRequest.of(page, PAGE_SIZE));
   }
+
+  public void deleteUser(UUID id) {
+    UserRepository.deleteById(id);
+  }
 }
