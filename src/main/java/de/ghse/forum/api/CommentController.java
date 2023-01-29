@@ -6,7 +6,6 @@ import de.ghse.forum.model.Comment;
 import de.ghse.forum.service.CommentService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -24,12 +23,14 @@ public class CommentController {
 
   @PostMapping(path = "/add/")
   public void addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
-    commentService.addComment(Comment.builder()
-        .title(commentRequest.getTitle())
-        .content(commentRequest.getContent())
-        .user(userService.findbyUsername(principal.getName()).orElseThrow())
-        .post(postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow())
-        .build());
+    commentService.addComment(
+        Comment.builder()
+            .title(commentRequest.getTitle())
+            .content(commentRequest.getContent())
+            .user(userService.findbyUsername(principal.getName()).orElseThrow())
+            .post(
+                postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow())
+            .build());
   }
 
   @GetMapping(path = "/get/{post_id}/{page}")
