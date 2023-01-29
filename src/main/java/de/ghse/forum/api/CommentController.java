@@ -6,7 +6,6 @@ import de.ghse.forum.model.Comment;
 import de.ghse.forum.service.CommentService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -27,8 +26,7 @@ public class CommentController {
     Comment comment = new Comment();
     comment.setTitle(commentRequest.getTitle());
     comment.setContent(commentRequest.getText());
-    comment.setUser(
-        userService.findbyUsername(principal.getName()).orElseThrow());
+    comment.setUser(userService.findbyUsername(principal.getName()).orElseThrow());
     comment.setPost(
         postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow());
     commentService.addComment(comment);
