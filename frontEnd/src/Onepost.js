@@ -1,12 +1,12 @@
-import { useParams } from "react-router-dom";
-import useFetching from "./useFetching";
-import * as React from "react";
+import { useParams } from 'react-router-dom'
+import useFetching from './useFetching'
+import * as React from 'react'
 
 const Onepost = () => {
-  const { id } = useParams();
-  const { data: postData } = useFetching("http://localhost:8000/posts/" + id);
+  const { id } = useParams()
+  const { data: postData } = useFetching('http://localhost:8000/posts/' + id)
   return (
-    <div className="one-post">
+    <div className='one-post'>
       {postData && (
         <article>
           <h2>
@@ -17,6 +17,6 @@ const Onepost = () => {
         </article>
       )}
     </div>
-  );
-};
-export default Onepost;
+  )
+}
+export default Onepost

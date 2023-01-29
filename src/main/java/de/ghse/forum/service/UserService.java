@@ -29,7 +29,7 @@ public class UserService {
 
   private final UserRepository UserRepository;
 
-public @NotNull Optional<User> findbyUsername(String username) {
+  public @NotNull Optional<User> findbyUsername(String username) {
     return UserRepository.findByUsername(username);
   }
 
