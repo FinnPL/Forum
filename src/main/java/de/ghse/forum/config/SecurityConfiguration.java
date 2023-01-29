@@ -1,5 +1,6 @@
 package de.ghse.forum.config;
 
+import de.ghse.forum.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,8 @@ public class SecurityConfiguration {
         .authorizeHttpRequests()
         .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**"))
         .permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/api/v1/admin/**"))
+            .hasAuthority(Role.ADMIN.name())
         .anyRequest()
         .authenticated()
         .and()
