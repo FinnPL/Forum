@@ -3,9 +3,16 @@ package de.ghse.forum.api.response;
 import de.ghse.forum.model.Comment;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentResponse {
   private String id;
   private String title;
@@ -17,26 +24,15 @@ public class CommentResponse {
   public List<CommentResponse> convert(List<Comment> comments) {
     List<CommentResponse> commentResponses = new ArrayList<>();
     for (Comment comment : comments) {
-      CommentResponse commentResponse = new CommentResponse();
-      commentResponse.setId(String.valueOf(comment.getId()));
-      commentResponse.setTitle(comment.getTitle());
-      commentResponse.setContent(comment.getContent());
-      commentResponse.setUser_id(String.valueOf(comment.getUser().getId()));
-      commentResponse.setUser_name(comment.getUser().getUsername());
-      commentResponse.setDate(String.valueOf(comment.getDate()));
-      commentResponses.add(commentResponse);
+      commentResponses.add(CommentResponse.builder()
+          .id(comment.getId().toString())
+          .title(comment.getTitle())
+          .content(comment.getContent())
+          .user_id(comment.getUser().getId().toString())
+          .user_name(comment.getUser().getUsername())
+          .date(comment.getDate().toString())
+          .build());
     }
     return commentResponses;
-  }
-
-  public CommentResponse convert(Comment comment) {
-    CommentResponse commentResponse = new CommentResponse();
-    commentResponse.setId(String.valueOf(comment.getId()));
-    commentResponse.setTitle(comment.getTitle());
-    commentResponse.setContent(comment.getContent());
-    commentResponse.setUser_id(String.valueOf(comment.getUser().getId()));
-    commentResponse.setUser_name(comment.getUser().getUsername());
-    commentResponse.setDate(String.valueOf(comment.getDate()));
-    return commentResponse;
   }
 }

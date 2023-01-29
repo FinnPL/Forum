@@ -24,14 +24,12 @@ public class CommentController {
 
   @PostMapping(path = "/add/")
   public void addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
-    Comment comment = new Comment();
-    comment.setTitle(commentRequest.getTitle());
-    comment.setContent(commentRequest.getText());
-    comment.setUser(
-        userService.findbyUsername(principal.getName()).orElseThrow());
-    comment.setPost(
-        postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow());
-    commentService.addComment(comment);
+    commentService.addComment(Comment.builder()
+        .title(commentRequest.getTitle())
+        .content(commentRequest.getContent())
+        .user(userService.findbyUsername(principal.getName()).orElseThrow())
+        .post(postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow())
+        .build());
   }
 
   @GetMapping(path = "/get/{post_id}/{page}")

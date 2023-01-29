@@ -30,10 +30,12 @@ public class PostController {
 
   @PostMapping(path = "/add")
   public ResponseEntity<PostResponse> addPost(@RequestBody PostRequest postRequest, Principal principal) {
-    Post post = new Post();
-    post.setUser(userService.findbyUsername(principal.getName()).orElseThrow());
-    post.setTitle(postRequest.getTitle());
-    post.setContent(postRequest.getContent());
+    Post post = Post.builder()
+            .title(postRequest.getTitle())
+            .content(postRequest.getContent())
+            .user(userService.findbyUsername(principal.getName()).orElseThrow())
+            .build();
+
     postService.addPost(post);
     URI uri =
         URI.create(

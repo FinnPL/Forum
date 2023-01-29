@@ -25,9 +25,4 @@ public class UserController {
       @PathVariable("query") String query, @PathVariable("page") int page) {
     return new UserResponse().convert(userService.search(query, page));
   }
-
-  @GetMapping(path = "test")
-  public String test(Principal principal) {
-    return principal.getName();
-  }
 }
