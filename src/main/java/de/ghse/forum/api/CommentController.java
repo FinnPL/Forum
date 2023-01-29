@@ -25,7 +25,6 @@ public class CommentController {
   public void addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
     commentService.addComment(
         Comment.builder()
-            .title(commentRequest.getTitle())
             .content(commentRequest.getContent())
             .user(userService.findbyUsername(principal.getName()).orElseThrow())
             .post(

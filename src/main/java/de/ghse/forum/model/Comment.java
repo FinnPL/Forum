@@ -20,7 +20,6 @@ public class Comment {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @NotBlank private String title;
   @NotBlank private String content;
 
   @ManyToOne private User user;

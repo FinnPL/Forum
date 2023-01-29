@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentResponse {
   private String id;
-  private String title;
   private String content;
   private String user_id;
   private String user_name;
@@ -26,7 +25,6 @@ public class CommentResponse {
       commentResponses.add(
           CommentResponse.builder()
               .id(comment.getId().toString())
-              .title(comment.getTitle())
               .content(comment.getContent())
               .user_id(comment.getUser().getId().toString())
               .user_name(comment.getUser().getUsername())
