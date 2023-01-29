@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
-import * as React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from 'react-router-dom'
+import * as React from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const PostList = ({ posts }) => {
   return (
-    <div className="post-list">
+    <div className='post-list'>
       {posts.map((post) => (
-        <div className="post-preview" key={post.id}>
+        <div className='post-preview' key={post.id}>
           <Link to={`/post/${post.id}`}>
             <h2>{post.title}</h2>
             <p>Gepostet von {post.author}</p>
@@ -16,7 +16,7 @@ const PostList = ({ posts }) => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default PostList;
+export default PostList

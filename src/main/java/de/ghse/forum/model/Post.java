@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,5 +44,4 @@ public class Post {
   private Collection<Comment> comment;
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
-
 }
