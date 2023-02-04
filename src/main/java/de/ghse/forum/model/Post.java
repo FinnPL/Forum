@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class Post {
 
@@ -44,4 +43,12 @@ public class Post {
   private Collection<Comment> comment;
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
+    public Post(UUID id, String title, String content, User user, Collection<Comment> comment, Timestamp date) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.user = user;
+        this.comment = comment;
+        date = new Timestamp(System.currentTimeMillis());
+    }
 }
