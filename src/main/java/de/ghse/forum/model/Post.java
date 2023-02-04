@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,12 +42,19 @@ public class Post {
   private Collection<Comment> comment;
 
   private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
-    public Post(UUID id, String title, String content, User user, Collection<Comment> comment, Timestamp date) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.user = user;
-        this.comment = comment;
-        date = new Timestamp(System.currentTimeMillis());
-    }
+
+  public Post(
+      UUID id,
+      String title,
+      String content,
+      User user,
+      Collection<Comment> comment,
+      Timestamp date) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.user = user;
+    this.comment = comment;
+    date = new Timestamp(System.currentTimeMillis());
+  }
 }
