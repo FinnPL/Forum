@@ -1,5 +1,6 @@
 package de.ghse.forum.config;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import de.ghse.forum.service.JwtService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -29,6 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
+    System.out.println("Request: " + request +" Header: A " + request.getHeader("Authorization") +" Host: " +request.getHeader("Host"));
+
     final String authorizationHeader = request.getHeader("Authorization");
     final String jwt;
     final String username;
@@ -48,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authToken);
         }
       }
+
       filterChain.doFilter(request, response);
     }
   }
