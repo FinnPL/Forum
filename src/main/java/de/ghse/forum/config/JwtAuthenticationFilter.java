@@ -30,7 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
-    System.out.println("Request: " + request +" Header: A " + request.getHeader("Authorization") +" Host: " +request.getHeader("Host"));
+
+    System.out.println("Request: " + request.getRequestURI() +" Header: A " + request.getHeader("Authorization") +" Host: " +request.getHeader("Host"));
 
     final String authorizationHeader = request.getHeader("Authorization");
     final String jwt;
@@ -41,6 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     } else {
       jwt = authorizationHeader.substring(7);
       username = jwtService.extractUsername(jwt);
+      //response.addHeader("Access-Control-Allow-Origin", "http://localhost");
+
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
         if (jwtService.isTokenValid(jwt, userDetails)) {
@@ -51,7 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authToken);
         }
       }
-
       filterChain.doFilter(request, response);
     }
   }
