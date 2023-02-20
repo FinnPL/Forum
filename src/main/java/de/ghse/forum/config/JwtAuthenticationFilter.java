@@ -1,6 +1,5 @@
 package de.ghse.forum.config;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import de.ghse.forum.service.JwtService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -31,7 +30,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
 
-    System.out.println("Request: " + request.getRequestURI() +" Header: A " + request.getHeader("Authorization") +" Host: " +request.getHeader("Host"));
+    System.out.println(
+        "Request: "
+            + request.getRequestURI()
+            + " Header: A "
+            + request.getHeader("Authorization")
+            + " Host: "
+            + request.getHeader("Host"));
 
     final String authorizationHeader = request.getHeader("Authorization");
     final String jwt;
@@ -42,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     } else {
       jwt = authorizationHeader.substring(7);
       username = jwtService.extractUsername(jwt);
-      //response.addHeader("Access-Control-Allow-Origin", "http://localhost");
+      // response.addHeader("Access-Control-Allow-Origin", "http://localhost");
 
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
