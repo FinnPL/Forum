@@ -108,5 +108,5 @@ sudo docker build -t forum .
 Run Docker Image
 
 ```
- sudo docker run -p 8080:8080 --network="host" forum
+ sudo docker run -p 8080:8080 --network="host" --restart always forum
 ```
