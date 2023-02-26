@@ -14,6 +14,8 @@ import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -27,24 +29,31 @@ public class PostController {
 
   private final PostService postService;
   private final UserService userService;
+  Logger logger = LoggerFactory.getLogger(PostController.class);
 
   @PostMapping(path = "/add")
   public ResponseEntity<PostResponse> addPost(
       @RequestBody PostRequest postRequest, Principal principal) {
-    Post post =
-        Post.builder()
-            .title(postRequest.getTitle())
-            .content(postRequest.getContent())
-            .user(userService.findbyUsername(principal.getName()).orElseThrow())
-            .build();
+    logger.info("Adding post with title: " + postRequest.getTitle());
+    try {
+      Post post =
+              Post.builder()
+                      .title(postRequest.getTitle())
+                      .content(postRequest.getContent())
+                      .user(userService.findbyUsername(principal.getName()).orElseThrow())
+                      .build();
 
-    postService.addPost(post);
-    URI uri =
-        URI.create(
-            ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v1/post/add")
-                .toUriString());
-    return ResponseEntity.created(uri).body(new PostResponse().convert(post));
+      postService.addPost(post);
+      URI uri =
+              URI.create(
+                      ServletUriComponentsBuilder.fromCurrentContextPath()
+                              .path("/api/v1/post/add")
+                              .toUriString());
+      return ResponseEntity.created(uri).body(new PostResponse().convert(post));
+    } catch (Exception e) {
+      logger.error("Error adding post" + e.getMessage());
+    }
+    return ResponseEntity.badRequest().build();
   }
 
   @GetMapping(path = "/{id}")
@@ -63,6 +72,8 @@ public class PostController {
 
   @DeleteMapping(path = "del/{id}")
   public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id, Principal principal) {
+    logger.info("Deleting post with id: " + id);
+    try {
     Post post = postService.getPostById(id).orElseThrow();
     if (post.getUser().getUsername().equals(principal.getName())) {
       postService.deletePost(id);
@@ -70,6 +81,10 @@ public class PostController {
     } else {
       throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");
     }
+    } catch (Exception e) {
+      logger.error("Error deleting post" + e.getMessage());
+    }
+    return ResponseEntity.badRequest().build();
   }
 
   @PutMapping(path = "/{id}")
@@ -77,6 +92,8 @@ public class PostController {
       @PathVariable("id") UUID id,
       @Valid @NonNull @RequestBody PostRequest postRequest,
       Principal principal) {
+    logger.info("Updating post with id: " + id);
+    try {
     Post post = postService.getPostById(id).orElseThrow();
     if (post.getUser().getUsername().equals(principal.getName())) {
       post.setTitle(postRequest.getTitle());
@@ -86,6 +103,10 @@ public class PostController {
     } else {
       throw new ResponseStatusException(NOT_FOUND, "Can not update Post: \nPost not found");
     }
+    } catch (Exception e) {
+      logger.error("Error updating post" + e.getMessage());
+    }
+    return ResponseEntity.badRequest().build();
   }
 
   @GetMapping(path = "search/{query}/{page}")
@@ -95,11 +116,17 @@ public class PostController {
   }
 
   @GetMapping(path = "/user/{id}/{page}")
-  public List<PostResponse> getByUserByPage(
+  public ResponseEntity<List<PostResponse>> getByUserByPage(
       @PathVariable("id") UUID id, @PathVariable("page") int page) {
-    return new PostResponse()
+    try {
+    return ResponseEntity.ok().body(
+            new PostResponse()
         .convert(
-            postService.getPostsByUserByPage(userService.findUserById(id).orElseThrow(), page));
+            postService.getPostsByUserByPage(userService.findUserById(id).orElseThrow(), page)));
+    } catch (Exception e) {
+      logger.error("Error getting posts by user" + e.getMessage());
+    }
+    return ResponseEntity.badRequest().build();
   }
 
   @GetMapping(path = "/page/{page}")
