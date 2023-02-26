@@ -29,9 +29,6 @@ public class AuthenticationService {
   }
 
   public AuthenticationResponse register(RegisterRequest request) {
-    if (userRepository.findByUsername(request.getUser_name()).isPresent()) {
-      throw new RuntimeException("User already exists");
-    }
     var user =
         User.builder()
             .username(request.getUser_name())

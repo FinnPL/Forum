@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
   private final UserDetailsService userDetailsService;
+  Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
   @Override
   protected void doFilterInternal(
@@ -29,14 +32,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
-
-    System.out.println(
+      logger.info(
         "Request: "
             + request.getRequestURI()
-            + " Header: A "
+            + " Header Auth: "
             + request.getHeader("Authorization")
             + " Host: "
-            + request.getHeader("Host"));
+            + request.getHeader("Host")
+            + " Origin: "
+            + request.getHeader("Origin")
+            + " Referer: "
+            + request.getHeader("Referer")
+            + " User-Agent: "
+            + request.getHeader("User-Agent")
+            + " Accept: "
+            + request.getHeader("Accept")
+            + " Accept-Encoding: "
+            + request.getHeader("Accept-Encoding")
+            + " Accept-Language: "
+            + request.getHeader("Accept-Language")
+            + " Connection: "
+            + request.getHeader("Connection")
+            + " Cookie: "
+            + request.getHeader("Cookie")
+            + " Sec-Fetch-Dest: "
+            + request.getHeader("Sec-Fetch-Dest"));
 
     final String authorizationHeader = request.getHeader("Authorization");
     final String jwt;
@@ -47,8 +67,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     } else {
       jwt = authorizationHeader.substring(7);
       username = jwtService.extractUsername(jwt);
-      // response.addHeader("Access-Control-Allow-Origin", "http://localhost");
-
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
         if (jwtService.isTokenValid(jwt, userDetails)) {
