@@ -90,3 +90,23 @@ Run Forum.jar
 cd target/
 sudo java -jar Forum-0.0.1-SNAPSHOT.jar
 ```
+
+## Docker Setup
+
+Build
+
+```
+mvn package
+```
+
+Build Docker Image
+
+```
+sudo docker build -t forum .
+```
+
+Run Docker Image
+
+```
+ sudo docker run -p 8080:8080 --network="host" forum
+```
