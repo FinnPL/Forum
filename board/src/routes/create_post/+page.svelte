@@ -2,27 +2,52 @@
   import { Badge, Form, FormGroup, Input, Label } from "sveltestrap";
   import "bootstrap/dist/css/bootstrap.min.css";
   import { Button } from "sveltestrap";
-
+  import { token, cookie_name } from "../../lib/Login/login.js";
+  import { getCookie } from "../../lib/functions";
+  import { onMount } from "svelte";
   let post_title: string;
   let post_body: string;
-  let example_user_id = "8ddfeb74-2877-4a0d-8777-f4d7084981b3"
+  let tokenValue: string;
+  let cookie_name_value: string;
 
-  async function post() {
-
-    const res = await fetch('http://127.0.0.1:8080/api/v1/post/add', {
-			method: 'POST',
-      headers: {"Content-Type": "application/json"},
-			body: JSON.stringify({
-				title: post_title,
-				content: post_body,
-        user_id: example_user_id,
-			})
-		})
-    console.log(res.json())
-		return res.json()
-
+  async function checkLoggedIn() {
+    cookie_name_value = await getCookie("username");
+    cookie_name.set(cookie_name_value);
+    tokenValue = await getCookie("tokenValue");
+    token.set(tokenValue);
   }
 
+  onMount(async () => {
+    await checkLoggedIn();
+    await subStores();
+  });
+
+  async function subStores() {
+    token.subscribe((value: string) => {
+      tokenValue = value;
+      console.log(tokenValue);
+    });
+
+    cookie_name.subscribe((value: string) => {
+      cookie_name_value = value;
+      console.log(cookie_name_value);
+    });
+  }
+
+  async function post() {
+    const res = await fetch("http://127.0.0.1:8080/api/v1/post/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + tokenValue,
+      },
+      body: JSON.stringify({
+        title: post_title,
+        content: post_body,
+      }),
+    });
+    return res.json();
+  }
 </script>
 
 <div class="container">
