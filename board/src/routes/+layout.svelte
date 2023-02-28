@@ -1,24 +1,24 @@
 <script lang="ts">
   import "bootstrap/dist/css/bootstrap.min.css";
-
   import {
-    Collapse,
     Navbar,
-    NavbarToggler,
     NavbarBrand,
     Nav,
     NavItem,
     NavLink,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Container,
     Button,
   } from "sveltestrap";
+  import { own_user_id, token } from "../lib/Login/login";
+  let own_user_id_value: string;
+
+  own_user_id.subscribe((value: string) => {
+    own_user_id_value = value;
+  });
 
   function signOut() {
     console.log("test");
+    document.cookie = "tokenValue=undefined";
+    document.cookie = "username=undefined";
   }
 </script>
 
@@ -27,7 +27,7 @@
   <Nav class="ms-auto">
     {#if true}
       <NavItem>
-        <NavLink href={"/profile/" + "$currentUser.id"}>Profile</NavLink>
+        <NavLink href={"/profile/" + own_user_id_value}>Profile</NavLink>
       </NavItem>
       <NavItem>
         <NavLink href="/create_post">Create New Post</NavLink>
