@@ -6,25 +6,15 @@
     FormGroup,
     Input
   } from 'sveltestrap';
-  import { token } from "../../lib/Login/login.js"
-
 
   let input:string;
   let searchList:any = [];
   let page:number = 0
   let searchType:string
-  let tokenValue:string
-
-  token.subscribe((value: string) => {
-		tokenValue = value;
-	});
 
   async function search_post() {
     searchType = "Post"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page, {
-      method: "GET",
-      headers: { "Authorization": "Bearer "+ tokenValue}
-    })
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page)
     const data = await dataRes.json()
     searchList = data;
     console.log(searchList)
@@ -33,10 +23,7 @@
 
 async function search_user() {
   searchType = "User"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page, {
-      method: "GET",
-      headers: { "Authorization": "Bearer "+ tokenValue}
-    })
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page)
     const data = await dataRes.json()
     searchList = data;
     console.log(searchList)
@@ -108,5 +95,23 @@ async function search_user() {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-    }
+
+}
+.container {
+  padding: 10px 16px;
+  margin: 40px auto;
+  max-width: 800px;
+}
+
+.container h2 {
+  font-size: 20px;
+  color: #3538f1d0;
+  margin-bottom: 8px;
+}
+
+.container a {
+  text-decoration: none;
+  color: inherit;
+}
+
 </style>

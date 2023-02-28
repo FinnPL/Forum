@@ -1,39 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { token } from "../../lib/Login/login";
-  let postList: any = [];
-  let page: number = 0;
-  let tokenValue: string;
 
-  token.subscribe((value: string) => {
-    tokenValue = value;
-  });
+  let postList: any = [];
+  let page: number = 0
 
   async function getFirstPostList() {
-    const dataRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/post/page/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-    const data = await dataRes.json();
-
-    postList = data;
-    console.log(postList);
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/page/" + page)
+    const data = await dataRes.json()
+    
+    postList = data
   }
-
+  
   async function getPostList() {
-    const dataRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/post/page/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-    const data = await dataRes.json();
-
-    postList = postList.concat(data);
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/page/" + page)
+    const data = await dataRes.json()
+    
+    postList = postList.concat(data)
   }
 
   onMount(async () => {
@@ -51,24 +33,27 @@
   getFirstPostList();
 </script>
 
-{#if postList != undefined}
-  {#each postList as post (post.id)}
-    <div class="container">
-      <div class="alert alert-dark">
-        <a href={"/post/" + post.id}>
-          <h2>Title: {post.title}</h2>
-          <p2>Body: {post.content}</p2><br />
-          <br />
-          <p2>Created: {post.date}</p2><br />
-          <br />
-          <p>
-            <a href={"/profile/" + post.user_id}>Author: {post.user_name}</a>
-          </p>
-        </a>
-      </div>
+{#each postList as post (post.id)}
+
+
+  <div class="container">
+    <div class="alert alert-dark">
+      <a href={"/post/" + post.id}>
+        <h2>Title: {post.title}</h2>
+        <p2>Body: {post.content}</p2><br />
+        <br />
+        <p2>Created: {post.date}</p2><br />
+        <br />
+        <p>
+          <a href={"/profile/" + post.user_id}
+            >Author: {post.user_name}</a
+          >
+        </p>
+      </a>
     </div>
-  {/each}
-{/if}
+  </div>
+
+{/each}
 
 <style>
   .container {
