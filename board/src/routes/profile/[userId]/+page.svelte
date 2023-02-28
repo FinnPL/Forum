@@ -1,34 +1,74 @@
 <script lang="ts">
+  import { getCookie } from "$lib/functions";
   import { onMount } from "svelte";
+  import { token } from "../../../lib/Login/login";
   export let data: any;
   let postList: any = [];
   let page = 0;
-  let user_name:string
-  let user_id:string
-  console.log(data.userId)
+  let user_name: string;
+  let user_id: string;
+  let tokenValue: string;
+
+  async function checkLoggedIn() {
+    await subStores();
+
+    tokenValue = await getCookie("tokenValue");
+    token.set(tokenValue);
+  }
+
+  async function subStores() {
+    token.subscribe((value: string) => {
+      tokenValue = value;
+    });
+  }
+
+  onMount(async () => {
+    await checkLoggedIn();
+    await subStores();
+    getUserDetails();
+    getFirstPostList();
+  });
 
   async function getUserDetails() {
-    const fetchedDataRes:any = await fetch("http://127.0.0.1:8080/api/v1/user/" + data.userId)
-    const fetchedData = await fetchedDataRes.json()
-    
-    user_name = fetchedData.user_name
-    user_id = fetchedData.id
+    const fetchedDataRes: any = await fetch(
+      "http://127.0.0.1:8080/api/v1/user/" + data.userId,
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + tokenValue },
+      }
+    );
+    const fetchedData = await fetchedDataRes.json();
+    console.log(fetchedDataRes);
+    user_name = fetchedData.user_name;
+    user_id = fetchedData.id;
+    console.log(user_name);
   }
-  getUserDetails();
 
   async function getFirstPostList() {
-    const fetchedDataRes = await fetch("http://127.0.0.1:8080/api/v1/post/user/" + data.userId +"/"+ page)
-    const fetchedData = await fetchedDataRes.json()
-    
-    postList = fetchedData
+    const fetchedDataRes = await fetch(
+      "http://127.0.0.1:8080/api/v1/post/user/" + data.userId + "/" + page,
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + tokenValue },
+      }
+    );
+    const fetchedData = await fetchedDataRes.json();
+    postList = fetchedData;
+    console.log(postList);
   }
-  getFirstPostList()
 
   async function getPostList() {
-    const fetchedDataRes = await fetch("http://127.0.0.1:8080/api/v1/post/page/" + data.userId +"/"+ page)
-    const fetchedData = await fetchedDataRes.json()
-    
-    postList = postList.concat(fetchedData)
+    const fetchedDataRes = await fetch(
+      "http://127.0.0.1:8080/api/v1/post/page/" + data.userId + "/" + page,
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + tokenValue },
+      }
+    );
+    const fetchedData = await fetchedDataRes.json();
+    console.log(fetchedData);
+    postList = postList.concat(fetchedData);
+    console.log(postList);
   }
   onMount(async () => {
     window.onscroll = function (ev) {
@@ -50,26 +90,24 @@
   </div>
 </div>
 <div class="profilePostList">
-  {#each postList as post (post.id)}
-   {#if post.title != undefined}
-    <div class="container">
-      <div class="alert alert-dark">
-        <a href={"/post/" + post.id}>
-          <h2>Title: {post.title}</h2>
-          <p2>Body: {post.content}</p2><br />
-          <br />
-          <p2>Created: {post.date}</p2><br />
-          <br />
-          <p>
-            <a href={"/profile/" + post.user_id}
-              >Author: {post.date}</a
-            >
-          </p>
-        </a>
+  {#if postList[0] != undefined}
+    {#each postList as post (post.id)}
+      <div class="container">
+        <div class="alert alert-dark">
+          <a href={"/post/" + post.id}>
+            <h2>Title: {post.title}</h2>
+            <p2>Body: {post.content}</p2><br />
+            <br />
+            <p2>Created: {post.date}</p2><br />
+            <br />
+            <p>
+              <a href={"/profile/" + post.user_id}>Author: {post.date}</a>
+            </p>
+          </a>
+        </div>
       </div>
-    </div>
-    {/if}
-  {/each}
+    {/each}
+  {/if}
 </div>
 
 <style>
