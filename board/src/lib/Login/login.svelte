@@ -4,6 +4,7 @@
   import "bootstrap/dist/css/bootstrap.min.css";
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
+  import {ip} from "../const.js"
   let user_name: string;
   let password: string;
   let tokenValue: string;
@@ -20,7 +21,7 @@
   }
 
   async function signUp() {
-    const res = await fetch("http://127.0.0.1:8080/api/v1/auth/register", {
+    const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name, password }),
@@ -48,7 +49,7 @@
   }
 
   async function login() {
-    const res = await fetch("http://127.0.0.1:8080/api/v1/auth/authenticate", {
+    const res = await fetch(ip + "api/v1/auth/authenticate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name, password }),
@@ -75,7 +76,7 @@
       token.set(tokenValue);
       let nameValue = await getCookie("username");
       cookie_name.set(nameValue);
-      subStores();
+      await subStores();
     }
   });
 
@@ -89,23 +90,24 @@
       cookie_name_value = value;
       console.log(cookie_name_value);
     });
+    
   }
+
 </script>
 
-{#if cookie_name_value != undefined || cookie_name_value != "undefined"}
+{#if cookie_name_value != "undefined"}
   <div class="container">
     <h1>Eingeloggt als {cookie_name_value}</h1>
   </div>
 {/if}
 
-{#if cookie_name_value == undefined || cookie_name_value == "undefined"}
+{#if cookie_name_value == "undefined"}
   <div class="container">
     <form on:submit|preventDefault>
       <Input placeholder="Username" type="text" bind:value={user_name} />
-
       <Input placeholder="Password" type="password" bind:value={password} />
-      <Button on:click={signUp}>Sign Up</Button>
-      <Button on:click={login}>Login</Button>
+      <Button on:click={signUp} on:click={() => location.reload()} >Sign Up</Button>
+      <Button on:click={login} on:click={() => location.reload()} >Login</Button>
     </form>
   </div>
 {/if}

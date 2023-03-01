@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Badge, Form, FormGroup, Input, Label } from "sveltestrap";
+  import { Form, FormGroup, Input} from "sveltestrap";
   import "bootstrap/dist/css/bootstrap.min.css";
   import { Button } from "sveltestrap";
   import { token, cookie_name } from "../../lib/Login/login.js";
   import { getCookie } from "../../lib/functions";
   import { onMount } from "svelte";
+  import { ip } from "../../lib/const.js"
   let post_title: string;
   let post_body: string;
   let tokenValue: string;
@@ -35,7 +36,7 @@
   }
 
   async function post() {
-    const res = await fetch("http://127.0.0.1:8080/api/v1/post/add", {
+    const res = await fetch(ip + "api/v1/post/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
