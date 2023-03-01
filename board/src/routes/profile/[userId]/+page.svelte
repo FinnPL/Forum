@@ -2,12 +2,13 @@
   import { getCookie } from "$lib/functions";
   import { onMount } from "svelte";
   import { token } from "../../../lib/Login/login";
+  import { ip } from "../../../lib/const.js"
   export let data: any;
   let postList: any = [];
   let page = 0;
   let user_name: string;
-  let user_id: string;
   let tokenValue: string;
+
 
   async function checkLoggedIn() {
     await subStores();
@@ -31,7 +32,7 @@
 
   async function getUserDetails() {
     const fetchedDataRes: any = await fetch(
-      "http://127.0.0.1:8080/api/v1/user/" + data.userId,
+      ip + "api/v1/user/" + data.userId,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
@@ -40,13 +41,12 @@
     const fetchedData = await fetchedDataRes.json();
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
-    user_id = fetchedData.id;
     console.log(user_name);
   }
 
   async function getFirstPostList() {
     const fetchedDataRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/post/user/" + data.userId + "/" + page,
+      ip + "api/v1/post/user/" + data.userId + "/" + page,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
@@ -59,7 +59,7 @@
 
   async function getPostList() {
     const fetchedDataRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/post/page/" + data.userId + "/" + page,
+      ip + "api/v1/post/page/" + data.userId + "/" + page,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
@@ -86,7 +86,7 @@
 <div class="container">
   <div class="alert alert-dark">
     <h2>Username: {user_name}</h2>
-    <h2>Joined since: {user_id}</h2>
+
   </div>
 </div>
 <div class="profilePostList">

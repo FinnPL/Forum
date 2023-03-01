@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { token, cookie_name } from "../../../lib/Login/login";
   import { getCookie } from "../../../lib/functions";
+  import { ip } from "../../../lib/const.js"
   export let data: any;
 
   let tokenValue: string;
@@ -51,7 +52,7 @@
   async function getPost() {
     await subStores();
     const fetchedDataRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/post/" + thisID,
+      ip + "api/v1/post/" + thisID,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
@@ -68,7 +69,7 @@
   async function getFirstComments() {
     await subStores();
     const fetchedRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/comment/get/" + thisID + "/" + page,
+      ip + "api/v1/comment/get/" + thisID + "/" + page,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
@@ -82,7 +83,7 @@
   async function getComments() {
     await subStores();
     const fetchedRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/comment/get/" + thisID + "/" + page,
+      ip + "api/v1/comment/get/" + thisID + "/" + page,
       {
         method: "GET",
         headers: {
@@ -97,7 +98,7 @@
   }
 
   async function post_comment() {
-    const res = await fetch("http://127.0.0.1:8080/api/v1/comment/add/", {
+    const res = await fetch(ip + "api/v1/comment/add/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,6 +125,9 @@
     };
   });
 </script>
+
+
+
 
 <div class="container">
   <div class="alert alert-dark">
@@ -166,6 +170,8 @@
     </div>
   {/each}
 </div>
+
+
 
 <style>
   .container {

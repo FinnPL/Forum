@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
+  import { ip } from "../../lib/const.js"
   let postList: any = [];
   let page: number = 0;
   let tokenValue: string;
+
 
   token.subscribe((value: string) => {
     tokenValue = value;
@@ -11,7 +13,7 @@
 
   async function getFirstPostList() {
     const dataRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/post/page/" + page,
+      ip + "api/v1/post/page/" + page,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
@@ -20,12 +22,11 @@
     const data = await dataRes.json();
 
     postList = data;
-    console.log(postList);
   }
 
   async function getPostList() {
     const dataRes = await fetch(
-      "http://127.0.0.1:8080/api/v1/post/page/" + page,
+      ip + "api/v1/post/page/" + page,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
