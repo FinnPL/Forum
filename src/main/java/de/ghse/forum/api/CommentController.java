@@ -29,15 +29,17 @@ public class CommentController {
     logger.info("Adding comment to post with id: " + commentRequest.getPost_id());
     try {
 
-    commentService.addComment(
-        Comment.builder()
-            .content(commentRequest.getContent())
-            .user(userService.findbyUsername(principal.getName()).orElseThrow())
-            .post(
-                postService.getPostById(UUID.fromString(commentRequest.getPost_id())).orElseThrow())
-            .build());
+      commentService.addComment(
+          Comment.builder()
+              .content(commentRequest.getContent())
+              .user(userService.findbyUsername(principal.getName()).orElseThrow())
+              .post(
+                  postService
+                      .getPostById(UUID.fromString(commentRequest.getPost_id()))
+                      .orElseThrow())
+              .build());
     } catch (Exception e) {
-        logger.error("Error adding comment" +e.getMessage());
+      logger.error("Error adding comment" + e.getMessage());
     }
   }
 

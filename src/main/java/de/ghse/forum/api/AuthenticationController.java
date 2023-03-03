@@ -22,7 +22,7 @@ public class AuthenticationController {
   @PostMapping(path = "/register")
   public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
     if (userService.findbyUsername(request.getUser_name()).isPresent()) {
-        logger.error("User with username: " + request.getUser_name() + " already exists");
+      logger.error("User with username: " + request.getUser_name() + " already exists");
       return ResponseEntity.badRequest().build();
     }
     logger.info("Registering user with username: " + request.getUser_name());
