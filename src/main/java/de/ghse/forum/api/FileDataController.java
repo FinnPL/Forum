@@ -1,7 +1,10 @@
 package de.ghse.forum.api;
 
 import de.ghse.forum.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -19,15 +22,21 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FileDataController {
 
     private final UserService userService;
 
-    public static String directory = "./files/";
+    Logger logger = LoggerFactory.getLogger(CommentController.class);
+
+
+    @Value("${file.directory}")
+    private String directory;
 
     @PostMapping("/api/v1/file")
     public ResponseEntity<String> uploadFile(@RequestParam("file") List<MultipartFile> files) throws IOException {
+        logger.info("File upload request received");
+
         if (createDirectory()) return ResponseEntity.badRequest().body("Could not create directory");
 
         for (MultipartFile file : files) {
@@ -54,7 +63,7 @@ public class FileDataController {
     public boolean createDirectory() {
         boolean directoryExists = new File(directory).exists();
 
-        if (!directoryExists) directoryExists = new File(FileDataController.directory).mkdir();
+        if (!directoryExists) directoryExists = new File(directory).mkdir();
 
         return !directoryExists;
     }
