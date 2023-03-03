@@ -20,10 +20,11 @@ public class UserController {
   @GetMapping(path = "{id}")
   public ResponseEntity<UserResponse> getUser(@PathVariable("id") UUID id) {
     try {
-    return ResponseEntity.ok().body( new UserResponse().convert(userService.findUserById(id).orElseThrow()));
+      return ResponseEntity.ok()
+          .body(new UserResponse().convert(userService.findUserById(id).orElseThrow()));
     } catch (Exception e) {
-        logger.error("User with id: " + id + " not found");
-        return ResponseEntity.notFound().build();
+      logger.error("User with id: " + id + " not found");
+      return ResponseEntity.notFound().build();
     }
   }
 

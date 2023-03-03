@@ -24,8 +24,8 @@ public class JwtService {
 
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
     try {
-    final Claims claims = extractAllClaims(token);
-    return claimsResolver.apply(claims);
+      final Claims claims = extractAllClaims(token);
+      return claimsResolver.apply(claims);
     } catch (Exception e) {
       throw new RuntimeException("Invalid token");
     }
