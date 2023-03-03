@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+/files/
+
 ### STS ###
 .apt_generated
 .classpath
@@ -34,6 +36,5 @@ build/
 
 ### Front End ###
 /frontEnd/node_modules
-
 
 
