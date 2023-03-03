@@ -1,5 +1,7 @@
 package de.ghse.forum.api;
 
+import de.ghse.forum.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -13,20 +15,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class FileDataController {
+
+    private final UserService userService;
 
     public static String directory = "./files/";
 
     @PostMapping("/api/v1/file")
     public ResponseEntity<String> uploadFile(@RequestParam("file") List<MultipartFile> files) throws IOException {
-        boolean directoryExists = new File(directory).exists();
-
-        if (!directoryExists) directoryExists = new File(FileDataController.directory).mkdir();
-
-        if (!directoryExists) return ResponseEntity.badRequest().body("Directory could not be created");
+        if (createDirectory()) return ResponseEntity.badRequest().body("Could not create directory");
 
         for (MultipartFile file : files) {
             file.transferTo(Paths.get(directory, System.currentTimeMillis() + "_" + file.getOriginalFilename()));
@@ -34,6 +36,29 @@ public class FileDataController {
         return ResponseEntity.ok().body("File(s) uploaded successfully");
 
     }
+
+    @PostMapping("/api/v1/file/profile")
+    public ResponseEntity<String> uploadProfilePicture(@RequestParam("file") MultipartFile file, Principal principal) throws IOException {
+
+        if (file.getContentType() != null && !file.getContentType().startsWith("image/"))
+            return ResponseEntity.badRequest().body("File type not supported");
+
+        if (createDirectory()) return ResponseEntity.badRequest().body("Could not create directory");
+
+        file.transferTo(Paths.get(directory, userService.findbyUsername(principal.getName()).orElseThrow().getId().toString() + "." + file.getContentType().split("/")[1].toLowerCase()));
+
+        return ResponseEntity.ok().body("File(s) uploaded successfully");
+
+    }
+
+    public boolean createDirectory() {
+        boolean directoryExists = new File(directory).exists();
+
+        if (!directoryExists) directoryExists = new File(FileDataController.directory).mkdir();
+
+        return !directoryExists;
+    }
+
 
     @GetMapping("/api/v1/file")
     public ResponseEntity<ByteArrayResource> loadFile(@RequestParam("file") String file) throws IOException {
