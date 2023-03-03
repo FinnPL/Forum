@@ -7,13 +7,12 @@ import de.ghse.forum.api.response.PostResponse;
 import de.ghse.forum.model.Post;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,18 +37,18 @@ public class PostController {
     logger.info("Adding post with title: " + postRequest.getTitle());
     try {
       Post post =
-              Post.builder()
-                      .title(postRequest.getTitle())
-                      .content(postRequest.getContent())
-                      .user(userService.findbyUsername(principal.getName()).orElseThrow())
-                      .build();
+          Post.builder()
+              .title(postRequest.getTitle())
+              .content(postRequest.getContent())
+              .user(userService.findbyUsername(principal.getName()).orElseThrow())
+              .build();
 
       postService.addPost(post);
       URI uri =
-              URI.create(
-                      ServletUriComponentsBuilder.fromCurrentContextPath()
-                              .path("/api/v1/post/add")
-                              .toUriString());
+          URI.create(
+              ServletUriComponentsBuilder.fromCurrentContextPath()
+                  .path("/api/v1/post/add")
+                  .toUriString());
       return ResponseEntity.created(uri).body(new PostResponse().convert(post));
     } catch (Exception e) {
       logger.error("Error adding post" + e.getMessage());
@@ -75,13 +74,13 @@ public class PostController {
   public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id, Principal principal) {
     logger.info("Deleting post with id: " + id);
     try {
-    Post post = postService.getPostById(id).orElseThrow();
-    if (post.getUser().getUsername().equals(principal.getName())) {
-      postService.deletePost(id);
-      return ResponseEntity.ok().body(new PostResponse().convert(post));
-    } else {
-      throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");
-    }
+      Post post = postService.getPostById(id).orElseThrow();
+      if (post.getUser().getUsername().equals(principal.getName())) {
+        postService.deletePost(id);
+        return ResponseEntity.ok().body(new PostResponse().convert(post));
+      } else {
+        throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");
+      }
     } catch (Exception e) {
       logger.error("Error deleting post" + e.getMessage());
     }
@@ -95,15 +94,15 @@ public class PostController {
       Principal principal) {
     logger.info("Updating post with id: " + id);
     try {
-    Post post = postService.getPostById(id).orElseThrow();
-    if (post.getUser().getUsername().equals(principal.getName())) {
-      post.setTitle(postRequest.getTitle());
-      post.setContent(postRequest.getContent());
-      postService.updatePost(id, post);
-      return ResponseEntity.ok().body(new PostResponse().convert(post));
-    } else {
-      throw new ResponseStatusException(NOT_FOUND, "Can not update Post: \nPost not found");
-    }
+      Post post = postService.getPostById(id).orElseThrow();
+      if (post.getUser().getUsername().equals(principal.getName())) {
+        post.setTitle(postRequest.getTitle());
+        post.setContent(postRequest.getContent());
+        postService.updatePost(id, post);
+        return ResponseEntity.ok().body(new PostResponse().convert(post));
+      } else {
+        throw new ResponseStatusException(NOT_FOUND, "Can not update Post: \nPost not found");
+      }
     } catch (Exception e) {
       logger.error("Error updating post" + e.getMessage());
     }
@@ -112,7 +111,7 @@ public class PostController {
 
   @GetMapping(path = "search/{query}/{page}")
   public List<PostResponse> search(
-          @NotBlank @PathVariable("query") String query, @PathVariable("page") int page) {
+      @NotBlank @PathVariable("query") String query, @PathVariable("page") int page) {
     return new PostResponse().convert(postService.getSearchPage(query, page));
   }
 
@@ -120,10 +119,12 @@ public class PostController {
   public ResponseEntity<List<PostResponse>> getByUserByPage(
       @PathVariable("id") UUID id, @PathVariable("page") int page) {
     try {
-    return ResponseEntity.ok().body(
-            new PostResponse()
-        .convert(
-            postService.getPostsByUserByPage(userService.findUserById(id).orElseThrow(), page)));
+      return ResponseEntity.ok()
+          .body(
+              new PostResponse()
+                  .convert(
+                      postService.getPostsByUserByPage(
+                          userService.findUserById(id).orElseThrow(), page)));
     } catch (Exception e) {
       logger.error("Error getting posts by user" + e.getMessage());
     }

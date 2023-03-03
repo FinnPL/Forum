@@ -1,11 +1,10 @@
 package de.ghse.forum.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.UUID;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,8 +32,7 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @NotBlank
-  private String title;
+  @NotBlank private String title;
 
   @NotBlank private String content;
 
