@@ -3,7 +3,7 @@ package de.ghse.forum.model;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

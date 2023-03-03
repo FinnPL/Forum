@@ -11,8 +11,9 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +112,7 @@ public class PostController {
 
   @GetMapping(path = "search/{query}/{page}")
   public List<PostResponse> search(
-      @NotBlank @PathVariable("query") String query, @PathVariable("page") int page) {
+          @NotBlank @PathVariable("query") String query, @PathVariable("page") int page) {
     return new PostResponse().convert(postService.getSearchPage(query, page));
   }
 

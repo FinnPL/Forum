@@ -2,8 +2,8 @@ package de.ghse.forum.model;
 
 import java.sql.Timestamp;
 import java.util.UUID;
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
