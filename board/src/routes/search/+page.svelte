@@ -1,33 +1,97 @@
 <script lang="ts">
     import 'bootstrap/dist/css/bootstrap.min.css';
+  import { onMount } from 'svelte';
     import {
+      Alert,
     Button,
     Form,
     FormGroup,
     Input
   } from 'sveltestrap';
+  import { token } from "../../lib/Login/login.js"
+
 
   let input:string;
   let searchList:any = [];
   let page:number = 0
   let searchType:string
+  let tokenValue:string
+
+  token.subscribe((value: string) => {
+		tokenValue = value;
+	});
 
   async function search_post() {
     searchType = "Post"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page)
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page, {
+      method: "GET",
+      headers: { "Authorization": "Bearer "+ tokenValue}
+    })
+    const data = await dataRes.json()
+    searchList = searchList.concat(data)
+    
+    console.log(searchList)
+  }
+  async function first_search_post() {
+    searchType = "Post"
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page, {
+      method: "GET",
+      headers: { "Authorization": "Bearer "+ tokenValue}
+    })
     const data = await dataRes.json()
     searchList = data;
+    if(searchList.length == 0) {
+      searchList[0] = "keinErgebnis"
+    }
     console.log(searchList)
   }
   
 
 async function search_user() {
   searchType = "User"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page)
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page, {
+      method: "GET",
+      headers: { "Authorization": "Bearer "+ tokenValue}
+    })
     const data = await dataRes.json()
-    searchList = data;
+    searchList = searchList.concat(data)
     console.log(searchList)
 }
+async function first_search_user() {
+  searchType = "User"
+    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page, {
+      method: "GET",
+      headers: { "Authorization": "Bearer "+ tokenValue}
+    })
+    const data = await dataRes.json()
+    searchList = data;
+    if(searchList.length == 0) {
+      searchList[0] = "keinErgebnis"
+    }
+    console.log(searchList)
+}
+onMount(async () => {
+    window.onscroll = function (ev) {
+      if (
+        window.innerHeight + window.pageYOffset >=
+        document.body.offsetHeight
+      ) {
+        
+        if(searchType == "Post" ) {
+          page += 1;
+          search_post()
+        }
+        if(searchType == "User" ) {
+          page += 1;
+          search_user()
+        }
+      }
+    };
+  });
+
+  async function resetPage() {
+    page = 0
+  }
 
 </script>
 
@@ -36,29 +100,40 @@ async function search_user() {
 
 <h1>Suche</h1>
 
+
+
 <Form>
     <FormGroup floating label="Gib hier Suchwörter ein">
       <Input required bind:value={input} />
     </FormGroup>
     
+    
     {#if input } 
-    <Button on:click={search_post}> Search Post </Button>
-    <Button on:click={search_user}> Search User </Button>
+    <Button on:click={resetPage} on:click={first_search_post} > Search Post </Button>
+    <Button on:click={resetPage} on:click={first_search_user}> Search User </Button>
     {:else}
     <div class="alert alert-info" role="alert">
       Suchfeld darf nicht leer sein!
     </div>
-    
+  
 
     {/if}
+    <div class="container">
+    {#if searchList[0] == "keinErgebnis"}
+    <div class="alert alert-warning" role="alert">
+      Kein Ergebnis 
+    </div>
+    
+  {/if}
+
 </Form>
 <br />
 
 
-{#if searchType=="Post"}
+{#if searchType=="Post" && searchList[0] != "keinErgebnis"}
 
   {#each searchList as post (post.id)}
-  <div class="alert alert-dark" role="alert">
+  <div class="alert alert-primary" role="alert">
   
       <a href={"/post/" + post.id }>
       <h2> Title: {post.title}</h2>
@@ -74,44 +149,29 @@ async function search_user() {
 {/if}
 
 
-{#if searchType=="User"}
+{#if searchType=="User" && searchList[0] != "keinErgebnis"}
   
+
   {#each searchList as user (user.id)}
+  <div class="alert alert-primary " role="alert">
   <a href={"/profile/" + user.id }> <br>
   <h2>Username: {user.user_name} </h2>
   </a>
-
-
+  </div>
   {/each}
 
 {/if}
+
+
 
 </div>
 </div>
 
 <style>
-    .container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-
-}
-.container {
-  padding: 10px 16px;
-  margin: 40px auto;
-  max-width: 800px;
-}
-
-.container h2 {
-  font-size: 20px;
-  color: #3538f1d0;
-  margin-bottom: 8px;
-}
-
-.container a {
-  text-decoration: none;
-  color: inherit;
-}
-
+  .container {
+max-width: 700px;
+margin: 0 auto;
+padding: 2rem;
+text-align: center;
+  }
 </style>

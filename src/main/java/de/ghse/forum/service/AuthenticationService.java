@@ -25,13 +25,13 @@ public class AuthenticationService {
         new UsernamePasswordAuthenticationToken(request.getUser_name(), request.getPassword()));
     var user = userRepository.findByUsername(request.getUser_name()).orElseThrow();
     var jwtToken = jwtService.generateToken(user);
-    return AuthenticationResponse.builder().token(jwtToken).build();
+    return AuthenticationResponse.builder()
+        .token(jwtToken)
+        .user_id(user.getId().toString())
+        .build();
   }
 
   public AuthenticationResponse register(RegisterRequest request) {
-    if (userRepository.findByUsername(request.getUser_name()).isPresent()) {
-      throw new RuntimeException("User already exists");
-    }
     var user =
         User.builder()
             .username(request.getUser_name())
@@ -40,6 +40,9 @@ public class AuthenticationService {
             .build();
     userRepository.save(user);
     var jwtToken = jwtService.generateToken(user);
-    return AuthenticationResponse.builder().token(jwtToken).build();
+    return AuthenticationResponse.builder()
+        .token(jwtToken)
+        .user_id(user.getId().toString())
+        .build();
   }
 }

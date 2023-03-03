@@ -23,8 +23,12 @@ public class JwtService {
   }
 
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
-    return claimsResolver.apply(claims);
+    try {
+      final Claims claims = extractAllClaims(token);
+      return claimsResolver.apply(claims);
+    } catch (Exception e) {
+      throw new RuntimeException("Invalid token");
+    }
   }
 
   public String generateToken(UserDetails userDetails) {
@@ -36,7 +40,7 @@ public class JwtService {
         .setClaims(extraClaims)
         .setSubject(userDetails.getUsername())
         .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
         .signWith(getSignInKey(), SignatureAlgorithm.HS256)
         .compact();
   }
