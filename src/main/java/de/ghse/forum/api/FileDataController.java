@@ -68,6 +68,7 @@ public class FileDataController {
         return !directoryExists;
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/api/v1/file/profile/{id}")
     public ResponseEntity<ByteArrayResource> loadProfilePicture(@PathVariable("id") String id) throws IOException {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -81,7 +82,7 @@ public class FileDataController {
         return ResponseEntity.ok().headers(httpHeaders).body(new ByteArrayResource(Files.readAllBytes(Paths.get(files[0].getAbsolutePath()))));
     }
 
-
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/api/v1/file")
     public ResponseEntity<ByteArrayResource> loadFile(@RequestParam("file") String file) throws IOException {
         HttpHeaders httpHeaders = new HttpHeaders();
