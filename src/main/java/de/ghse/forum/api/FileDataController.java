@@ -68,11 +68,22 @@ public class FileDataController {
         return !directoryExists;
     }
 
+    @GetMapping("/api/v1/file/profile/{id}")
+    public ResponseEntity<ByteArrayResource> loadProfilePicture(@PathVariable("id") String id) throws IOException {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        File[] files = new File(directory).listFiles((dir, name) -> name.startsWith(id));
+        if (files == null || files.length != 1) return ResponseEntity.notFound().build();
+        httpHeaders.setContentType(MediaType.parseMediaType(Files.probeContentType(Path.of(files[0].getAbsolutePath()))));
+        httpHeaders.setContentDisposition(ContentDisposition.parse(ContentDisposition.attachment().filename(files[0].getName()).build().toString()));
+        httpHeaders.setCacheControl("max-age=36000");
+
+        return ResponseEntity.ok().headers(httpHeaders).body(new ByteArrayResource(Files.readAllBytes(Paths.get(files[0].getAbsolutePath()))));
+    }
+
 
     @GetMapping("/api/v1/file")
     public ResponseEntity<ByteArrayResource> loadFile(@RequestParam("file") String file) throws IOException {
         HttpHeaders httpHeaders = new HttpHeaders();
-
         httpHeaders.setContentType(MediaType.parseMediaType(Files.probeContentType(Path.of(directory + file))));
         httpHeaders.setContentDisposition(ContentDisposition.parse(ContentDisposition.attachment().filename(file).build().toString()));
         httpHeaders.setCacheControl("max-age=36000");
