@@ -76,6 +76,7 @@ public class FileDataController {
         httpHeaders.setContentType(MediaType.parseMediaType(Files.probeContentType(Path.of(files[0].getAbsolutePath()))));
         httpHeaders.setContentDisposition(ContentDisposition.parse(ContentDisposition.attachment().filename(files[0].getName()).build().toString()));
         httpHeaders.setCacheControl("max-age=36000");
+        httpHeaders.setAccessControlAllowOrigin("*");
 
         return ResponseEntity.ok().headers(httpHeaders).body(new ByteArrayResource(Files.readAllBytes(Paths.get(files[0].getAbsolutePath()))));
     }
@@ -87,6 +88,7 @@ public class FileDataController {
         httpHeaders.setContentType(MediaType.parseMediaType(Files.probeContentType(Path.of(directory + file))));
         httpHeaders.setContentDisposition(ContentDisposition.parse(ContentDisposition.attachment().filename(file).build().toString()));
         httpHeaders.setCacheControl("max-age=36000");
+        httpHeaders.setAccessControlAllowOrigin("*");
 
         return ResponseEntity.ok().headers(httpHeaders).body(new ByteArrayResource(Files.readAllBytes(Paths.get(directory, file))));
     }
