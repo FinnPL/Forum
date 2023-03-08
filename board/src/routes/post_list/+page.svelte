@@ -38,7 +38,7 @@
   }
 
   onMount(async () => {
-    window.onscroll = function (ev) {
+    window.onscroll = function () {
       if (
         window.innerHeight + window.pageYOffset >=
         document.body.offsetHeight
@@ -57,13 +57,13 @@
     <div class="container">
       <div class="alert alert-dark">
         <a href={"/post/" + post.id}>
-          <h2>Title: {post.title}</h2>
-          <p2>Body: {post.content}</p2><br />
+          <h2>{post.title}</h2>
+          <p2>{post.content}</p2><br />
           <br />
-          <p2>Created: {post.date}</p2><br />
+          <p2>Datum: {post.date}</p2><br />
           <br />
           <p>
-            <a href={"/profile/" + post.user_id}>Author: {post.user_name}</a>
+            <a href={"/profile/" + post.user_id}>Autor: {post.user_name}</a>
           </p>
         </a>
       </div>
