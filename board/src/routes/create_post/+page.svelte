@@ -6,10 +6,12 @@
   import { getCookie } from "../../lib/functions";
   import { onMount } from "svelte";
   import { ip } from "../../lib/const.js"
+  import  Error  from "../../lib/Error/error.svelte"
   let post_title: string;
   let post_body: string;
   let tokenValue: string;
   let cookie_name_value: string;
+  let error = false;
 
   async function checkLoggedIn() {
     cookie_name_value = await getCookie("username");
@@ -36,6 +38,7 @@
   }
 
   async function post() {
+    error = false;
     const res = await fetch(ip + "api/v1/post/add", {
       method: "POST",
       headers: {
@@ -47,9 +50,17 @@
         content: post_body,
       }),
     });
+    if (!res.ok) {
+      error = true;
+    }
     return res.json();
   }
 </script>
+
+{#if error}
+<Error></Error>
+
+{/if}
 
 <div class="container">
   <div class="alert alert-dark" role="alert">
@@ -71,7 +82,7 @@
         </div>
       </FormGroup>
 
-      <Button on:click={post}>Post</Button>
+      <Button color="primary" on:click={post}>Post</Button>
     </Form>
   </div>
 </div>
