@@ -32,35 +32,34 @@ public class AuthenticationControllerTest {
             .build();
 
     ResponseEntity<AuthenticationResponse> response =
-        restTemplate.postForEntity("/api/v1/auth/register", authenticationRequest, AuthenticationResponse.class);
+        restTemplate.postForEntity(
+            "/api/v1/auth/register", authenticationRequest, AuthenticationResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody().getUser_id()).isNotNull();
     assertThat(response.getBody().getToken()).isNotNull();
   }
 
-    @Test
-    public void login() {
-      String password =new Faker().internet().password();
-        User user =
-            User.builder()
-                .username(new Faker().name().username())
-                .password(passwordEncoder.encode(password))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
+  @Test
+  public void login() {
+    String password = new Faker().internet().password();
+    User user =
+        User.builder()
+            .username(new Faker().name().username())
+            .password(passwordEncoder.encode(password))
+            .role(Role.USER)
+            .build();
+    userRepository.save(user);
 
-        AuthenticationRequest authenticationRequest =
-            AuthenticationRequest.builder()
-                .user_name(user.getUsername())
-                .password(password)
-                .build();
+    AuthenticationRequest authenticationRequest =
+        AuthenticationRequest.builder().user_name(user.getUsername()).password(password).build();
 
-        ResponseEntity<AuthenticationResponse> response =
-            restTemplate.postForEntity("/api/v1/auth/authenticate", authenticationRequest, AuthenticationResponse.class);
+    ResponseEntity<AuthenticationResponse> response =
+        restTemplate.postForEntity(
+            "/api/v1/auth/authenticate", authenticationRequest, AuthenticationResponse.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getUser_id()).isNotNull();
-        assertThat(response.getBody().getToken()).isNotNull();
-    }
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody().getUser_id()).isNotNull();
+    assertThat(response.getBody().getToken()).isNotNull();
+  }
 }
