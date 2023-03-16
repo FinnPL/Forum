@@ -45,7 +45,7 @@ public class PostControllerTest {
     PostRequest postRequest =
         PostRequest.builder()
             .title(new Faker().book().title())
-            .content(new Faker().yoda().quote())
+            .content(new Faker().yoda().quote().substring(0,20))
             .build();
 
     ResponseEntity<PostResponse> response =
@@ -55,6 +55,8 @@ public class PostControllerTest {
             new HttpEntity<>(postRequest, headers),
                 PostResponse.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(response.getBody().getTitle()).isEqualTo(postRequest.getTitle());
+    assertThat(response.getBody().getContent()).isEqualTo(postRequest.getContent());
 
     postRepository.delete(postRepository.findById(UUID.fromString(response.getBody().getId())).get());
     userRepository.delete(user);
@@ -64,7 +66,7 @@ public class PostControllerTest {
   public void deletePost(){
     User user = User.builder().username(new Faker().name().username()).password(new Faker().internet().password()).role(Role.USER).build();
     userRepository.save(user);
-    Post post = Post.builder().title(new Faker().book().title()).content(new Faker().yoda().quote()).user(user).build();
+    Post post = Post.builder().title(new Faker().book().title()).content(new Faker().yoda().quote().substring(0,20)).user(user).build();
     postRepository.save(post);
 
     String token = jwtService.generateToken(user);
@@ -82,4 +84,31 @@ public class PostControllerTest {
     userRepository.delete(user);
   }
 
+  @Test
+  public void updatePost(){
+    User user = User.builder().username(new Faker().name().username()).password(new Faker().internet().password()).role(Role.USER).build();
+    userRepository.save(user);
+    Post post = Post.builder().title(new Faker().book().title()).content(new Faker().yoda().quote()).user(user).build();
+    postRepository.save(post);
+    post.setTitle(new Faker().book().title());
+    post.setContent(new Faker().yoda().quote().substring(0,20));
+
+    String token = jwtService.generateToken(user);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Bearer " + token);
+
+    ResponseEntity<PostResponse> response =
+        restTemplate.exchange(
+            "/api/v1/post/" + post.getId(),
+            HttpMethod.PUT,
+            new HttpEntity<>(post, headers),
+            PostResponse.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody().getTitle()).isEqualTo(post.getTitle());
+    assertThat(response.getBody().getContent()).isEqualTo(post.getContent());
+
+    postRepository.delete(post);
+    userRepository.delete(user);
+  }
 }
