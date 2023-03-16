@@ -5,56 +5,62 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.javafaker.Faker;
 import de.ghse.forum.api.request.AuthenticationRequest;
 import de.ghse.forum.api.response.AuthenticationResponse;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
+import de.ghse.forum.model.Role;
+import de.ghse.forum.model.User;
+import de.ghse.forum.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthenticationControllerTest {
-  private static String username;
-  private static String password;
-
-  @BeforeAll
-  public static void setUp() {
-    Faker faker = new Faker();
-    username = faker.name().username();
-    password = faker.internet().password();
-  }
 
   @Autowired private TestRestTemplate restTemplate;
+  @Autowired private UserRepository userRepository;
+  @Autowired private PasswordEncoder passwordEncoder;
 
   @Test
-  @Order(1)
-  public void testRegisterAndAuth() {
-    // create a login request object with valid credentials
-    AuthenticationRequest loginRequest = new AuthenticationRequest();
-    loginRequest.setUser_name(username);
-    loginRequest.setPassword(password);
+  public void register() {
+    AuthenticationRequest authenticationRequest =
+        AuthenticationRequest.builder()
+            .user_name(new Faker().name().username())
+            .password(passwordEncoder.encode(new Faker().internet().password()))
+            .build();
 
-    // send the login request to the /api/auth/login endpoint
     ResponseEntity<AuthenticationResponse> response =
-        restTemplate.postForEntity(
-            "/api/v1/auth/register", loginRequest, AuthenticationResponse.class);
+        restTemplate.postForEntity("/api/v1/auth/register", authenticationRequest, AuthenticationResponse.class);
 
-    // assert that the response status code is 200 OK
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    // assert that the response body contains a non-null JWT token
-    assertThat(response.getBody().getToken()).isNotNull();
-
-    response =
-        restTemplate.postForEntity(
-            "/api/v1/auth/authenticate", loginRequest, AuthenticationResponse.class);
-
-    // assert that the response status code is 200 OK
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    // assert that the response body contains a non-null JWT token
+    assertThat(response.getBody().getUser_id()).isNotNull();
     assertThat(response.getBody().getToken()).isNotNull();
   }
+
+    @Test
+    public void login() {
+      String password =new Faker().internet().password();
+        User user =
+            User.builder()
+                .username(new Faker().name().username())
+                .password(passwordEncoder.encode(password))
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+
+        AuthenticationRequest authenticationRequest =
+            AuthenticationRequest.builder()
+                .user_name(user.getUsername())
+                .password(password)
+                .build();
+
+        ResponseEntity<AuthenticationResponse> response =
+            restTemplate.postForEntity("/api/v1/auth/authenticate", authenticationRequest, AuthenticationResponse.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getUser_id()).isNotNull();
+        assertThat(response.getBody().getToken()).isNotNull();
+    }
 }
