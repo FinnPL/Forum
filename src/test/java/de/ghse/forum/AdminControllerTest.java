@@ -1,4 +1,3 @@
 package de.ghse.forum;
 
-public class AdminControllerTest {
-}
+public class AdminControllerTest {}
