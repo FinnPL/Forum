@@ -3,6 +3,4 @@ package de.ghse.forum;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AdminControllerTest {
-
-}
+public class AdminControllerTest {}
