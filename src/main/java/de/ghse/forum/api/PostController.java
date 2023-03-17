@@ -82,7 +82,6 @@ public class PostController {
         throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");
       }
     } catch (Exception e) {
-      e.printStackTrace();
       logger.error("Error deleting post " + e.getMessage());
     }
     return ResponseEntity.badRequest().build();
