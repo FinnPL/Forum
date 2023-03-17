@@ -1,4 +1,5 @@
 package de.ghse.forum;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.javafaker.Faker;
@@ -11,7 +12,6 @@ import de.ghse.forum.repository.CommentRepository;
 import de.ghse.forum.repository.PostRepository;
 import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
-
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,64 +22,90 @@ import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTest {
-    @Autowired private UserRepository userRepository;
-    @Autowired private JwtService jwtService;
-    @Autowired private TestRestTemplate restTemplate;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private CommentRepository commentRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private JwtService jwtService;
+  @Autowired private TestRestTemplate restTemplate;
+  @Autowired private PostRepository postRepository;
+  @Autowired private CommentRepository commentRepository;
 
-    @Test
-    public void addComment(){
-        User user = User.builder()
-                .username(new Faker().name().username())
-                .password(new Faker().internet().password())
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-        String token = jwtService.generateToken(user);
+  @Test
+  public void addComment() {
+    User user =
+        User.builder()
+            .username(new Faker().name().username())
+            .password(new Faker().internet().password())
+            .role(Role.USER)
+            .build();
+    userRepository.save(user);
+    String token = jwtService.generateToken(user);
 
-        Post post = Post.builder().title(new Faker().book().title()).content(new Faker().book().title()).user(user).build();
-        postRepository.save(post);
-        String postId = post.getId().toString();
+    Post post =
+        Post.builder()
+            .title(new Faker().book().title())
+            .content(new Faker().book().title())
+            .user(user)
+            .build();
+    postRepository.save(post);
+    String postId = post.getId().toString();
 
-        CommentRequest commentRequest = CommentRequest.builder().content(new Faker().book().title()).post_id(postId).build();
+    CommentRequest commentRequest =
+        CommentRequest.builder().content(new Faker().book().title()).post_id(postId).build();
 
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            "/api/v1/comment/add/",
+            HttpMethod.POST,
+            new HttpEntity<>(commentRequest, headers),
+            String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(
+            commentRepository
+                .findCommentByPostByPage(UUID.fromString(postId), Pageable.ofSize(1))
+                .get(0)
+                .getContent())
+        .isEqualTo(commentRequest.getContent());
+    commentRepository.delete(
+        commentRepository
+            .findCommentByPostByPage(UUID.fromString(postId), Pageable.ofSize(1))
+            .get(0));
+  }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        ResponseEntity<String> response = restTemplate.exchange("/api/v1/comment/add/", HttpMethod.POST, new HttpEntity<>(commentRequest,headers), String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(commentRepository.findCommentByPostByPage(UUID.fromString(postId), Pageable.ofSize(1)).get(0).getContent()).isEqualTo(commentRequest.getContent());
-        commentRepository.delete(commentRepository.findCommentByPostByPage(UUID.fromString(postId), Pageable.ofSize(1)).get(0));
-    }
+  @Test
+  public void getComment() {
+    User user =
+        User.builder()
+            .username(new Faker().name().username())
+            .password(new Faker().internet().password())
+            .role(Role.USER)
+            .build();
+    userRepository.save(user);
+    String token = jwtService.generateToken(user);
 
-    @Test
-    public void getComment() {
-        User user = User.builder()
-                .username(new Faker().name().username())
-                .password(new Faker().internet().password())
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-        String token = jwtService.generateToken(user);
+    Post post =
+        Post.builder()
+            .title(new Faker().book().title())
+            .content(new Faker().book().title())
+            .user(user)
+            .build();
+    postRepository.save(post);
+    String postId = post.getId().toString();
 
-        Post post = Post.builder().title(new Faker().book().title()).content(new Faker().book().title()).user(user).build();
-        postRepository.save(post);
-        String postId = post.getId().toString();
+    Comment comment =
+        Comment.builder().content(new Faker().book().title()).user(user).post(post).build();
+    commentRepository.save(comment);
+    String commentId = comment.getId().toString();
 
-        Comment comment = Comment.builder().content(new Faker().book().title()).user(user).post(post).build();
-        commentRepository.save(comment);
-        String commentId = comment.getId().toString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange("/api/v1/comment/get/" +postId +"/0", HttpMethod.GET, entity, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains(commentId);
-        assertThat(response.getBody()).contains(user.getUsername());
-        commentRepository.delete(comment);
-    }
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            "/api/v1/comment/get/" + postId + "/0", HttpMethod.GET, entity, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).contains(commentId);
+    assertThat(response.getBody()).contains(user.getUsername());
+    commentRepository.delete(comment);
+  }
 }

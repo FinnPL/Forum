@@ -1,4 +1,5 @@
 package de.ghse.forum;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.javafaker.Faker;
@@ -16,45 +17,48 @@ import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
-    @Autowired private UserRepository userRepository;
-    @Autowired private JwtService jwtService;
-    @Autowired private TestRestTemplate restTemplate;
+  @Autowired private UserRepository userRepository;
+  @Autowired private JwtService jwtService;
+  @Autowired private TestRestTemplate restTemplate;
 
+  @Test
+  public void getUser() {
+    User user =
+        User.builder()
+            .username(new Faker().name().username())
+            .password(new Faker().internet().password())
+            .role(Role.USER)
+            .build();
+    userRepository.save(user);
+    String id = user.getId().toString();
+    String token = jwtService.generateToken(user);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+    ResponseEntity<UserResponse> response =
+        restTemplate.exchange("/api/v1/user/" + id, HttpMethod.GET, entity, UserResponse.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody().getUser_name()).isEqualTo(user.getUsername());
+    userRepository.delete(user);
+  }
 
-    @Test
-    public void getUser() {
-        User user = User.builder()
-                .username(new Faker().name().username())
-                .password(new Faker().internet().password())
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-        String id = user.getId().toString();
-        String token = jwtService.generateToken(user);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<UserResponse> response = restTemplate.exchange("/api/v1/user/" + id, HttpMethod.GET, entity, UserResponse.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getUser_name()).isEqualTo(user.getUsername());
-        userRepository.delete(user);
-    }
-
-    @Test
-    public void getUserWithWrongId() {
-        User user = User.builder()
-                .username(new Faker().name().username())
-                .password(new Faker().internet().password())
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
-        String id = UUID.randomUUID().toString();
-        String token = jwtService.generateToken(user);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<UserResponse> response = restTemplate.exchange("/api/v1/user/" + id, HttpMethod.GET, entity, UserResponse.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        userRepository.delete(user);
-    }
+  @Test
+  public void getUserWithWrongId() {
+    User user =
+        User.builder()
+            .username(new Faker().name().username())
+            .password(new Faker().internet().password())
+            .role(Role.USER)
+            .build();
+    userRepository.save(user);
+    String id = UUID.randomUUID().toString();
+    String token = jwtService.generateToken(user);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+    ResponseEntity<UserResponse> response =
+        restTemplate.exchange("/api/v1/user/" + id, HttpMethod.GET, entity, UserResponse.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    userRepository.delete(user);
+  }
 }
