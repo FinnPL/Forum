@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,54 +28,58 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+          HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
+          throws ServletException, IOException {
     logger.info(
-        "Request: "
-            + request.getRequestURI()
-            + " Header Auth: "
-            + request.getHeader("Authorization")
-            + " Host: "
-            + request.getHeader("Host")
-            + " Origin: "
-            + request.getHeader("Origin")
-            + " Referer: "
-            + request.getHeader("Referer")
-            + " User-Agent: "
-            + request.getHeader("User-Agent")
-            + " Accept: "
-            + request.getHeader("Accept")
-            + " Accept-Encoding: "
-            + request.getHeader("Accept-Encoding")
-            + " Accept-Language: "
-            + request.getHeader("Accept-Language")
-            + " Connection: "
-            + request.getHeader("Connection")
-            + " Cookie: "
-            + request.getHeader("Cookie")
-            + " Sec-Fetch-Dest: "
-            + request.getHeader("Sec-Fetch-Dest"));
+            "Request: "
+                    + request.getRequestURI()
+                    + " Header Auth: "
+                    + request.getHeader("Authorization")
+                    + " Host: "
+                    + request.getHeader("Host")
+                    + " Origin: "
+                    + request.getHeader("Origin")
+                    + " Referer: "
+                    + request.getHeader("Referer")
+                    + " User-Agent: "
+                    + request.getHeader("User-Agent")
+                    + " Accept: "
+                    + request.getHeader("Accept")
+                    + " Accept-Encoding: "
+                    + request.getHeader("Accept-Encoding")
+                    + " Accept-Language: "
+                    + request.getHeader("Accept-Language")
+                    + " Connection: "
+                    + request.getHeader("Connection")
+                    + " Cookie: "
+                    + request.getHeader("Cookie")
+                    + " Sec-Fetch-Dest: "
+                    + request.getHeader("Sec-Fetch-Dest"));
 
     final String authorizationHeader = request.getHeader("Authorization");
-    final String jwt;
-    final String username;
     if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
       filterChain.doFilter(request, response);
       return;
-    } else {
-      jwt = authorizationHeader.substring(7);
-      username = jwtService.extractUsername(jwt);
+    }
+    final String jwt = authorizationHeader.substring(7);
+    try {
+      final String username = jwtService.extractUsername(jwt);
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
         if (jwtService.isTokenValid(jwt, userDetails)) {
           UsernamePasswordAuthenticationToken authToken =
-              new UsernamePasswordAuthenticationToken(
-                  userDetails, null, userDetails.getAuthorities());
+                  new UsernamePasswordAuthenticationToken(
+                          userDetails, null, userDetails.getAuthorities());
           authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           SecurityContextHolder.getContext().setAuthentication(authToken);
+          logger.debug("User '{}' authenticated with JWT", username);
+        } else {
+          logger.warn("Invalid JWT token for user '{}'", username);
         }
       }
-      filterChain.doFilter(request, response);
+    } catch (Exception e) {
+      logger.error("Error during JWT authentication: {}", e.getMessage());
     }
+    filterChain.doFilter(request, response);
   }
 }
