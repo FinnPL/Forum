@@ -19,6 +19,7 @@ public class PostResponse {
   private String user_id;
   private String user_name;
   private String date;
+  private  boolean edited;
 
   public List<PostResponse> convert(List<Post> posts) {
     List<PostResponse> postResponses = new ArrayList<>();
@@ -36,6 +37,7 @@ public class PostResponse {
         .user_id(post.getUser().getId().toString())
         .user_name(post.getUser().getUsername())
         .date(post.getDate().toString())
+        .edited(post.isEdited())
         .build();
   }
 }

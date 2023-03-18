@@ -98,6 +98,7 @@ public class PostController {
       if (post.getUser().getUsername().equals(principal.getName())) {
         post.setTitle(postRequest.getTitle());
         post.setContent(postRequest.getContent());
+        post.setEdited(true);
         postService.updatePost(id, post);
         return ResponseEntity.ok().body(new PostResponse().convert(post));
       } else {
