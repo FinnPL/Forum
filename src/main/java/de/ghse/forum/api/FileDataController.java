@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 public class FileDataController {
 
-    public static String directory = "./files/";
+    private static final String directory = "./files/";
 
     @PostMapping("/api/v1/file")
     public ResponseEntity<String> uploadFile(@RequestParam("file") List<MultipartFile> files) throws IOException {
