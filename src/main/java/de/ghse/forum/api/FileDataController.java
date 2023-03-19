@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -53,9 +54,18 @@ public class FileDataController {
             return ResponseEntity.badRequest().body("File type not supported");
 
         if (createDirectory()) return ResponseEntity.badRequest().body("Could not create directory");
+        String id = userService.findbyUsername(principal.getName()).orElseThrow().getId().toString();
 
-        file.transferTo(Paths.get(directory, userService.findbyUsername(principal.getName()).orElseThrow().getId().toString() + "." + file.getContentType().split("/")[1].toLowerCase()));
-
+        file.transferTo(Paths.get(directory, id +"-" + new Timestamp(System.currentTimeMillis()) + "." + file.getContentType().split("/")[1].toLowerCase()));
+        //delete old profile picture
+        File[] files = new File(directory).listFiles((dir, name) -> name.startsWith(id));
+        if (files != null && files.length > 1) {
+            for (File f : files) {
+                if (!f.getName().equals(file.getOriginalFilename())) if(!f.delete()){
+                    logger.error("Could not delete file: " + f.getName());
+                }
+            }
+        }
         return ResponseEntity.ok().body("File(s) uploaded successfully");
 
     }
