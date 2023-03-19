@@ -17,14 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthenticationControllerTest {
+class AuthenticationControllerTest {
 
   @Autowired private TestRestTemplate restTemplate;
   @Autowired private UserRepository userRepository;
   @Autowired private PasswordEncoder passwordEncoder;
 
   @Test
-  public void register() {
+  void register() {
     AuthenticationRequest authenticationRequest =
         AuthenticationRequest.builder()
             .user_name(new Faker().name().username())
@@ -41,7 +41,7 @@ public class AuthenticationControllerTest {
   }
 
   @Test
-  public void login() {
+  void login() {
     String password = new Faker().internet().password();
     User user =
         User.builder()

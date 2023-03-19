@@ -17,7 +17,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AdminControllerTest {
+class AdminControllerTest {
 
   @Autowired private TestRestTemplate restTemplate;
   @Autowired private UserRepository userRepository;
@@ -25,7 +25,7 @@ public class AdminControllerTest {
   @Autowired private PostRepository postRepository;
 
   @Test
-  public void deletePostAsAdmin() {
+  void deletePostAsAdmin() {
     User user =
         User.builder()
             .username(new Faker().name().username())
@@ -64,7 +64,7 @@ public class AdminControllerTest {
   }
 
   @Test
-  public void deleteUserAsAdmin() {
+  void deleteUserAsAdmin() {
     User user =
         User.builder()
             .username(new Faker().name().username())

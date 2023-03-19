@@ -16,13 +16,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
+class UserControllerTest {
   @Autowired private UserRepository userRepository;
   @Autowired private JwtService jwtService;
   @Autowired private TestRestTemplate restTemplate;
 
   @Test
-  public void getUser() {
+  void getUser() {
     User user =
         User.builder()
             .username(new Faker().name().username())
@@ -43,7 +43,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void getUserWithWrongId() {
+  void getUserWithWrongId() {
     User user =
         User.builder()
             .username(new Faker().name().username())

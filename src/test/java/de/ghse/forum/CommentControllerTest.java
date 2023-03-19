@@ -21,7 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommentControllerTest {
+class CommentControllerTest {
   @Autowired private UserRepository userRepository;
   @Autowired private JwtService jwtService;
   @Autowired private TestRestTemplate restTemplate;
@@ -29,7 +29,7 @@ public class CommentControllerTest {
   @Autowired private CommentRepository commentRepository;
 
   @Test
-  public void addComment() {
+  void addComment() {
     User user =
         User.builder()
             .username(new Faker().name().username())
@@ -73,7 +73,7 @@ public class CommentControllerTest {
   }
 
   @Test
-  public void getComment() {
+  void getComment() {
     User user =
         User.builder()
             .username(new Faker().name().username())

@@ -19,7 +19,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostControllerTest {
+class PostControllerTest {
 
   @Autowired private TestRestTemplate restTemplate;
   @Autowired private UserRepository userRepository;
@@ -27,7 +27,7 @@ public class PostControllerTest {
   @Autowired private JwtService jwtService;
 
   @Test
-  public void addPost() {
+  void addPost() {
     User user =
         User.builder()
             .username(new Faker().name().username())
@@ -63,7 +63,7 @@ public class PostControllerTest {
   }
 
   @Test
-  public void deletePost() {
+  void deletePost() {
     User user =
         User.builder()
             .username(new Faker().name().username())
@@ -95,7 +95,7 @@ public class PostControllerTest {
   }
 
   @Test
-  public void updatePost() {
+  void updatePost() {
     User user =
         User.builder()
             .username(new Faker().name().username())
