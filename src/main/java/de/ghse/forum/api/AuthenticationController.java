@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
   private final AuthenticationService authenticationService;
   private final UserService userService;
-  Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+  final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
   @PostMapping(path = "/register")
   public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {

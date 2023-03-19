@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
 public class AdminController {
-  Logger logger = LoggerFactory.getLogger(AdminController.class);
+  final Logger logger = LoggerFactory.getLogger(AdminController.class);
   private final UserService userService;
   private final PostService postService;
 

@@ -8,6 +8,8 @@ import de.ghse.forum.model.Role;
 import de.ghse.forum.model.User;
 import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
+
+import java.util.Objects;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ class UserControllerTest {
     ResponseEntity<UserResponse> response =
         restTemplate.exchange("/api/v1/user/" + id, HttpMethod.GET, entity, UserResponse.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody().getUser_name()).isEqualTo(user.getUsername());
+    assertThat(Objects.requireNonNull(response.getBody()).getUser_name()).isEqualTo(user.getUsername());
     userRepository.delete(user);
   }
 

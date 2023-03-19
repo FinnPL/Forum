@@ -11,6 +11,8 @@ import de.ghse.forum.model.User;
 import de.ghse.forum.repository.PostRepository;
 import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
+
+import java.util.Objects;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +56,11 @@ class PostControllerTest {
             new HttpEntity<>(postRequest, headers),
             PostResponse.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    assertThat(response.getBody().getTitle()).isEqualTo(postRequest.getTitle());
+    assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo(postRequest.getTitle());
     assertThat(response.getBody().getContent()).isEqualTo(postRequest.getContent());
 
     postRepository.delete(
-        postRepository.findById(UUID.fromString(response.getBody().getId())).get());
+        postRepository.findById(UUID.fromString(response.getBody().getId())).orElseThrow());
     userRepository.delete(user);
   }
 
@@ -125,7 +127,7 @@ class PostControllerTest {
             new HttpEntity<>(post, headers),
             PostResponse.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody().getTitle()).isEqualTo(post.getTitle());
+    assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo(post.getTitle());
     assertThat(response.getBody().getContent()).isEqualTo(post.getContent());
 
     postRepository.delete(post);

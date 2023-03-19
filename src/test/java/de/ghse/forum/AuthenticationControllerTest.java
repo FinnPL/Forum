@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Objects;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthenticationControllerTest {
 
@@ -36,7 +38,7 @@ class AuthenticationControllerTest {
             "/api/v1/auth/register", authenticationRequest, AuthenticationResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody().getUser_id()).isNotNull();
+    assertThat(Objects.requireNonNull(response.getBody()).getUser_id()).isNotNull();
     assertThat(response.getBody().getToken()).isNotNull();
   }
 
@@ -59,7 +61,7 @@ class AuthenticationControllerTest {
             "/api/v1/auth/authenticate", authenticationRequest, AuthenticationResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody().getUser_id()).isNotNull();
+    assertThat(Objects.requireNonNull(response.getBody()).getUser_id()).isNotNull();
     assertThat(response.getBody().getToken()).isNotNull();
   }
 }

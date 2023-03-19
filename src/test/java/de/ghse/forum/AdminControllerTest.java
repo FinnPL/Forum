@@ -40,7 +40,6 @@ class AdminControllerTest {
             .user(user)
             .build();
     postRepository.save(post);
-    postRepository.save(post);
     String id = post.getId().toString();
 
     User adminUser =

@@ -29,7 +29,7 @@ public class PostController {
 
   private final PostService postService;
   private final UserService userService;
-  Logger logger = LoggerFactory.getLogger(PostController.class);
+  final Logger logger = LoggerFactory.getLogger(PostController.class);
 
   @PostMapping(path = "/add")
   public ResponseEntity<PostResponse> addPost(

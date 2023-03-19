@@ -22,7 +22,7 @@ public class CommentController {
   private final UserService userService;
   private final PostService postService;
 
-  Logger logger = LoggerFactory.getLogger(CommentController.class);
+  final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
   @PostMapping(path = "/add/")
   public void addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
