@@ -19,7 +19,7 @@ public class PostResponse {
   private String user_id;
   private String user_name;
   private String date;
-  private  boolean edited;
+  private boolean edited;
 
   public List<PostResponse> convert(List<Post> posts) {
     List<PostResponse> postResponses = new ArrayList<>();
