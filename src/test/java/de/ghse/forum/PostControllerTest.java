@@ -11,7 +11,6 @@ import de.ghse.forum.model.User;
 import de.ghse.forum.repository.PostRepository;
 import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
-
 import java.util.Objects;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -56,7 +55,8 @@ class PostControllerTest {
             new HttpEntity<>(postRequest, headers),
             PostResponse.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo(postRequest.getTitle());
+    assertThat(Objects.requireNonNull(response.getBody()).getTitle())
+        .isEqualTo(postRequest.getTitle());
     assertThat(response.getBody().getContent()).isEqualTo(postRequest.getContent());
 
     postRepository.delete(
