@@ -55,15 +55,16 @@ public class FileDataController {
 
         if (createDirectory()) return ResponseEntity.badRequest().body("Could not create directory");
         String id = userService.findbyUsername(principal.getName()).orElseThrow().getId().toString();
-        file.transferTo(Paths.get(directory, id +"-" + UUID.randomUUID() + "."+file.getContentType().split("/")[1].toLowerCase()));
         File[] files = new File(directory).listFiles((dir, name) -> name.startsWith(id));
-        if (files != null && files.length > 1) {
+
+        if(files != null && files.length >= 1) {
             for (File f : files) {
-                if (!f.getName().equals(file.getOriginalFilename())) if(!f.delete()){
-                    logger.error("Could not delete file: " + f.getName());
-                }
+                if(!f.delete()) logger.error("Could not delete file: " + f.getName());
             }
         }
+
+        file.transferTo(Paths.get(directory, id +"-" + UUID.randomUUID() + "."+file.getContentType().split("/")[1].toLowerCase()));
+
         return ResponseEntity.ok().body("File(s) uploaded successfully");
 
     }
