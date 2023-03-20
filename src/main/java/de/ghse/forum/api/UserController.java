@@ -2,6 +2,7 @@ package de.ghse.forum.api;
 
 import de.ghse.forum.api.response.UserResponse;
 import de.ghse.forum.service.UserService;
+import java.security.Principal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -32,5 +33,13 @@ public class UserController {
   public Iterable<UserResponse> search(
       @PathVariable("query") String query, @PathVariable("page") int page) {
     return new UserResponse().convert(userService.search(query, page));
+  }
+
+  @PutMapping(path = "update/{Bio}")
+  public ResponseEntity<UserResponse> updateUser(
+      @PathVariable("Bio") String bio, Principal principal) {
+    userService.updateUser(
+        bio, userService.findbyUsername(principal.getName()).orElseThrow().getId());
+    return ResponseEntity.ok().build();
   }
 }
