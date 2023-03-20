@@ -24,22 +24,22 @@
 </script>
 
 
-<Navbar color="light" light expand="md">
+<Navbar  >
   <NavbarBrand href="/">GHSE-Board</NavbarBrand>
   
   <Nav class="ms-auto">
     {#if own_user_id_value != undefined && own_user_id_value != "undefined"}
       <NavItem>
-        <NavLink href={"/profile/" + own_user_id_value}>Profile</NavLink>
+        <NavLink href={"/profile/" + own_user_id_value}>Profil</NavLink>
       </NavItem>
       <NavItem>
-        <NavLink href="/create_post">Create New Post</NavLink>
+        <NavLink href="/create_post">Post erstellen</NavLink>
       </NavItem>
     <NavItem>
-      <NavLink href="/search">Search</NavLink>
+      <NavLink href="/search">Suche</NavLink>
     </NavItem>
     <NavItem>
-        <Button on:click={signOut} on:click={() => location.reload()}>Sign Out</Button>
+        <Button color="primary" on:click={signOut} on:click={() => location.reload()}>Abmelden</Button>
     </NavItem>
   {/if}
   </Nav>

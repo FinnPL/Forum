@@ -44,4 +44,6 @@ public class Post {
   private Collection<Comment> comment;
 
   private final java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
+
+  private boolean edited = false;
 }

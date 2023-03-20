@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
-  Logger logger = LoggerFactory.getLogger(UserController.class);
+  final Logger logger = LoggerFactory.getLogger(UserController.class);
 
   @GetMapping(path = "{id}")
   public ResponseEntity<UserResponse> getUser(@PathVariable("id") UUID id) {

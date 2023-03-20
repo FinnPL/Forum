@@ -29,7 +29,7 @@ public class PostController {
 
   private final PostService postService;
   private final UserService userService;
-  Logger logger = LoggerFactory.getLogger(PostController.class);
+  final Logger logger = LoggerFactory.getLogger(PostController.class);
 
   @PostMapping(path = "/add")
   public ResponseEntity<PostResponse> addPost(
@@ -82,7 +82,7 @@ public class PostController {
         throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");
       }
     } catch (Exception e) {
-      logger.error("Error deleting post" + e.getMessage());
+      logger.error("Error deleting post " + e.getMessage());
     }
     return ResponseEntity.badRequest().build();
   }
@@ -98,6 +98,7 @@ public class PostController {
       if (post.getUser().getUsername().equals(principal.getName())) {
         post.setTitle(postRequest.getTitle());
         post.setContent(postRequest.getContent());
+        post.setEdited(true);
         postService.updatePost(id, post);
         return ResponseEntity.ok().body(new PostResponse().convert(post));
       } else {

@@ -109,10 +109,10 @@ onMount(async () => {
     
     
     {#if input } 
-    <Button on:click={resetPage} on:click={first_search_post} > Search Post </Button>
-    <Button on:click={resetPage} on:click={first_search_user}> Search User </Button>
+    <Button color="primary" on:click={resetPage} on:click={first_search_post} > Search Post </Button>
+    <Button color="primary" on:click={resetPage} on:click={first_search_user}> Search User </Button>
     {:else}
-    <div class="alert alert-info" role="alert">
+    <div class="alert alert-warning" role="alert">
       Suchfeld darf nicht leer sein!
     </div>
   
@@ -133,7 +133,7 @@ onMount(async () => {
 {#if searchType=="Post" && searchList[0] != "keinErgebnis"}
 
   {#each searchList as post (post.id)}
-  <div class="alert alert-primary" role="alert">
+  <div class="alert alert-secondary" role="alert">
   
       <a href={"/post/" + post.id }>
       <h2> Title: {post.title}</h2>
@@ -153,11 +153,13 @@ onMount(async () => {
   
 
   {#each searchList as user (user.id)}
-  <div class="alert alert-primary " role="alert">
+  <div class="resultlist">
+  <div class="alert alert-secondary " role="alert">
   <a href={"/profile/" + user.id }> <br>
   <h2>Username: {user.user_name} </h2>
   </a>
   </div>
+</div>
   {/each}
 
 {/if}
@@ -173,5 +175,9 @@ max-width: 700px;
 margin: 0 auto;
 padding: 2rem;
 text-align: center;
+  }
+  .resultlist a {
+    text-decoration: none;
+    color: inherit;
   }
 </style>

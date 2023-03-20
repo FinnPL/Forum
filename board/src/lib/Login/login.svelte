@@ -59,9 +59,15 @@
     token.subscribe((token: any) => {
       tokenValue = token;
     });
+    own_user_id.subscribe((temp: any) => {
+      own_user_id_value = temp;
+      console.log(tokenValue + "TTTTTTTTT");
+    });
+    own_user_id.set(data.user_id);
 
     document.cookie = "tokenValue=" + tokenValue;
     document.cookie = "username=" + user_name;
+    document.cookie = "userid=" + own_user_id_value;
 
     console.log("Der Cookie ist:" + document.cookie);
     token.set(tokenValue);
@@ -95,19 +101,19 @@
 
 </script>
 
-{#if cookie_name_value != "undefined"}
+{#if cookie_name_value != "undefined" || cookie_name_value != undefined}
   <div class="container">
     <h1>Eingeloggt als {cookie_name_value}</h1>
   </div>
 {/if}
 
-{#if cookie_name_value == "undefined"}
+{#if cookie_name_value == "undefined" || cookie_name_value == undefined}
   <div class="container">
     <form on:submit|preventDefault>
       <Input placeholder="Username" type="text" bind:value={user_name} />
       <Input placeholder="Password" type="password" bind:value={password} />
-      <Button on:click={signUp} on:click={() => location.reload()} >Sign Up</Button>
-      <Button on:click={login} on:click={() => location.reload()} >Login</Button>
+      <Button color="primary" on:click={signUp} on:click={() => location.reload()} >Sign Up</Button>
+      <Button color="primary" on:click={login} on:click={() => location.reload()} >Login</Button>
     </form>
   </div>
 {/if}
