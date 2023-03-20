@@ -45,7 +45,7 @@ public class UserService {
     UserRepository.deleteById(id);
   }
 
-    public void updateUser(String bio, UUID id) {
-         UserRepository.updateUser(bio, id);
-    }
+  public void updateUser(String bio, UUID id) {
+    UserRepository.updateUser(bio, id);
+  }
 }

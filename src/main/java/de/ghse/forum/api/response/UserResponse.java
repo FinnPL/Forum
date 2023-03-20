@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserResponse {
   private String user_name;
   private UUID id;
-  private  String bio;
+  private String bio;
 
   public Iterable<UserResponse> convert(Iterable<User> allUsers) {
     List<UserResponse> userResponses = new ArrayList<>();
@@ -27,6 +27,10 @@ public class UserResponse {
   }
 
   public UserResponse convert(User user) {
-    return UserResponse.builder().id(user.getId()).user_name(user.getUsername()).bio(user.getBio()).build();
+    return UserResponse.builder()
+        .id(user.getId())
+        .user_name(user.getUsername())
+        .bio(user.getBio())
+        .build();
   }
 }
