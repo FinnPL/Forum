@@ -30,11 +30,9 @@
     token.set(data.token);
     token.subscribe((token: any) => {
       tokenValue = token;
-      console.log(tokenValue + "TTTTTTTTT");
     });
     own_user_id.subscribe((temp: any) => {
       own_user_id_value = temp;
-      console.log(tokenValue + "TTTTTTTTT");
     });
     own_user_id.set(data.user_id);
 
@@ -61,7 +59,6 @@
     });
     own_user_id.subscribe((temp: any) => {
       own_user_id_value = temp;
-      console.log(tokenValue + "TTTTTTTTT");
     });
     own_user_id.set(data.user_id);
 

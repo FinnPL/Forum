@@ -119,7 +119,7 @@ const userid = path[path.length-1];
 
 
   async function loadAvatar() {
-const res = await fetch("http://127.0.0.1:8080/api/v1/file/profile/"+userid, requestOptions)
+const res = await fetch("http://127.0.0.1:8080/api/v1/file/profile/"+userid+"?"+new Date().getTime(), requestOptions)
 const blob = await res.blob();
   const reader = new FileReader();
   reader.readAsDataURL(blob);
