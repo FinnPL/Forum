@@ -32,7 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NotNull HttpServletResponse response,
       @NotNull FilterChain filterChain)
       throws ServletException, IOException {
-    logger.info(
+    if(!request.getRequestURI().equals("/actuator/prometheus"))
+      logger.info(
         "Request: "
             + request.getRequestURI()
             + " Header Auth: "

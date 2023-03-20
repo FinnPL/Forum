@@ -131,3 +131,14 @@ Run Docker Image
 ```
  sudo docker run -p 8080:8080 --network="host" --restart always forum
 ```
+
+## Prometheus configuration
+
+```
+  - job_name: "spring-actuartors"
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+     - targets: ['localhost:8080']
+```
+
