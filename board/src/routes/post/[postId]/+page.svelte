@@ -34,6 +34,10 @@
   let title_update: string;
   let content_update: string;
 
+  let imageSrc:any = null;
+  let file:any;
+  let image_file:any;
+
   //Modal
   let open = false;
   const toggle = () => (open = !open);
@@ -146,7 +150,7 @@
         date: "2023-03-04 14:00:05.0",
       }),
     });
-
+    await update_image();
     return res.json();
   }
 
@@ -178,6 +182,55 @@
       }
     };
   });
+
+  onMount(async () => { 
+  let bearerToken = await getCookie("tokenValue");
+  console.log(bearerToken)
+  let requestOptions:any = {
+  method: 'GET',
+  headers: { "Authorization": "Bearer " + bearerToken,},
+  redirect: 'follow'
+};
+
+const path = window.location.pathname.split("/");
+const post_id = path[path.length-1];
+
+
+
+
+  async function loadImage() {
+const res = await fetch(ip + "api/v1/file/post/"+post_id+"?"+new Date().getTime(), requestOptions)
+const blob = await res.blob();
+  const reader = new FileReader();
+  reader.readAsDataURL(blob);
+  reader.onloadend = (event) => {
+    if(event.target && event.target.result) {
+      imageSrc = event.target.result; 
+    }
+}
+}
+loadImage();
+console.log(imageSrc)
+})
+
+const handleFileChange = (event:any) => {
+    file = event.target.files[0];
+  };
+
+  async function update_image () {
+  
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch(ip +"api/v1/file/post/" + thisID,{
+      method: 'POST',
+      body: formData,
+      headers: { 
+        Authorization: "Bearer " + tokenValue,
+      },
+    });
+    console.log(res)
+  };
+  
 </script>
 
 <div class="container">
@@ -188,6 +241,9 @@
     <p2>Datum: {date}</p2><br />
     <br />
     <p><a href={"/profile/" + userID}>Autor: {user_name}</a></p>
+    {#if imageSrc}
+      <img src={imageSrc } alt="Avatar" width="250" height="300">
+    {/if}
     {#if own_user_id_value == userID}
       <div>
         <Button color="primary" on:click={toggle}>Edit Post</Button>
@@ -210,6 +266,9 @@
                   />
                   <label for="floatingTextarea2">Text</label>
                 </div>
+              </FormGroup>
+              <FormGroup>
+                <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
               </FormGroup>
             </Form>
           </ModalBody>

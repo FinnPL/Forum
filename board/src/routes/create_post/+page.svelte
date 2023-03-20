@@ -12,6 +12,8 @@
   let tokenValue: string;
   let cookie_name_value: string;
   let error = false;
+  let file:any;
+  let image_file:any;
 
   async function checkLoggedIn() {
     cookie_name_value = await getCookie("username");
@@ -53,8 +55,30 @@
     if (!res.ok) {
       error = true;
     }
+    const json = await res.json();
+    await upload_image(json.id);
     return res.json();
   }
+
+  const handleFileChange = (event:any) => {
+    file = event.target.files[0];
+  };
+
+  async function upload_image (post_id:string) {
+  
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch(ip +"api/v1/file/post/" + post_id,{
+      method: 'POST',
+      body: formData,
+      headers: { 
+        Authorization: "Bearer " + tokenValue,
+      },
+    });
+    console.log(res)
+  };
+
+
 </script>
 
 {#if error}
@@ -81,10 +105,13 @@
           <label for="floatingTextarea2">Text</label>
         </div>
       </FormGroup>
-
+      <FormGroup>
+        <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
+      </FormGroup>
       <Button color="primary" on:click={post}>Post</Button>
     </Form>
   </div>
+  
 </div>
 
 <style>
