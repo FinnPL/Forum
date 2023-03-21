@@ -133,11 +133,12 @@ Run Docker Image
 ```
 
 ## Docker Compose
-Set the DB password and Name as an environment variable
 
+Set the DB password, Name and Grafana password as an environment variable
 ```
 export DB_PASSWORD=example
 export DB_NAME=example
+export GF_SECURITY_ADMIN_PASSWORD=example
 ```
 
 Start the containers
