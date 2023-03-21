@@ -132,13 +132,16 @@ Run Docker Image
  sudo docker run -p 8080:8080 --network="host" --restart always forum
 ```
 
-## Prometheus configuration
+## Docker Compose
+Set the DB password and Name as an environment variable
 
 ```
-  - job_name: "spring-actuartors"
-    metrics_path: '/actuator/prometheus'
-    scrape_interval: 5s
-    static_configs:
-     - targets: ['localhost:8080']
+export DB_PASSWORD=example
+export DB_NAME=example
+```
+
+Start the containers
+```
+sudo docker-compose up -d
 ```
 
