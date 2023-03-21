@@ -18,7 +18,7 @@ services:
       - db
     environment:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/${DB_NAME}
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
 
   prometheus:
     image: prom/prometheus
