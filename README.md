@@ -12,7 +12,7 @@ chmod +x install.sh
 ```
 Run the script 
 ```
-./install.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
+sudo ./install.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
 ```
 
 ## Conection
