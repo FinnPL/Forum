@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#Update
+# Update the system
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 
 # Install Docker
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -24,7 +24,12 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-# Set environment variables
-export DB_PASSWORD=$1
-export DB_NAME=$2
-export GF_SECURITY_ADMIN_PASSWORD=$3
+# Clone the project
+git clone https://github.com/FinnPL/Forum
+
+# Make the mvnw file executable
+chmod +x Forum/mvnw
+
+# Run Docker Compose
+cd Forum
+docker-compose up -d
