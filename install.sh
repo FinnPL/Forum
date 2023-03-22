@@ -26,8 +26,7 @@ fi
 
 
 # Make the mvnw file executable
-chmod +x Forum/mvnw
+chmod +x mvnw
 
 # Run Docker Compose
-cd Forum
 docker-compose up -d
