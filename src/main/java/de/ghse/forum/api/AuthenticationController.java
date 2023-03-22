@@ -35,8 +35,9 @@ public class AuthenticationController {
     logger.info("Authenticating user with username: " + request.getUser_name());
     return ResponseEntity.ok(authenticationService.authenticate(request));
   }
+
   @GetMapping(path = "/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("test");
-    }
+  public ResponseEntity<String> test() {
+    return ResponseEntity.ok("test");
+  }
 }

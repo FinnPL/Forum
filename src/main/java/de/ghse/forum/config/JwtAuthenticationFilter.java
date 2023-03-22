@@ -32,32 +32,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NotNull HttpServletResponse response,
       @NotNull FilterChain filterChain)
       throws ServletException, IOException {
-    if(!request.getRequestURI().equals("/actuator/prometheus"))
+    if (!request.getRequestURI().equals("/actuator/prometheus"))
       logger.info(
-        "Request: "
-            + request.getRequestURI()
-            + " Header Auth: "
-            + request.getHeader("Authorization")
-            + " Host: "
-            + request.getHeader("Host")
-            + " Origin: "
-            + request.getHeader("Origin")
-            + " Referer: "
-            + request.getHeader("Referer")
-            + " User-Agent: "
-            + request.getHeader("User-Agent")
-            + " Accept: "
-            + request.getHeader("Accept")
-            + " Accept-Encoding: "
-            + request.getHeader("Accept-Encoding")
-            + " Accept-Language: "
-            + request.getHeader("Accept-Language")
-            + " Connection: "
-            + request.getHeader("Connection")
-            + " Cookie: "
-            + request.getHeader("Cookie")
-            + " Sec-Fetch-Dest: "
-            + request.getHeader("Sec-Fetch-Dest"));
+          "Request: "
+              + request.getRequestURI()
+              + " Header Auth: "
+              + request.getHeader("Authorization")
+              + " Host: "
+              + request.getHeader("Host")
+              + " Origin: "
+              + request.getHeader("Origin")
+              + " Referer: "
+              + request.getHeader("Referer")
+              + " User-Agent: "
+              + request.getHeader("User-Agent")
+              + " Accept: "
+              + request.getHeader("Accept")
+              + " Accept-Encoding: "
+              + request.getHeader("Accept-Encoding")
+              + " Accept-Language: "
+              + request.getHeader("Accept-Language")
+              + " Connection: "
+              + request.getHeader("Connection")
+              + " Cookie: "
+              + request.getHeader("Cookie")
+              + " Sec-Fetch-Dest: "
+              + request.getHeader("Sec-Fetch-Dest"));
 
     final String authorizationHeader = request.getHeader("Authorization");
     if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
