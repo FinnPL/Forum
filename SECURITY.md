@@ -3,7 +3,7 @@
 ## Reporting Potential Security Issues
 
 If you have encountered a potential security vulnerability in this project,
-please report it to us at the Email Adresse listed on my [Profile page](https://github.com/FinnPL)
+please report it to us at the Email Address listed on my [Profile page](https://github.com/FinnPL)
 (You need to be logged in to see the email).
 We will work with you to verify the vulnerability and patch it.
 
