@@ -9,112 +9,19 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-Install Java 19
 
-```
-wget https://download.oracle.com/java/19/latest/jdk-19_linux-x64_bin.deb
-sudo apt-get -qqy install ./jdk-19_linux-x64_bin.deb
-sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-19/bin/java 1919
-```
-
-Install Maven
-
-```
-sudo apt install maven
-```
 
 Clone projekt
-
 ```
 git clone https://github.com/FinnPL/Forum
 ```
 
-Install and start MySQL-server
-
+run install script
 ```
-sudo apt install mysql-server
-sudo systemctl start mysql.service
-```
-
-Open my SQL
-
-```
-sudo mysql
+chmod +x install-and-set-env-variables.sh
+./install-and-set-env-variables.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
 ```
 
-Type the following into the mySQL console.
-Replace password with your own password.
-Create Forum Database
-
-```
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YOUR_OWN_PASSWORD_HERE';
-FLUSH PRIVILEGES;
-SELECT user,authentication_string,plugin,host FROM mysql.user;
-CREATE DATABASE forum;
-exit
-```
-
-Continue in Linux Console and enter your chosen mySQL password into application.properties
-
-```
-nano Forum/src/main/resources/application.properties
-```
-
-```
-spring.jpa.hibernate.ddl-auto=update
-spring.datasource.url=jdbc:mysql://localhost:3306/forum
-spring.datasource.username=root
-spring.datasource.password= YOUR_OWN_PASSWORD_HERE
-
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-```
-
-Build
-
-```
-cd Forum/
-mvn package
-```
-
-Open Port 8080
-
-```
-sudo ufw allow 8080
-```
-
-Run Forum.jar
-
-```
-cd target/
-sudo java -jar Forum-0.0.1-SNAPSHOT.jar
-```
-
-## Docker Setup
-
-### Install Docker
-
-```
-sudo mkdir -m 0755 -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-```
-
-```
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
-
-```
-  sudo apt-get update
-```
-
-```
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-
-### Build
 
 ```
 chmod +x mvnw
