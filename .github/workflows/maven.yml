@@ -17,9 +17,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: project_test
     env:
       SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/project_test
       SPRING_DATASOURCE_PASSWORD: password
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -28,14 +37,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-      services:
-        mysql:
-          image: mysql:5.7
-          ports:
-            - 3306:3306
-          env:
-            MYSQL_ROOT_PASSWORD: password
-            MYSQL_DATABASE: project_test
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
