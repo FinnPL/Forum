@@ -24,8 +24,6 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-# Clone the project
-git clone https://github.com/FinnPL/Forum
 
 # Make the mvnw file executable
 chmod +x Forum/mvnw
