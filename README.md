@@ -7,6 +7,7 @@ git clone https://github.com/FinnPL/Forum
 ```
 Make the install script executable
 ```
+cd Forum/
 chmod +x install.sh
 ```
 Run the script 
