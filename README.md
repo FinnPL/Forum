@@ -1,7 +1,15 @@
 # Forum
 
 ## Setup
+Clone Projekt
 ```
-chmod +x install-and-set-env-variables.sh
-./install-and-set-env-variables.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
+git clone https://github.com/FinnPL/Forum
+```
+Make the install script executable
+```
+chmod +x install.sh
+```
+Run the script 
+```
+./install.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
 ```
