@@ -28,9 +28,6 @@ jobs:
       actions: read
       contents: read
       security-events: write
-    env:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/project_test
-      SPRING_DATASOURCE_PASSWORD: password
 
     strategy:
       fail-fast: false
