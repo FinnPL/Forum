@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * FileDataController is a REST controller for file related endpoints.
+ *
  * @apiNote This controller is accessible under /api/v1/file.
  */
 @RestController
@@ -40,6 +41,7 @@ public class FileDataController {
 
   /**
    * REST endpoint for uploading a profile picture.
+   *
    * @apiNote This endpoint is accessible under /api/v1/file/profile.
    * @param file to be uploaded
    * @param principal the user who is uploading the file (Spring internal)
@@ -60,6 +62,7 @@ public class FileDataController {
 
   /**
    * REST endpoint for downloading a profile picture.
+   *
    * @apiNote This endpoint is accessible under /api/v1/file/profile/{id}.
    * @param id of the user
    * @return a ResponseEntity with the status code
@@ -73,6 +76,7 @@ public class FileDataController {
 
   /**
    * REST endpoint for uploading a file allocated to a post.
+   *
    * @apiNote This endpoint is accessible under /api/v1/file/post/{id}.
    * @param id of the post
    * @return a ResponseEntity with the status code
@@ -99,13 +103,14 @@ public class FileDataController {
     return ResponseEntity.badRequest().body("You are not allowed to upload files to this post");
   }
 
-    /**
-     * REST endpoint for downloading a file allocated to a post.
-     * @apiNote This endpoint is accessible under /api/v1/file/post/{id}.
-     * @param id of the post
-     * @return a ResponseEntity with the status code and the file as a ByteArrayResource
-     * @throws IOException if the file could not be read
-     */
+  /**
+   * REST endpoint for downloading a file allocated to a post.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/file/post/{id}.
+   * @param id of the post
+   * @return a ResponseEntity with the status code and the file as a ByteArrayResource
+   * @throws IOException if the file could not be read
+   */
   @GetMapping("/api/v1/file/post/{id}")
   public ResponseEntity<ByteArrayResource> loadFile(@PathVariable String id) throws IOException {
     return getFileWithID(id);
@@ -113,12 +118,12 @@ public class FileDataController {
 
   /**
    * Deletes all old files allocated to a UUID. Afterward, the new file is saved.
+   *
    * @param id of the Post or User
    * @param file to be saved
    */
   @NotNull
-  private ResponseEntity<String> updateFile(
-      String id, MultipartFile file) throws IOException {
+  private ResponseEntity<String> updateFile(String id, MultipartFile file) throws IOException {
     File[] files = new File(directory).listFiles((dir, name) -> name.startsWith(id));
     if (files != null && files.length >= 1) {
       for (File f : files) {
@@ -138,13 +143,13 @@ public class FileDataController {
 
   /**
    * Searches for a file with the given id and returns it as a ByteArrayResource.
+   *
    * @param id of the file
    * @return a ResponseEntity with the status code and the file as a ByteArrayResource
    * @throws IOException if the file could not be read
    */
   @NotNull
-  private ResponseEntity<ByteArrayResource> getFileWithID(
-       String id) throws IOException {
+  private ResponseEntity<ByteArrayResource> getFileWithID(String id) throws IOException {
     HttpHeaders httpHeaders = new HttpHeaders();
     File[] files = new File(directory).listFiles((dir, name) -> name.startsWith(id));
     if (files == null || files.length != 1) return ResponseEntity.notFound().build();
@@ -161,6 +166,7 @@ public class FileDataController {
 
   /**
    * Deletes a file with the given id.
+   *
    * @param file to be deleted
    * @return a ResponseEntity with the status code
    * @throws IOException if the file could not be deleted
@@ -172,10 +178,11 @@ public class FileDataController {
     return ResponseEntity.ok().body("File deleted successfully");
   }
 
-    /**
-     * Creates a directory if it does not exist.
-     * @return true if the directory could not be created
-     */
+  /**
+   * Creates a directory if it does not exist.
+   *
+   * @return true if the directory could not be created
+   */
   private boolean createDirectory() {
     boolean directoryExists = new File(directory).exists();
 

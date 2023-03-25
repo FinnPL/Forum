@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * REST controller for authentication related endpoints.
+ *
  * @apiNote This controller is accessible under /api/v1/auth without an Authentication Header.
  * @see AuthenticationService
  * @see de.ghse.forum.config.JwtAuthenticationFilter JwtAuthenticationFilter
@@ -27,7 +28,9 @@ public class AuthenticationController {
 
   /**
    * REST endpoint for registering a new user.
-   * @apiNote This endpoint is accessible under /api/v1/auth/register without an Authentication Header.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/auth/register without an Authentication
+   *     Header.
    * @param request the RegisterRequest containing the user_name and password
    * @return the AuthenticationResponse containing the JWT token and the user id
    * @see de.ghse.forum.api.request.RegisterRequest RegisterRequest
@@ -43,14 +46,16 @@ public class AuthenticationController {
     return ResponseEntity.ok(authenticationService.register(request));
   }
 
-    /**
-     * REST endpoint for authenticating a user.
-     * @apiNote This endpoint is accessible under /api/v1/auth/authenticate without an Authentication Header.
-     * @param request the AuthenticationRequest containing the user_name and password
-     * @return the AuthenticationResponse containing the JWT token and the user id
-     * @see de.ghse.forum.api.request.AuthenticationRequest AuthenticationRequest
-     * @see de.ghse.forum.api.response.AuthenticationResponse AuthenticationResponse
-     */
+  /**
+   * REST endpoint for authenticating a user.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/auth/authenticate without an Authentication
+   *     Header.
+   * @param request the AuthenticationRequest containing the user_name and password
+   * @return the AuthenticationResponse containing the JWT token and the user id
+   * @see de.ghse.forum.api.request.AuthenticationRequest AuthenticationRequest
+   * @see de.ghse.forum.api.response.AuthenticationResponse AuthenticationResponse
+   */
   @PostMapping(path = "/authenticate")
   public ResponseEntity<AuthenticationResponse> authentication(
       @RequestBody AuthenticationRequest request) {
@@ -60,6 +65,7 @@ public class AuthenticationController {
 
   /**
    * REST endpoint for testing the Application.
+   *
    * @apiNote This endpoint is accessible under /api/v1/auth/test without an Authentication Header.
    * @return the String "test"
    * @deprecated This endpoint is only for testing purposes and will be removed in the future.

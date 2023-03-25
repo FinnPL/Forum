@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * JSON model returned after fetching a Comment.
+ *
  * @see de.ghse.forum.api.CommentController CommentController
  */
 @Data
@@ -23,11 +24,12 @@ public class CommentResponse {
   private String user_name;
   private String date;
 
-    /**
-     * Converts a List of Comment objects to a List of CommentResponse objects.
-     * @param comments List of Comment objects.
-     * @return List of CommentResponse objects.
-     */
+  /**
+   * Converts a List of Comment objects to a List of CommentResponse objects.
+   *
+   * @param comments List of Comment objects.
+   * @return List of CommentResponse objects.
+   */
   public List<CommentResponse> convert(List<Comment> comments) {
     List<CommentResponse> commentResponses = new ArrayList<>();
     for (Comment comment : comments) {
