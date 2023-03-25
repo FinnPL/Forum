@@ -7,8 +7,10 @@
   import { onMount } from "svelte";
   import { ip } from "../../lib/const.js"
   import  Error  from "../../lib/Error/error.svelte"
+  import { goto } from "$app/navigation";
   let post_title: string;
   let post_body: string;
+  let post_id: string;
   let tokenValue: string;
   let cookie_name_value: string;
   let error = false;
@@ -57,6 +59,7 @@
     }
     const json = await res.json();
     await upload_image(json.id);
+    post_id = json.id;
     return res.json();
   }
 
@@ -76,6 +79,7 @@
       },
     });
     console.log(res)
+    await goto("/post/"+post_id)
   };
 
 

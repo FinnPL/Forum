@@ -14,6 +14,7 @@
   import { getCookie } from "../../../lib/functions";
   import { ip } from "../../../lib/const.js";
   import { error } from "@sveltejs/kit";
+  import { goto } from "$app/navigation";
 
   export let data: any;
 
@@ -231,6 +232,17 @@ const handleFileChange = (event:any) => {
     console.log(res)
   };
   
+  async function del_post() {
+    const res = await fetch(ip +"api/v1/post/del/" + thisID,{
+      method: 'DELETE',
+      headers: { 
+        Authorization: "Bearer " + tokenValue,
+      }, 
+    });
+    console.log(res)
+    await goto("/")
+  }
+
 </script>
 
 <div class="container">
@@ -247,6 +259,7 @@ const handleFileChange = (event:any) => {
     {#if own_user_id_value == userID}
       <div>
         <Button color="primary" on:click={toggle}>Edit Post</Button>
+        <Button color="danger" on:click={del_post}>Delete Post</Button>
         <Modal isOpen={open} {toggle}>
           <ModalHeader {toggle}>Update Post</ModalHeader>
           <ModalBody>
@@ -283,6 +296,7 @@ const handleFileChange = (event:any) => {
           </ModalFooter>
         </Modal>
       </div>
+
     {/if}
     <br />
 
@@ -339,4 +353,5 @@ const handleFileChange = (event:any) => {
   .button {
     text-align: center;
   }
+  
 </style>
