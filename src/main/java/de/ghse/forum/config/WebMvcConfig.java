@@ -6,8 +6,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * WebMvcConfig is a Spring configuration class for the web mvc.
+ */
 @Configuration
 public class WebMvcConfig {
+    /**
+     * Creates a CorsFilter bean.
+     * @return a CorsFilter bean
+     */
   @Bean
   public CorsFilter corsFilter() {
     CorsConfiguration config = new CorsConfiguration();

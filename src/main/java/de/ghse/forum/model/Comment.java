@@ -9,6 +9,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity Model for comments.
+ * @apiNote This model is mapped to the database table "comment".
+ * @see Post Post
+ * @see User User
+ * @see de.ghse.forum.service.CommentService CommentService
+ */
 @Data
 @Builder
 @AllArgsConstructor

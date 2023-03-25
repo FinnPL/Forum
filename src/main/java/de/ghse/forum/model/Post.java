@@ -11,14 +11,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
- *
- * <pre>
- * Post Model in Database
- * </pre>
- *
- * @version 1.0
- * @since 1.0
+ * Entity Model for posts.
+ * @apiNote This model is mapped to the database table "post".
+ * @see Comment Comment
+ * @see User User
+ * @see de.ghse.forum.service.PostService PostService
  */
 @Entity
 @Data

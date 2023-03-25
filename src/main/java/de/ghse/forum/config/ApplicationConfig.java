@@ -13,12 +13,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * ApplicationConfig is a Spring configuration class for the application.
+ */
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
   private final UserRepository userRepository;
 
+  /**
+   * Creates a UserDetailsService bean.
+   * @return a UserDetailsService bean
+   */
   @Bean
   public UserDetailsService userDetailsService() {
     return username ->
@@ -27,6 +34,10 @@ public class ApplicationConfig {
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 
+    /**
+     * Creates an AuthenticationProvider bean.
+     * @return an AuthenticationProvider bean
+     */
   @Bean
   public AuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -35,12 +46,22 @@ public class ApplicationConfig {
     return authProvider;
   }
 
+    /**
+     * Creates an AuthenticationManager bean.
+     * @param config the AuthenticationConfiguration
+     * @return an AuthenticationManager bean
+     * @throws Exception if an error occurs
+     */
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
   }
 
+    /**
+     * Creates a PasswordEncoder bean.
+     * @return a PasswordEncoder bean
+     */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();

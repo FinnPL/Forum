@@ -13,14 +13,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- *
- *
- * <pre>
- * User Model in Database
- * </pre>
- *
- * @version 1.0
- * @since 1.0
+ * Entity Model for users.
+ * @apiNote This model is mapped to the database table "user".
+ * @see Post Post
+ * @see Comment Comment
+ * @see de.ghse.forum.service.UserService UserService
  */
 @Data
 @Builder

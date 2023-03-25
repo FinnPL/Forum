@@ -14,14 +14,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- *
- *
- * <pre>
- * User Repository Interface extends JpaRepository
- * </pre>
- *
- * @version 1.0
- * @since 1.0
+ * Repository for users.
+ * @apiNote This repository is mapped to the database table "user".
+ * @see User User
+ * @see de.ghse.forum.service.UserService UserService
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
