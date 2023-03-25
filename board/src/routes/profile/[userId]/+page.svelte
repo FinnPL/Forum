@@ -3,16 +3,21 @@
   import { onMount } from "svelte";
   import { own_user_id, token } from "../../../lib/Login/login";
   import { ip } from "../../../lib/const.js"
-  import { FormGroup, Input, FormText, Label, Button } from "sveltestrap";
+  import { FormGroup, Input, FormText, Label, Button, Modal, ModalHeader, ModalBody, Form, ModalFooter } from "sveltestrap";
   export let data: any;
   let postList: any = [];
   let page = 0;
   let user_name: string;
+  let bio: string;
+  let bio_update: string;
   let tokenValue: string;
   let file:any ;
   let own_user_id_value:string
   let avatarSrc:any = null;
   let avatar_file:any
+  //Modal
+  let open = false;
+  const toggle = () => (open = !open);
 
 
   async function checkLoggedIn() {
@@ -54,6 +59,9 @@
     const fetchedData = await fetchedDataRes.json();
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
+    bio = fetchedData.bio;
+    bio_update = bio;
+    console.log(bio)
     console.log(user_name);
   }
 
@@ -147,6 +155,15 @@ console.log(avatarSrc)
   });
 
 
+async function update_bio() {
+  const res = await fetch(ip +"api/v1/user/update/"+ bio_update,{
+      method: 'PUT',
+      headers: { 
+        Authorization: "Bearer " + tokenValue,
+      },
+    });
+    console.log(res)
+  };
 
 
 </script>
@@ -154,7 +171,9 @@ console.log(avatarSrc)
 <div class="container">
   <div class="alert alert-dark">
     <h2>Username: {user_name}</h2>
-
+    {#if bio != "null"}
+    <h3>Bio: {bio} </h3>
+    {/if}
     {#if avatarSrc}
       <img src={avatarSrc } alt="Avatar" width="250" height="300">
     {/if}
@@ -163,7 +182,36 @@ console.log(avatarSrc)
     <FormGroup>
       <Input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
       <Button color="primary" on:click={upload_avatar} on:click={() => location.reload()} >Hochladen</Button>
+      <Button color="info" on:click={toggle} >Update Bio</Button>
     </FormGroup>
+    <Modal isOpen={open} {toggle}>
+      <ModalHeader {toggle}>Update Bio</ModalHeader>
+      <ModalBody>
+        <Form>
+          <FormGroup>
+            <div class="form-floating">
+              <textarea
+                class="form-control"
+                placeholder="Body"
+                bind:value={bio_update}
+                id="floatingTextarea2"
+                style="height: 100px"
+              />
+              <label for="floatingTextarea2">Text</label>
+            </div>
+          </FormGroup>
+        </Form>
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          color="primary"
+          on:click={toggle}
+          on:click={update_bio}
+          on:click={() => location.reload()}>Update Bio</Button
+        >
+        <Button color="secondary" on:click={toggle}>Cancel</Button>
+      </ModalFooter>
+    </Modal>
     {/if}
 
   </div>
