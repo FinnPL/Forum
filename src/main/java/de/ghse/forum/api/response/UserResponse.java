@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * JSON model returned after fetching a User.
+ *
  * @see de.ghse.forum.api.UserController UserController
  */
 @Data
@@ -24,6 +25,7 @@ public class UserResponse {
 
   /**
    * Converts a List of User objects to a List of UserResponse objects.
+   *
    * @param allUsers List of User objects.
    * @return List of UserResponse objects.
    */
@@ -35,11 +37,12 @@ public class UserResponse {
     return userResponses;
   }
 
-    /**
-     * Converts a User object to a UserResponse object.
-     * @param user User object.
-     * @return UserResponse object.
-     */
+  /**
+   * Converts a User object to a UserResponse object.
+   *
+   * @param user User object.
+   * @return UserResponse object.
+   */
   public UserResponse convert(User user) {
     return UserResponse.builder()
         .id(user.getId())
