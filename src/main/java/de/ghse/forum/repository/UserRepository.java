@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repository for users.
+ *
  * @apiNote This repository is mapped to the database table "user".
  * @see User User
  * @see de.ghse.forum.service.UserService UserService

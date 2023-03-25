@@ -12,9 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-/**
- * SecurityConfiguration is a Spring configuration class for the security.
- */
+/** SecurityConfiguration is a Spring configuration class for the security. */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -23,12 +21,13 @@ public class SecurityConfiguration {
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final AuthenticationProvider authenticationProvider;
 
-    /**
-     * Creates a SecurityFilterChain bean.
-     * @param http the HttpSecurity
-     * @return a SecurityFilterChain bean
-     * @throws Exception if an error occurs
-     */
+  /**
+   * Creates a SecurityFilterChain bean.
+   *
+   * @param http the HttpSecurity
+   * @return a SecurityFilterChain bean
+   * @throws Exception if an error occurs
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors()

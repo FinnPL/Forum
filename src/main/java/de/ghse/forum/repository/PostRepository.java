@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repository for posts.
+ *
  * @apiNote This repository is mapped to the database table "post".
  * @see Post Post
  * @see de.ghse.forum.service.PostService PostService

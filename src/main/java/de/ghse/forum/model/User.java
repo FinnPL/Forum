@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Entity Model for users.
+ *
  * @apiNote This model is mapped to the database table "user".
  * @see Post Post
  * @see Comment Comment

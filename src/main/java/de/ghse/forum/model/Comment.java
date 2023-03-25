@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Entity Model for comments.
+ *
  * @apiNote This model is mapped to the database table "comment".
  * @see Post Post
  * @see User User

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repository for comments.
+ *
  * @apiNote This repository is mapped to the database table "comment".
  * @see Comment Comment
  * @see de.ghse.forum.service.CommentService CommentService
