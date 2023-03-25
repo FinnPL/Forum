@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * REST controller for comment related endpoints.
+ *
  * @apiNote This controller is accessible under /api/v1/comment.
  * @see CommentService
  * @see Comment
@@ -31,7 +32,8 @@ public class CommentController {
   final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
   /**
-   *  REST endpoint for adding a comment.
+   * REST endpoint for adding a comment.
+   *
    * @apiNote This endpoint is accessible under /api/v1/comment/add.
    * @param commentRequest the JSON body of the request
    * @param principal the principal of the user (Spring internal)
@@ -59,6 +61,7 @@ public class CommentController {
 
   /**
    * REST endpoint for getting comments of a post.
+   *
    * @apiNote This endpoint is accessible under /api/v1/comment/get/{post_id}/{page}.
    * @param post_id the UUID of the post
    * @param page the page number

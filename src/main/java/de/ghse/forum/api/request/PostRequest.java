@@ -1,11 +1,12 @@
 package de.ghse.forum.api.request;
 
+import java.security.Principal;
 import lombok.Builder;
 import lombok.Data;
-import java.security.Principal;
 
 /**
  * JSON model used for creating a new Post.
+ *
  * @apiNote JSON body of the POST /api/v1/post endpoint.
  * @see de.ghse.forum.api.PostController#addPost(PostRequest, Principal) PostController
  */

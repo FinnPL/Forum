@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * AdminController is a REST controller for admin related endpoints.
+ *
  * @apiNote This controller is only accessible for admins under /api/v1/admin.
  * @see de.ghse.forum.model.Role User Roles
  * @see de.ghse.forum.api.AuthenticationController
@@ -24,6 +25,7 @@ public class AdminController {
 
   /**
    * REST endpoint for deleting a user.
+   *
    * @apiNote This endpoint is only accessible for admins under /api/v1/admin/user/{id}.
    * @param id the UUID of the user to be deleted
    * @see de.ghse.forum.model.User User
@@ -34,12 +36,13 @@ public class AdminController {
     userService.deleteUser(id);
   }
 
-    /**
-     * REST endpoint for deleting a post.
-     * @apiNote This endpoint is only accessible for admins under /api/v1/admin/post/{id}.
-     * @param id the UUID of the post to be deleted
-     * @see de.ghse.forum.model.Post Post
-     */
+  /**
+   * REST endpoint for deleting a post.
+   *
+   * @apiNote This endpoint is only accessible for admins under /api/v1/admin/post/{id}.
+   * @param id the UUID of the post to be deleted
+   * @see de.ghse.forum.model.Post Post
+   */
   @DeleteMapping(path = "/post/{id}")
   public void deletePost(@PathVariable("id") UUID id) {
     logger.info("Deleting post with id: " + id);

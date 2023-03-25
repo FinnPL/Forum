@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * JSON model returned after fetching a Post.
+ *
  * @see de.ghse.forum.api.PostController PostController
  */
 @Data
@@ -25,11 +26,12 @@ public class PostResponse {
   private String date;
   private boolean edited;
 
-    /**
-     * Converts a List of Post objects to a List of PostResponse objects.
-     * @param posts List of Post objects.
-     * @return List of PostResponse objects.
-     */
+  /**
+   * Converts a List of Post objects to a List of PostResponse objects.
+   *
+   * @param posts List of Post objects.
+   * @return List of PostResponse objects.
+   */
   public List<PostResponse> convert(List<Post> posts) {
     List<PostResponse> postResponses = new ArrayList<>();
     for (Post post : posts) {
@@ -38,11 +40,12 @@ public class PostResponse {
     return postResponses;
   }
 
-    /**
-     * Converts a Post object to a PostResponse object.
-     * @param post Post object.
-     * @return PostResponse object.
-     */
+  /**
+   * Converts a Post object to a PostResponse object.
+   *
+   * @param post Post object.
+   * @return PostResponse object.
+   */
   public PostResponse convert(Post post) {
     return PostResponse.builder()
         .id(post.getId().toString())
