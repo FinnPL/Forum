@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * REST controller for user related endpoints.
+ *
  * @apiNote This controller is accessible under /api/v1/user.
  * @see UserService
  * @see de.ghse.forum.model.User User
@@ -26,6 +27,7 @@ public class UserController {
 
   /**
    * REST endpoint for getting a user by id.
+   *
    * @apiNote This endpoint is accessible under /api/v1/user/{id}.
    * @param id the UUID of the user to be returned
    * @return the user with the given id
@@ -45,6 +47,7 @@ public class UserController {
 
   /**
    * REST endpoint searching for a user by username.
+   *
    * @apiNote This endpoint is accessible under /api/v1/user/search/{query}/{page}.
    * @param query the username to be searched for
    * @return the user with the given username
@@ -59,6 +62,7 @@ public class UserController {
 
   /**
    * REST endpoint for updating a user.
+   *
    * @apiNote This endpoint is accessible under /api/v1/user/update/{Bio}.
    * @param bio the new bio of the user
    * @param principal the user to be updated (Spring internal)

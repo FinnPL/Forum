@@ -20,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * JwtAuthenticationFilter is a filter that checks if the request contains a valid JWT token.
+ *
  * @apiNote This filter is used by Spring Security.
  * @see SecurityConfiguration
  */
@@ -33,6 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   /**
    * Checks if the request contains a valid JWT token.
+   *
    * @param request the request
    * @param response the response
    * @param filterChain the filter chain
