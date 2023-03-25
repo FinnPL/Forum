@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service for authentication.
+ *
  * @apiNote This service is used by the AuthenticationController.
  * @see de.ghse.forum.api.AuthenticationController AuthenticationController
  */
@@ -27,6 +28,7 @@ public class AuthenticationService {
 
   /**
    * Generates a JWT token for the user.
+   *
    * @param request AuthenticationRequest
    * @return AuthenticationResponse with JWT token and user id
    */
@@ -41,11 +43,12 @@ public class AuthenticationService {
         .build();
   }
 
-    /**
-     * Registers a new user.
-     * @param request RegisterRequest
-     * @return AuthenticationResponse with JWT token and user id
-     */
+  /**
+   * Registers a new user.
+   *
+   * @param request RegisterRequest
+   * @return AuthenticationResponse with JWT token and user id
+   */
   public AuthenticationResponse register(RegisterRequest request) {
     var user =
         User.builder()

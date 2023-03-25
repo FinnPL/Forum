@@ -26,6 +26,7 @@ public class CommentService {
 
   /**
    * Add a comment to the database.
+   *
    * @param comment The comment to add.
    */
   public void addComment(Comment comment) {
@@ -34,6 +35,7 @@ public class CommentService {
 
   /**
    * Find all comments for a post.
+   *
    * @param post The post to find the comments for.
    * @param page The page to get.
    * @return A list of comments.
