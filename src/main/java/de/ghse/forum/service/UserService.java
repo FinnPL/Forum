@@ -28,6 +28,7 @@ public class UserService {
 
   /**
    * Find a user by its username.
+   *
    * @param username The username of the user.
    * @return The user.
    */
@@ -35,17 +36,19 @@ public class UserService {
     return UserRepository.findByUsername(username);
   }
 
-    /**
-     * Find a user by its id.
-     * @param id The id of the user.
-     * @return The user.
-     */
+  /**
+   * Find a user by its id.
+   *
+   * @param id The id of the user.
+   * @return The user.
+   */
   public @NotNull Optional<User> findUserById(UUID id) {
     return UserRepository.findById(id);
   }
 
   /**
    * Search for users by their username.
+   *
    * @param username The username to search for.
    * @param page The page to get.
    * @return A list of users.
@@ -56,17 +59,19 @@ public class UserService {
 
   /**
    * Delete a user from the database.
+   *
    * @param id The id of the user to delete.
    */
   public void deleteUser(UUID id) {
     UserRepository.deleteById(id);
   }
 
-    /**
-     * Update a user in the database.
-     * @param bio The new bio of the user.
-     * @param id The id of the user to update.
-     */
+  /**
+   * Update a user in the database.
+   *
+   * @param bio The new bio of the user.
+   * @param id The id of the user to update.
+   */
   public void updateUser(String bio, UUID id) {
     UserRepository.updateUser(bio, id);
   }

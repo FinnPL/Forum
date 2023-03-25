@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service for JWT.
+ *
  * @apiNote This service is used to generate and validate JWT tokens.
  * @see de.ghse.forum.config.JwtAuthenticationFilter JwtAuthenticationFilter
  */
@@ -25,6 +26,7 @@ public class JwtService {
 
   /**
    * Extracts the username from the JWT token.
+   *
    * @param token JWT token
    * @return username
    */
@@ -32,14 +34,14 @@ public class JwtService {
     return extractClaim(token, Claims::getSubject);
   }
 
-    /**
-     * Extracts a claim from the JWT token and applies a function to it.
-     * @param token JWT token
-     * @param claimsResolver function to apply to the claim
-     *                       (e.g. Claims::getSubject)
-     * @param <T> type of the claim
-     * @return the extracted information
-     */
+  /**
+   * Extracts a claim from the JWT token and applies a function to it.
+   *
+   * @param token JWT token
+   * @param claimsResolver function to apply to the claim (e.g. Claims::getSubject)
+   * @param <T> type of the claim
+   * @return the extracted information
+   */
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
     try {
       final Claims claims = extractAllClaims(token);
@@ -49,21 +51,23 @@ public class JwtService {
     }
   }
 
-    /**
-     * Generates a JWT token for the user.
-     * @param userDetails UserDetails
-     * @return JWT token
-     */
+  /**
+   * Generates a JWT token for the user.
+   *
+   * @param userDetails UserDetails
+   * @return JWT token
+   */
   public String generateToken(UserDetails userDetails) {
     return generateToken(Map.of(), userDetails);
   }
 
-    /**
-     * Generates a JWT token for the user with additional claims.
-     * @param extraClaims additional claims
-     * @param userDetails UserDetails
-     * @return JWT token
-     */
+  /**
+   * Generates a JWT token for the user with additional claims.
+   *
+   * @param extraClaims additional claims
+   * @param userDetails UserDetails
+   * @return JWT token
+   */
   public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
     return Jwts.builder()
         .setClaims(extraClaims)
@@ -74,12 +78,13 @@ public class JwtService {
         .compact();
   }
 
-    /**
-     * Checks if the JWT token is valid.
-     * @param token JWT token
-     * @param userDetails UserDetails
-     * @return true if the token is valid, false otherwise
-     */
+  /**
+   * Checks if the JWT token is valid.
+   *
+   * @param token JWT token
+   * @param userDetails UserDetails
+   * @return true if the token is valid, false otherwise
+   */
   public Boolean isTokenValid(String token, UserDetails userDetails) {
     final String username = extractUsername(token);
     return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -87,6 +92,7 @@ public class JwtService {
 
   /**
    * Checks if the JWT token is expired.
+   *
    * @param token JWT token
    * @return true if the token is expired, false otherwise
    */
@@ -96,6 +102,7 @@ public class JwtService {
 
   /**
    * Extracts the expiration date from the JWT token.
+   *
    * @param token JWT token
    * @return expiration date
    */
@@ -103,11 +110,12 @@ public class JwtService {
     return extractClaim(token, Claims::getExpiration);
   }
 
-    /**
-     * Extracts all claims from the JWT token.
-     * @param token JWT token
-     * @return all claims
-     */
+  /**
+   * Extracts all claims from the JWT token.
+   *
+   * @param token JWT token
+   * @return all claims
+   */
   private Claims extractAllClaims(String token) {
     return Jwts.parserBuilder()
         .setSigningKey(getSignInKey())
@@ -116,10 +124,11 @@ public class JwtService {
         .getBody();
   }
 
-    /**
-     * Returns the secret key.
-     * @return secret key
-     */
+  /**
+   * Returns the secret key.
+   *
+   * @return secret key
+   */
   private Key getSignInKey() {
     byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
     return Keys.hmacShaKeyFor(keyBytes);
