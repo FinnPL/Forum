@@ -14,6 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for comment related endpoints.
+ * @apiNote This controller is accessible under /api/v1/comment.
+ * @see CommentService
+ * @see Comment
+ */
 @RequestMapping("api/v1/comment")
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +30,14 @@ public class CommentController {
 
   final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
+  /**
+   *  REST endpoint for adding a comment.
+   * @apiNote This endpoint is accessible under /api/v1/comment/add.
+   * @param commentRequest the JSON body of the request
+   * @param principal the principal of the user (Spring internal)
+   * @see CommentRequest
+   * @see Comment
+   */
   @PostMapping(path = "/add/")
   public void addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
     logger.info("Adding comment to post with id: " + commentRequest.getPost_id());
@@ -43,6 +57,15 @@ public class CommentController {
     }
   }
 
+  /**
+   * REST endpoint for getting comments of a post.
+   * @apiNote This endpoint is accessible under /api/v1/comment/get/{post_id}/{page}.
+   * @param post_id the UUID of the post
+   * @param page the page number
+   * @return a list of CommentResponse
+   * @see CommentResponse
+   * @see Comment
+   */
   @GetMapping(path = "/get/{post_id}/{page}")
   public List<CommentResponse> getCommentsByPostByPage(
       @PathVariable("post_id") UUID post_id, @PathVariable("page") int page) {

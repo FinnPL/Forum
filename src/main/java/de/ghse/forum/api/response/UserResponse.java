@@ -9,6 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * JSON model returned after fetching a User.
+ * @see de.ghse.forum.api.UserController UserController
+ */
 @Data
 @Builder
 @AllArgsConstructor
