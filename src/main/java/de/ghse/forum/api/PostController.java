@@ -192,6 +192,14 @@ public class PostController {
     return ResponseEntity.badRequest().build();
   }
 
+    /**
+     * REST endpoint for getting posts.
+     * @apiNote This endpoint is accessible under /api/v1/post/all.
+     * @param page the page to be retrieved
+     * @return the posts as PostResponse
+     * @see PostResponse PostResponse
+     * @see Post Post
+     */
   @GetMapping(path = "/page/{page}")
   public List<PostResponse> getAllByPage(@PathVariable("page") int page) {
     return new PostResponse().convert(postService.getNewestByPage(page));
