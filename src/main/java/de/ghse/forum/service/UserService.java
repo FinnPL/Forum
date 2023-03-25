@@ -12,14 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
+ * Service for users.
  *
- *
- * <pre>
- * User Service Class
- * </pre>
- *
- * @version 1.0
- * @since 1.0
+ * @apiNote This service is mapped to the database table "user".
+ * @see User User
+ * @see de.ghse.forum.repository.UserRepository UserRepository
  */
 @Service
 @RequiredArgsConstructor
@@ -29,22 +26,47 @@ public class UserService {
 
   private final UserRepository UserRepository;
 
+  /**
+   * Find a user by its username.
+   * @param username The username of the user.
+   * @return The user.
+   */
   public @NotNull Optional<User> findbyUsername(String username) {
     return UserRepository.findByUsername(username);
   }
 
+    /**
+     * Find a user by its id.
+     * @param id The id of the user.
+     * @return The user.
+     */
   public @NotNull Optional<User> findUserById(UUID id) {
     return UserRepository.findById(id);
   }
 
+  /**
+   * Search for users by their username.
+   * @param username The username to search for.
+   * @param page The page to get.
+   * @return A list of users.
+   */
   public List<User> search(String username, int page) {
     return UserRepository.search(username, PageRequest.of(page, PAGE_SIZE));
   }
 
+  /**
+   * Delete a user from the database.
+   * @param id The id of the user to delete.
+   */
   public void deleteUser(UUID id) {
     UserRepository.deleteById(id);
   }
 
+    /**
+     * Update a user in the database.
+     * @param bio The new bio of the user.
+     * @param id The id of the user to update.
+     */
   public void updateUser(String bio, UUID id) {
     UserRepository.updateUser(bio, id);
   }

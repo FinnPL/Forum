@@ -12,6 +12,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for authentication.
+ * @apiNote This service is used by the AuthenticationController.
+ * @see de.ghse.forum.api.AuthenticationController AuthenticationController
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -20,6 +25,11 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
+  /**
+   * Generates a JWT token for the user.
+   * @param request AuthenticationRequest
+   * @return AuthenticationResponse with JWT token and user id
+   */
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(request.getUser_name(), request.getPassword()));
@@ -31,6 +41,11 @@ public class AuthenticationService {
         .build();
   }
 
+    /**
+     * Registers a new user.
+     * @param request RegisterRequest
+     * @return AuthenticationResponse with JWT token and user id
+     */
   public AuthenticationResponse register(RegisterRequest request) {
     var user =
         User.builder()
