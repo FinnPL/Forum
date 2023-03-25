@@ -24,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * PostController is a REST controller for post related endpoints.
+ *
  * @apiNote This controller is accessible under /api/v1/post.
  * @see PostService PostService
  * @see de.ghse.forum.model.Post Post
@@ -39,6 +40,7 @@ public class PostController {
 
   /**
    * REST endpoint for adding a new post.
+   *
    * @apiNote This endpoint is accessible under /api/v1/post/add.
    * @param postRequest the JSON body of the request
    * @param principal the principal of the user (Spring internal)
@@ -70,14 +72,15 @@ public class PostController {
     return ResponseEntity.badRequest().build();
   }
 
-    /**
-     * REST endpoint for getting posts by id.
-     * @apiNote This endpoint is accessible under /api/v1/post/{id}.
-     * @param id the UUID of the post to be retrieved
-     * @return the post as PostResponse
-     * @see PostResponse PostResponse
-     * @see Post Post
-     */
+  /**
+   * REST endpoint for getting posts by id.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/post/{id}.
+   * @param id the UUID of the post to be retrieved
+   * @return the post as PostResponse
+   * @see PostResponse PostResponse
+   * @see Post Post
+   */
   @GetMapping(path = "/{id}")
   public ResponseEntity<PostResponse> getPostById(@PathVariable("id") UUID id) {
     return ResponseEntity.ok()
@@ -94,6 +97,7 @@ public class PostController {
 
   /**
    * REST endpoint for deleting posts by id.
+   *
    * @param id the UUID of the post to be deleted
    * @param principal the principal of the user (Spring internal)
    * @return the deleted post as PostResponse
@@ -118,16 +122,17 @@ public class PostController {
     return ResponseEntity.badRequest().build();
   }
 
-    /**
-     * REST endpoint for updating posts by id.
-     * @param id the UUID of the post to be updated
-     * @param postRequest the JSON body of the request containing the new post data
-     * @param principal the principal of the user (Spring internal)
-     * @return the updated post as PostResponse
-     * @apiNote This endpoint is accessible under /api/v1/post/{id}.
-     * @see PostResponse PostResponse
-     * @see Post Post
-     */
+  /**
+   * REST endpoint for updating posts by id.
+   *
+   * @param id the UUID of the post to be updated
+   * @param postRequest the JSON body of the request containing the new post data
+   * @param principal the principal of the user (Spring internal)
+   * @return the updated post as PostResponse
+   * @apiNote This endpoint is accessible under /api/v1/post/{id}.
+   * @see PostResponse PostResponse
+   * @see Post Post
+   */
   @PutMapping(path = "/{id}")
   public ResponseEntity<PostResponse> updatePost(
       @PathVariable("id") UUID id,
@@ -152,8 +157,9 @@ public class PostController {
   }
 
   /**
-   * REST endpoint for searching posts.
-   * Searches for posts containing the query in the title or content.
+   * REST endpoint for searching posts. Searches for posts containing the query in the title or
+   * content.
+   *
    * @param query the query to search for
    * @param page the page to be retrieved
    * @return the posts as PostResponse
@@ -167,15 +173,16 @@ public class PostController {
     return new PostResponse().convert(postService.getSearchPage(query, page));
   }
 
-    /**
-     * REST endpoint for getting Posts by user.
-     * @apiNote This endpoint is accessible under /api/v1/post/all.
-     * @param id the UUID of the user
-     * @param page the page to be retrieved
-     * @return the posts as PostResponse
-     * @see PostResponse PostResponse
-     * @see Post Post
-     */
+  /**
+   * REST endpoint for getting Posts by user.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/post/all.
+   * @param id the UUID of the user
+   * @param page the page to be retrieved
+   * @return the posts as PostResponse
+   * @see PostResponse PostResponse
+   * @see Post Post
+   */
   @GetMapping(path = "/user/{id}/{page}")
   public ResponseEntity<List<PostResponse>> getByUserByPage(
       @PathVariable("id") UUID id, @PathVariable("page") int page) {
@@ -192,14 +199,15 @@ public class PostController {
     return ResponseEntity.badRequest().build();
   }
 
-    /**
-     * REST endpoint for getting posts.
-     * @apiNote This endpoint is accessible under /api/v1/post/all.
-     * @param page the page to be retrieved
-     * @return the posts as PostResponse
-     * @see PostResponse PostResponse
-     * @see Post Post
-     */
+  /**
+   * REST endpoint for getting posts.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/post/all.
+   * @param page the page to be retrieved
+   * @return the posts as PostResponse
+   * @see PostResponse PostResponse
+   * @see Post Post
+   */
   @GetMapping(path = "/page/{page}")
   public List<PostResponse> getAllByPage(@PathVariable("page") int page) {
     return new PostResponse().convert(postService.getNewestByPage(page));
