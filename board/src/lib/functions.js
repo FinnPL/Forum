@@ -6,4 +6,4 @@ export function getCookie (cookieName) {
   })
   return cookie[cookieName]
 }
-//function to get the cookie value with the cookie name
+// function to get the cookie value with the cookie name
