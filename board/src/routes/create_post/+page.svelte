@@ -25,6 +25,7 @@
   }
 
   onMount(async () => {
+    
     await checkLoggedIn();
     await subStores();
   });

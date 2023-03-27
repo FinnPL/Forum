@@ -60,7 +60,7 @@
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
     bio = fetchedData.bio;
-    bio_update = bio;
+    bio_update = bio; // For the modal pre-input
     console.log(bio)
     console.log(user_name);
   }
@@ -121,7 +121,7 @@ onMount(async () => {
 };
 
 const path = window.location.pathname.split("/");
-const userid = path[path.length-1];
+const userid = path[path.length-1]; // Get userid from url path
 
 
 
@@ -135,6 +135,7 @@ const blob = await res.blob();
     if(event.target && event.target.result) {
       avatarSrc = event.target.result; 
     }
+    console.log(avatarSrc)
 }
 }
 loadAvatar();
@@ -171,10 +172,10 @@ async function update_bio() {
 <div class="container">
   <div class="alert alert-dark">
     <h2>Username: {user_name}</h2>
-    {#if bio != "null"}
+    {#if bio != null}
     <h3>Bio: {bio} </h3>
     {/if}
-    {#if avatarSrc}
+    {#if avatarSrc != "data:"}
       <img src={avatarSrc } alt="Avatar" width="250" height="300">
     {/if}
     {#if own_user_id_value == data.userId}

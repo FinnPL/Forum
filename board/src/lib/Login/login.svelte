@@ -11,7 +11,7 @@
   let cookie_name_value: string;
   let own_user_id_value: string;
 
-  async function checkLoggedIn() {
+  async function checkLoggedIn() { // Check if you already logged in
     cookie_name_value = await getCookie("username");
     cookie_name.set(cookie_name_value);
     tokenValue = await getCookie("tokenValue");
@@ -20,7 +20,7 @@
     own_user_id.set(own_user_id_value);
   }
 
-  async function signUp() {
+  async function signUp() { // Sign up & store the values in cookies
     const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -46,7 +46,7 @@
     console.log(name);
   }
 
-  async function login() {
+  async function login() { //Login & store the values in cookies
     const res = await fetch(ip + "api/v1/auth/authenticate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -72,7 +72,7 @@
     console.log(name);
   }
 
-  onMount(async () => {
+  onMount(async () => { // Write in Cookie values in writable stores
     checkLoggedIn();
     if (document.cookie != undefined) {
       let tokenValue = await getCookie("tokenValue");
@@ -83,7 +83,7 @@
     }
   });
 
-  async function subStores() {
+  async function subStores() { // Subscribe to writable stores
     token.subscribe((value: string) => {
       tokenValue = value;
       console.log(tokenValue);
@@ -98,9 +98,13 @@
 
 </script>
 
-{#if cookie_name_value != "undefined" || cookie_name_value != undefined}
+{#if cookie_name_value != undefined}
   <div class="container">
     <h1>Eingeloggt als {cookie_name_value}</h1>
+  </div>
+  {:else}
+  <div class="container">
+    <h1>Login or Register!</h1>
   </div>
 {/if}
 
@@ -109,7 +113,7 @@
     <form on:submit|preventDefault>
       <Input placeholder="Username" type="text" bind:value={user_name} />
       <Input placeholder="Password" type="password" bind:value={password} />
-      <Button color="primary" on:click={signUp} on:click={() => location.reload()} >Sign Up</Button>
+      <Button color="primary" on:click={signUp} on:click={() => location.reload()} >Sign Up</Button> 
       <Button color="primary" on:click={login} on:click={() => location.reload()} >Login</Button>
     </form>
   </div>

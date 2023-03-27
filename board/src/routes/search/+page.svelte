@@ -28,7 +28,7 @@
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
     const data = await dataRes.json()
-    searchList = searchList.concat(data)
+    searchList = searchList.concat(data) // Expand current searchlist
     
     console.log(searchList)
   }
@@ -54,7 +54,7 @@ async function search_user() {
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
     const data = await dataRes.json()
-    searchList = searchList.concat(data)
+    searchList = searchList.concat(data) // Expand current searchlist
     console.log(searchList)
 }
 async function first_search_user() {
@@ -71,7 +71,7 @@ async function first_search_user() {
     console.log(searchList)
 }
 onMount(async () => {
-    window.onscroll = function (ev) {
+    window.onscroll = function (ev) { // Dymamic loading of searchlist items
       if (
         window.innerHeight + window.pageYOffset >=
         document.body.offsetHeight

@@ -157,7 +157,7 @@
 
   async function post_comment() {
     const res = await fetch(ip + "api/v1/comment/add/", {
-      method: "POST",
+      method: "post",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + tokenValue,
@@ -173,7 +173,7 @@
   }
 
   onMount(async () => {
-    window.onscroll = function (ev) {
+    window.onscroll = function (ev) { // Dynamic site loading
       if (
         window.innerHeight + window.pageYOffset >=
         document.body.offsetHeight
@@ -193,14 +193,14 @@
   redirect: 'follow'
 };
 
-const path = window.location.pathname.split("/");
-const post_id = path[path.length-1];
+const path = window.location.pathname.split("/"); 
+const post_id = path[path.length-1]; // Get the url params
 
 
 
 
   async function loadImage() {
-const res = await fetch(ip + "api/v1/file/post/"+post_id+"?"+new Date().getTime(), requestOptions)
+const res = await fetch(ip + "api/v1/file/post/"+post_id+"?"+new Date().getTime(), requestOptions) // Add unique params to the image to avoid cache issues
 const blob = await res.blob();
   const reader = new FileReader();
   reader.readAsDataURL(blob);
@@ -253,8 +253,8 @@ const handleFileChange = (event:any) => {
     <p2>Datum: {date}</p2><br />
     <br />
     <p><a href={"/profile/" + userID}>Autor: {user_name}</a></p>
-    {#if imageSrc}
-      <img src={imageSrc } alt="Avatar" width="250" height="300">
+    {#if imageSrc != "data:" }
+      <img src={imageSrc } alt="User Image" width="250" height="300">
     {/if}
     {#if own_user_id_value == userID}
       <div>
@@ -300,7 +300,7 @@ const handleFileChange = (event:any) => {
     {/if}
     <br />
 
-    <Form method="POST">
+    <Form>
       <FormGroup>
         <h3>Comment:</h3>
         <div class="form-floating">
@@ -316,7 +316,7 @@ const handleFileChange = (event:any) => {
         </div>
       </FormGroup>
       <div class="button">
-        <Button color="primary" on:click={post_comment}>Post Comment</Button>
+        <Button color="primary" on:click={post_comment} on:click={() => location.reload()} >Post Comment</Button>
       </div>
     </Form>
   </div>
