@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api/v1/file")
 public class FileDataController {
 
   private final UserService userService;
@@ -48,7 +49,7 @@ public class FileDataController {
    * @return a ResponseEntity with the status code
    * @throws IOException if the file could not be saved
    */
-  @PostMapping("/api/v1/file/profile")
+  @PostMapping("/profile")
   public ResponseEntity<String> uploadProfilePicture(
       @RequestParam("file") MultipartFile file, Principal principal) throws IOException {
 
@@ -68,7 +69,7 @@ public class FileDataController {
    * @return a ResponseEntity with the status code
    * @throws IOException if the file could not be read
    */
-  @GetMapping("/api/v1/file/profile/{id}")
+  @GetMapping("/profile/{id}")
   public ResponseEntity<ByteArrayResource> loadProfilePicture(@PathVariable("id") String id)
       throws IOException {
     return getFileWithID(id);
@@ -82,7 +83,7 @@ public class FileDataController {
    * @return a ResponseEntity with the status code
    * @throws IOException if the file could not be read
    */
-  @PostMapping("/api/v1/file/post/{id}")
+  @PostMapping("/post/{id}")
   public ResponseEntity<String> uploadFile(
       @PathVariable("id") String id, @RequestParam("file") MultipartFile file, Principal principal)
       throws IOException {
@@ -111,7 +112,7 @@ public class FileDataController {
    * @return a ResponseEntity with the status code and the file as a ByteArrayResource
    * @throws IOException if the file could not be read
    */
-  @GetMapping("/api/v1/file/post/{id}")
+  @GetMapping("/post/{id}")
   public ResponseEntity<ByteArrayResource> loadFile(@PathVariable String id) throws IOException {
     return getFileWithID(id);
   }
@@ -164,19 +165,6 @@ public class FileDataController {
         .body(new ByteArrayResource(Files.readAllBytes(Paths.get(files[0].getAbsolutePath()))));
   }
 
-  /**
-   * Deletes a file with the given id.
-   *
-   * @param file to be deleted
-   * @return a ResponseEntity with the status code
-   * @throws IOException if the file could not be deleted
-   * @deprecated This method will be moved to the admin controller
-   */
-  @DeleteMapping("/api/v1/file")
-  public ResponseEntity<String> deleteFile(@RequestParam("file") String file) throws IOException {
-    Files.delete(Paths.get(directory, file));
-    return ResponseEntity.ok().body("File deleted successfully");
-  }
 
   /**
    * Creates a directory if it does not exist.

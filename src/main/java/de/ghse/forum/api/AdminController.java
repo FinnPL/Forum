@@ -1,11 +1,20 @@
 package de.ghse.forum.api;
 
+import de.ghse.forum.api.response.PostResponse;
+import de.ghse.forum.api.response.UserResponse;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -23,6 +32,9 @@ public class AdminController {
   private final UserService userService;
   private final PostService postService;
 
+    @Value("${file.directory}")
+    private String directory;
+
   /**
    * REST endpoint for deleting a user.
    *
@@ -31,9 +43,17 @@ public class AdminController {
    * @see de.ghse.forum.model.User User
    */
   @DeleteMapping(path = "/user/{id}")
-  public void deleteUser(@PathVariable("id") UUID id) {
+  public ResponseEntity<UserResponse> deleteUser(@PathVariable("id") UUID id) {
     logger.info("Deleting user with id: " + id);
-    userService.deleteUser(id);
+    return
+        userService
+            .findUserById(id)
+            .map(
+                user -> {
+                  userService.deleteUser(id);
+                  return ResponseEntity.ok(new UserResponse().convert(user));
+                })
+            .orElse(ResponseEntity.notFound().build());
   }
 
   /**
@@ -44,8 +64,31 @@ public class AdminController {
    * @see de.ghse.forum.model.Post Post
    */
   @DeleteMapping(path = "/post/{id}")
-  public void deletePost(@PathVariable("id") UUID id) {
+  public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id) {
     logger.info("Deleting post with id: " + id);
-    postService.deletePost(id);
+    return postService
+            .getPostById(id)
+        .map(
+            post -> {
+              postService.deletePost(id);
+              return ResponseEntity.ok(new PostResponse().convert(post));
+            })
+        .orElse(ResponseEntity.notFound().build());
   }
+    /**
+     * Deletes a file with the given id.
+     * @param id the id of the file to be deleted
+     * @return a ResponseEntity with the status code
+     * @throws IOException if the file could not be deleted
+     */
+    @DeleteMapping("file/{id}")
+    public ResponseEntity<String> deleteFile(@PathVariable String id) throws IOException {
+        File[] files = new File(directory).listFiles((dir, name) -> name.startsWith(id));
+        if (files != null) {
+            for (File file : files) {
+                Files.delete(Paths.get(file.getPath()));
+            }
+        }
+        return ResponseEntity.ok("File deleted");
+    }
 }

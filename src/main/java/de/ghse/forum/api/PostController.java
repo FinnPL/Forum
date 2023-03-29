@@ -47,7 +47,7 @@ public class PostController {
    * @return the created post as PostResponse
    * @see PostRequest PostRequest
    */
-  @PostMapping(path = "/add")
+  @PostMapping
   public ResponseEntity<PostResponse> addPost(
       @RequestBody PostRequest postRequest, Principal principal) {
     logger.info("Adding post with title: " + postRequest.getTitle());
@@ -105,7 +105,7 @@ public class PostController {
    * @see PostResponse PostResponse
    * @see Post Post
    */
-  @DeleteMapping(path = "del/{id}")
+  @DeleteMapping(path = "/{id}")
   public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id, Principal principal) {
     logger.info("Deleting post with id: " + id);
     try {

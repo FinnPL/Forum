@@ -33,15 +33,24 @@ public class CommentResponse {
   public List<CommentResponse> convert(List<Comment> comments) {
     List<CommentResponse> commentResponses = new ArrayList<>();
     for (Comment comment : comments) {
-      commentResponses.add(
-          CommentResponse.builder()
+      commentResponses.add(this.convert(comment));
+    }
+    return commentResponses;
+  }
+
+    /**
+     * Converts a Comment object to a CommentResponse object.
+     *
+     * @param comment Comment object.
+     * @return CommentResponse object.
+     */
+    public CommentResponse convert(Comment comment) {
+      return CommentResponse.builder()
               .id(comment.getId().toString())
               .content(comment.getContent())
               .user_id(comment.getUser().getId().toString())
               .user_name(comment.getUser().getUsername())
               .date(comment.getDate().toString())
-              .build());
+              .build();
     }
-    return commentResponses;
-  }
 }

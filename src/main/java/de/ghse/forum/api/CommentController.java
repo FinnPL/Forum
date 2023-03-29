@@ -12,6 +12,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -40,12 +41,11 @@ public class CommentController {
    * @see CommentRequest
    * @see Comment
    */
-  @PostMapping(path = "/add/")
-  public void addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
+  @PostMapping
+  public ResponseEntity<CommentResponse> addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
     logger.info("Adding comment to post with id: " + commentRequest.getPost_id());
     try {
-
-      commentService.addComment(
+        Comment comment =
           Comment.builder()
               .content(commentRequest.getContent())
               .user(userService.findbyUsername(principal.getName()).orElseThrow())
@@ -53,9 +53,12 @@ public class CommentController {
                   postService
                       .getPostById(UUID.fromString(commentRequest.getPost_id()))
                       .orElseThrow())
-              .build());
+                        .build();
+        commentService.addComment(comment);
+        return ResponseEntity.ok(new CommentResponse().convert(comment));
     } catch (Exception e) {
       logger.error("Error adding comment" + e.getMessage());
+      return ResponseEntity.badRequest().build();
     }
   }
 
@@ -69,7 +72,7 @@ public class CommentController {
    * @see CommentResponse
    * @see Comment
    */
-  @GetMapping(path = "/get/{post_id}/{page}")
+  @GetMapping(path = "/{post_id}/{page}")
   public List<CommentResponse> getCommentsByPostByPage(
       @PathVariable("post_id") UUID post_id, @PathVariable("page") int page) {
     logger.info("Getting comments from post with id: " + post_id);
