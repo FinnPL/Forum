@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { ip } from '$lib/const.js';
     import 'bootstrap/dist/css/bootstrap.min.css';
   import { onMount } from 'svelte';
     import {
@@ -23,7 +24,7 @@
 
   async function search_post() {
     searchType = "Post"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/post/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
@@ -34,7 +35,7 @@
   }
   async function first_search_post() {
     searchType = "Post"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/post/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
@@ -49,7 +50,7 @@
 
 async function search_user() {
   searchType = "User"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/user/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
@@ -59,7 +60,7 @@ async function search_user() {
 }
 async function first_search_user() {
   searchType = "User"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/user/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
