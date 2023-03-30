@@ -117,8 +117,8 @@
     <form on:submit|preventDefault>
       <Input placeholder="Username" type="text" bind:value={user_name} />
       <Input placeholder="Password" type="password" bind:value={password} />
-      <Button color="primary" on:click={signUp} on:click={() => location.reload()} >Sign Up</Button> 
-      <Button color="primary" on:click={login} on:click={() => location.reload()} >Login</Button>
+      <Button color="primary" on:click={signUp}  >Sign Up</Button> 
+      <Button color="primary" on:click={login}  >Login</Button>
     </form>
   </div>
 {/if}
