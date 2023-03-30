@@ -127,7 +127,7 @@ const userid = path[path.length-1]; // Get userid from url path
 
 
   async function loadAvatar() {
-const res = await fetch(ip+userid+"?"+new Date().getTime(), requestOptions)
+const res = await fetch(ip+"api/v1/file/profile/"+userid+"?"+new Date().getTime(), requestOptions)
 const blob = await res.blob();
   const reader = new FileReader();
   reader.readAsDataURL(blob);

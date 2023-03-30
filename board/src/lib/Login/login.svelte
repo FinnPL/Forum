@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
   import {ip} from "../const.js"
+  import { goto } from "$app/navigation";
   let user_name: string;
   let password: string;
   let tokenValue: string;
@@ -44,6 +45,7 @@
     token.set(tokenValue);
     let name = await getCookie("username");
     console.log(name);
+    await goto("/")
   }
 
   async function login() { //Login & store the values in cookies
@@ -70,6 +72,7 @@
     token.set(tokenValue);
     let name = await getCookie("username");
     console.log(name);
+    await goto("/")
   }
 
   onMount(async () => { // Write in Cookie values in writable stores
