@@ -2,6 +2,7 @@ package de.ghse.forum.api;
 
 import de.ghse.forum.api.response.PostResponse;
 import de.ghse.forum.api.response.UserResponse;
+import de.ghse.forum.service.FileDataService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
 
@@ -31,9 +32,8 @@ public class AdminController {
   final Logger logger = LoggerFactory.getLogger(AdminController.class);
   private final UserService userService;
   private final PostService postService;
+  private final FileDataService fileDataService;
 
-    @Value("${file.directory}")
-    private String directory;
 
   /**
    * REST endpoint for deleting a user.
@@ -79,16 +79,16 @@ public class AdminController {
      * Deletes a file with the given id.
      * @param id the id of the file to be deleted
      * @return a ResponseEntity with the status code
-     * @throws IOException if the file could not be deleted
      */
     @DeleteMapping("file/{id}")
-    public ResponseEntity<String> deleteFile(@PathVariable String id) throws IOException {
-        File[] files = new File(directory).listFiles((dir, name) -> name.startsWith(id));
-        if (files != null) {
-            for (File file : files) {
-                Files.delete(Paths.get(file.getPath()));
-            }
+    public ResponseEntity<String> deleteFile(@PathVariable String id){
+        logger.info("Deleting file with id: " + id);
+        try {
+            fileDataService.deleteFile(id);
+            return ResponseEntity.ok("File deleted");
+        } catch (IOException e) {
+            logger.error("Could not delete file with id: " + id);
+            return ResponseEntity.badRequest().body("Could not delete file");
         }
-        return ResponseEntity.ok("File deleted");
-    }
+     }
 }
