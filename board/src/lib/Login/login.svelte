@@ -83,7 +83,6 @@
       let nameValue = await getCookie("username");
       cookie_name.set(nameValue);
       await subStores();
-      console.log(ip+"This is my ip")
     }
   });
 

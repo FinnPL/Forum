@@ -4,6 +4,7 @@
   import { own_user_id, token } from "../../../lib/Login/login";
   import { ip } from "../../../lib/const.js"
   import { FormGroup, Input, FormText, Label, Button, Modal, ModalHeader, ModalBody, Form, ModalFooter } from "sveltestrap";
+  import { goto } from "$app/navigation";
   export let data: any;
   let postList: any = [];
   let page = 0;
@@ -108,6 +109,8 @@
       },
     });
     console.log(res)
+    await goto("/")
+    await goto("/profile/"+own_user_id_value)
   };
 
 
@@ -182,7 +185,7 @@ async function update_bio() {
     
     <FormGroup>
       <Input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
-      <Button color="primary" on:click={upload_avatar} on:click={() => location.reload()} >Hochladen</Button>
+      <Button color="primary" on:click={upload_avatar} >Hochladen</Button>
       <Button color="info" on:click={toggle} >Update Bio</Button>
     </FormGroup>
     <Modal isOpen={open} {toggle}>

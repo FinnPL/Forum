@@ -142,7 +142,7 @@ onMount(async () => {
       <br />
       <p2>Name: {post.user_name}</p2><br />
       <br />
-      <p><a href={"/profile/" + post.user_id}>Author: {post.id}</a></p>
+      <p><a href={"/profile/" + post.user_id}>Author: {post.user_name}</a></p>
       </a>
     </div>
   {/each}

@@ -152,7 +152,10 @@
       }),
     });
     await update_image();
+    await goto("/")
+    await goto("/post/"+thisID)
     return res.json();
+    
   }
 
   async function post_comment() {
@@ -290,7 +293,7 @@ const handleFileChange = (event:any) => {
               color="primary"
               on:click={toggle}
               on:click={update_post}
-              on:click={() => location.reload()}>Update Post</Button
+              >Update Post</Button
             >
             <Button color="secondary" on:click={toggle}>Cancel</Button>
           </ModalFooter>
