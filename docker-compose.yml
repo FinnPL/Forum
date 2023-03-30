@@ -20,6 +20,14 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
 
+  svelte:
+    build: ./board
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - spring
+
   prometheus:
     image: prom/prometheus
     ports:
