@@ -172,6 +172,8 @@
     });
 
     console.log(res.json());
+    await goto("/")
+    await goto("/post/"+thisID)
     return res.json();
   }
 
@@ -319,7 +321,7 @@ const handleFileChange = (event:any) => {
         </div>
       </FormGroup>
       <div class="button">
-        <Button color="primary" on:click={post_comment} on:click={() => location.reload()} >Post Comment</Button>
+        <Button color="primary" on:click={post_comment}  >Post Comment</Button>
       </div>
     </Form>
   </div>
