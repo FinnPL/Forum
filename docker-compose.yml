@@ -19,14 +19,20 @@ services:
     environment:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
+      SERVER_IP: ${SERVER_IP}
+    volumes:
+      - files:/files
+      - logs:/logs
 
   svelte:
     build: ./board
     ports:
-      - "3000:3000"
+      - "80:80"
     restart: always
     depends_on:
       - spring
+    environment:
+      SERVER_IP: ${SERVER_IP}
 
   prometheus:
     image: prom/prometheus
@@ -60,3 +66,5 @@ services:
 volumes:
     db-data:
     prometheus-data:
+    files:
+    logs:
