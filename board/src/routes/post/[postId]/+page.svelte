@@ -262,6 +262,7 @@ const handleFileChange = (event:any) => {
     <br />
     <p><a href={"/profile/" + userID}>Autor: {user_name}</a></p>
     {#if imageSrc != "data:" }
+
       <img src={imageSrc } alt="User Image" width="250" height="300">
     {/if}
     {#if isEdited == true}

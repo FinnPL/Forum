@@ -214,7 +214,7 @@ async function update_bio() {
           on:click={toggle}
           on:click={update_bio}
           on:click={upload_avatar}
-          on:click={() => location.reload()}>Update Bio</Button
+          >Update Bio</Button
         >
         <Button color="secondary" on:click={toggle}>Cancel</Button>
       </ModalFooter>
