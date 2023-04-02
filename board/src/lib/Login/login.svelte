@@ -46,6 +46,7 @@
     let name = await getCookie("username");
     console.log(name);
     await goto("/")
+    location.reload();
   }
 
   async function login() { //Login & store the values in cookies
@@ -73,6 +74,7 @@
     let name = await getCookie("username");
     console.log(name);
     await goto("/")
+    location.reload();
   }
 
   onMount(async () => { // Write in Cookie values in writable stores
