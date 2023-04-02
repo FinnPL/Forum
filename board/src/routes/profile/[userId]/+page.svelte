@@ -63,7 +63,9 @@
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
     bio = fetchedData.bio;
-    bio_update = bio; // For the modal pre-input
+    if(bio != "null" && bio != null) {
+      bio_update = bio; // For the modal pre-input
+    } else { bio_update = ""}
     console.log(bio)
     console.log(user_name);
   }
@@ -174,7 +176,7 @@ async function update_bio() {
   <div class="alert alert-dark">
 
     <h2>Username: {user_name}</h2>
-    {#if bio != null}
+    {#if bio != null && bio != "null"}
     <h3>Bio: {bio} </h3>
     {/if}
     
@@ -214,7 +216,7 @@ async function update_bio() {
           on:click={toggle}
           on:click={update_bio}
           on:click={upload_avatar}
-          >Update Bio</Button
+          >Update Profile</Button
         >
         <Button color="secondary" on:click={toggle}>Cancel</Button>
       </ModalFooter>
