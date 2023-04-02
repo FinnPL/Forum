@@ -1,1 +1,1 @@
-export const ip = "http://"+${SERVER_IP}+":8080/";
+export const ip = "http://"+ process.env.SERVER_IP+":8080/";
