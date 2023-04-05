@@ -14,7 +14,7 @@ public class WebMvcConfig {
   @Value("${adr.ip}")
   private String ip;
 
- /**
+  /**
    * Creates a CorsFilter bean.
    *
    * @return a CorsFilter bean
