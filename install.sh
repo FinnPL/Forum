@@ -12,11 +12,13 @@ sudo sh get-docker.sh
 sudo apt-get update
 sudo apt-get install -y docker-compose
 
+# find out the public IP address of the server
+export SERVER_IP=$(curl -s http://checkip.amazonaws.com)
+
 # Set environment variables
 export DB_PASSWORD=$1
 export DB_NAME=$2
 export GF_SECURITY_ADMIN_PASSWORD=$3
-export SERVER_IP=$4
 
 # Make the mvnw file executable
 chmod +x mvnw

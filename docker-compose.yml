@@ -19,6 +19,7 @@ services:
     environment:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
+      SERVER_IP: ${SERVER_IP}
     volumes:
       - files:/files
       - logs:/logs

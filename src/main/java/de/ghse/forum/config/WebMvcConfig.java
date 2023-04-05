@@ -1,22 +1,21 @@
 package de.ghse.forum.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 @Configuration
 public class WebMvcConfig {
+  @Value("${adr.ip}")
+  private String ip;
   @Bean
-  public CorsFilter corsFilter() throws UnknownHostException {
+  public CorsFilter corsFilter() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    System.out.println("http://"+ InetAddress.getLocalHost().getHostAddress());
-    config.addAllowedOrigin("http://"+ InetAddress.getLocalHost().getHostAddress());
+    config.addAllowedOrigin("http://"+ip);
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
