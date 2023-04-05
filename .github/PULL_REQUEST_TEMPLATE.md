@@ -1,13 +1,14 @@
-copilot:all
-
-<!--- Provide a general summary of your changes in the Title above -->
-
-## Description
-<!--- Describe your changes in detail -->
+### WHAT
+copilot:summary
+copilot:poem
 
 ## Motivation and Context
 <!--- Why is this change required? What problem does it solve? -->
 <!--- If it fixes an open issue, please link to the issue here. -->
+
+### HOW
+copilot:walkthrough
+
 
 ## How has this been tested?
 <!--- Please describe in detail how you tested your changes. -->
