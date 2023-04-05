@@ -3,7 +3,7 @@
 [![.github/workflows/installScript.yml](https://github.com/FinnPL/Forum/actions/workflows/installScript.yml/badge.svg)](https://github.com/FinnPL/Forum/actions/workflows/installScript.yml)
 [![Java CI with Maven](https://github.com/FinnPL/Forum/actions/workflows/maven.yml/badge.svg)](https://github.com/FinnPL/Forum/actions/workflows/maven.yml)
 [![.github/workflows/codeql-analysis.yml](https://github.com/FinnPL/Forum/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/FinnPL/Forum/actions/workflows/codeql-analysis.yml)
-
+[![Frontend Build](https://github.com/FinnPL/Forum/actions/workflows/build-frontend.yml/badge.svg)](https://github.com/FinnPL/Forum/actions/workflows/build-frontend.yml)
 ## Setup
 
 Clone Projekt
