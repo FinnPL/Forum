@@ -11,11 +11,12 @@ import org.springframework.web.filter.CorsFilter;
 public class WebMvcConfig {
   @Value("${adr.ip}")
   private String ip;
+
   @Bean
   public CorsFilter corsFilter() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    config.addAllowedOrigin("http://"+ip);
+    config.addAllowedOrigin("http://" + ip);
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
