@@ -2,7 +2,6 @@
   import { getCookie } from "$lib/functions";
   import { onMount } from "svelte";
   import { own_user_id, token } from "../../../lib/Login/login";
-  import { ip } from "../../../lib/const.js"
   import { FormGroup, Input, FormText, Label, Button, Modal, ModalHeader, ModalBody, Form, ModalFooter } from "sveltestrap";
   import { goto } from "$app/navigation";
   export let data: any;
@@ -19,6 +18,13 @@
   //Modal
   let open = false;
   const toggle = () => (open = !open);
+  let ip:string;
+
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
+
 
  
 
@@ -42,6 +48,7 @@
 
 
   onMount(async () => {
+    await get_server_ip();
     await checkLoggedIn();
     await subStores();
     console.log(avatarSrc)

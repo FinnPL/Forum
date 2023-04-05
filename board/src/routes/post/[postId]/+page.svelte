@@ -12,9 +12,11 @@
   import { onMount } from "svelte";
   import { token, cookie_name, own_user_id } from "../../../lib/Login/login";
   import { getCookie } from "../../../lib/functions";
-  import { ip } from "../../../lib/const.js";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
+  let ip:string
+
+
 
   export let data: any;
 
@@ -46,6 +48,10 @@
 
   console.log(thisID);
 
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
   async function checkLoggedIn() {
     cookie_name_value = await getCookie("username");
     cookie_name.set(cookie_name_value);
@@ -69,6 +75,7 @@
   }
 
   onMount(async () => {
+    await get_server_ip();
     await checkLoggedIn();
     await subStores();
     getPost();
