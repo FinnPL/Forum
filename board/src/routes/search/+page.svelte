@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { ip } from '$lib/const.js';
     import 'bootstrap/dist/css/bootstrap.min.css';
   import { onMount } from 'svelte';
     import {
@@ -10,6 +9,13 @@
     Input
   } from 'sveltestrap';
   import { token } from "../../lib/Login/login.js"
+  let ip:string
+
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
+
 
 
   let input:string;
@@ -72,6 +78,7 @@ async function first_search_user() {
     console.log(searchList)
 }
 onMount(async () => {
+  await get_server_ip();
     window.onscroll = function (ev) { // Dymamic loading of searchlist items
       if (
         window.innerHeight + window.pageYOffset >=

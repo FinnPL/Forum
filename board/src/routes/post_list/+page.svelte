@@ -1,11 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
-  import { ip } from "../../lib/const.js"
   let postList: any = [];
   let page: number = 0;
   let tokenValue: string;
+  let ip:string
 
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
 
   token.subscribe((value: string) => {
     tokenValue = value;
@@ -38,6 +41,8 @@
   }
 
   onMount(async () => {
+    await get_server_ip();
+    getFirstPostList();
     window.onscroll = function () {
       if (
         window.innerHeight + window.pageYOffset >=
@@ -49,7 +54,7 @@
     };
   });
 
-  getFirstPostList();
+ 
 </script>
 
 {#if postList != undefined}

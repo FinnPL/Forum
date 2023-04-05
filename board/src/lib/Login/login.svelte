@@ -4,13 +4,18 @@
   import "bootstrap/dist/css/bootstrap.min.css";
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
-  import {ip} from "../const.js"
   import { goto } from "$app/navigation";
   let user_name: string;
   let password: string;
   let tokenValue: string;
   let cookie_name_value: string;
   let own_user_id_value: string;
+  let ip:string
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
+
 
   async function checkLoggedIn() { // Check if you already logged in
     cookie_name_value = await getCookie("username");
@@ -78,6 +83,7 @@
   }
 
   onMount(async () => { // Write in Cookie values in writable stores
+    await get_server_ip();
     checkLoggedIn();
     if (document.cookie != undefined) {
       let tokenValue = await getCookie("tokenValue");

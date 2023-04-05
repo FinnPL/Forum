@@ -5,7 +5,6 @@
   import { token, cookie_name } from "../../lib/Login/login.js";
   import { getCookie } from "../../lib/functions";
   import { onMount } from "svelte";
-  import { ip } from "../../lib/const.js"
   import  Error  from "../../lib/Error/error.svelte"
   import { goto } from "$app/navigation";
   let post_title: string;
@@ -16,6 +15,11 @@
   let error = false;
   let file:any;
   let image_file:any;
+  let ip:string
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
 
   async function checkLoggedIn() {
     cookie_name_value = await getCookie("username");
@@ -25,7 +29,7 @@
   }
 
   onMount(async () => {
-    
+    await get_server_ip();
     await checkLoggedIn();
     await subStores();
   });
