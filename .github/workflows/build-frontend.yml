@@ -21,6 +21,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: cd board
-      - run: npm install
-      - run: npm run build
+      - run: |
+          cd board
+          npm install
+          npm run build
+        shell: bash
