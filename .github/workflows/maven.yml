@@ -28,6 +28,7 @@ jobs:
     env:
       SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/project_test
       SPRING_DATASOURCE_PASSWORD: password
+      SERVER_IP: 127.0.0.1
 
     steps:
     - uses: actions/checkout@v3
