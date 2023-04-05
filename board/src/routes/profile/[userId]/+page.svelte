@@ -20,6 +20,7 @@
   let open = false;
   const toggle = () => (open = !open);
 
+ 
 
   async function checkLoggedIn() {
 
@@ -47,6 +48,7 @@
     getUserDetails();
     getFirstPostList();
     
+    
   });
 
   async function getUserDetails() {
@@ -61,7 +63,9 @@
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
     bio = fetchedData.bio;
-    bio_update = bio; // For the modal pre-input
+    if(bio != "null" && bio != null) {
+      bio_update = bio; // For the modal pre-input
+    } else { bio_update = ""}
     console.log(bio)
     console.log(user_name);
   }
@@ -122,12 +126,8 @@ onMount(async () => {
   headers: { "Authorization": "Bearer " + bearerToken,},
   redirect: 'follow'
 };
-
 const path = window.location.pathname.split("/");
 const userid = path[path.length-1]; // Get userid from url path
-
-
-
 
   async function loadAvatar() {
 const res = await fetch(ip+"api/v1/file/profile/"+userid+"?"+new Date().getTime(), requestOptions)
@@ -174,22 +174,23 @@ async function update_bio() {
 
 <div class="container">
   <div class="alert alert-dark">
+
     <h2>Username: {user_name}</h2>
-    {#if bio != null}
+    {#if bio != null && bio != "null"}
     <h3>Bio: {bio} </h3>
     {/if}
+    
     {#if avatarSrc != "data:"}
       <img src={avatarSrc } alt="Avatar" width="250" height="300">
     {/if}
+    
     {#if own_user_id_value == data.userId}
     
     <FormGroup>
-      <Input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
-      <Button color="primary" on:click={upload_avatar} >Hochladen</Button>
-      <Button color="info" on:click={toggle} >Update Bio</Button>
+      <Button color="info" on:click={toggle}>Edit Profile</Button>
     </FormGroup>
     <Modal isOpen={open} {toggle}>
-      <ModalHeader {toggle}>Update Bio</ModalHeader>
+      <ModalHeader {toggle}>Edit Profile</ModalHeader>
       <ModalBody>
         <Form>
           <FormGroup>
@@ -204,6 +205,9 @@ async function update_bio() {
               <label for="floatingTextarea2">Text</label>
             </div>
           </FormGroup>
+          <FormGroup>
+            <Input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange} />
+          </FormGroup>
         </Form>
       </ModalBody>
       <ModalFooter>
@@ -211,7 +215,8 @@ async function update_bio() {
           color="primary"
           on:click={toggle}
           on:click={update_bio}
-          on:click={() => location.reload()}>Update Bio</Button
+          on:click={upload_avatar}
+          >Update Profile</Button
         >
         <Button color="secondary" on:click={toggle}>Cancel</Button>
       </ModalFooter>

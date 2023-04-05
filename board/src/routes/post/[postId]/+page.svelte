@@ -34,6 +34,7 @@
   let own_user_id_value: string;
   let title_update: string;
   let content_update: string;
+  let isEdited:boolean;
 
   let imageSrc:any = null;
   let file:any;
@@ -89,6 +90,7 @@
     }
 
     const fetchedData = await fetchedDataRes.json();
+    console.log(fetchedData)
     title = fetchedData.title;
     content = fetchedData.content;
     date = fetchedData.date;
@@ -96,6 +98,7 @@
     userID = fetchedData.user_id;
     title_update = title;
     content_update = content;
+    isEdited = fetchedData.edited;
   }
 
   async function getFirstComments() {
@@ -259,7 +262,13 @@ const handleFileChange = (event:any) => {
     <br />
     <p><a href={"/profile/" + userID}>Autor: {user_name}</a></p>
     {#if imageSrc != "data:" }
+
       <img src={imageSrc } alt="User Image" width="250" height="300">
+    {/if}
+    {#if isEdited == true}
+    <FormGroup>
+      <h8>(Post wurde bearbeitet)</h8>
+    </FormGroup>
     {/if}
     {#if own_user_id_value == userID}
       <div>
@@ -288,6 +297,7 @@ const handleFileChange = (event:any) => {
               <FormGroup>
                 <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
               </FormGroup>
+            
             </Form>
           </ModalBody>
           <ModalFooter>

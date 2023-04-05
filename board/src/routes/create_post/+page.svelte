@@ -111,7 +111,7 @@
         </div>
       </FormGroup>
       <FormGroup>
-        <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
+        <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
       </FormGroup>
       <Button color="primary" on:click={post}>Post</Button>
     </Form>
