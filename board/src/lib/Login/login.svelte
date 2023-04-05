@@ -4,12 +4,18 @@
   import "bootstrap/dist/css/bootstrap.min.css";
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
-  import {ip} from "../const.js"
+  import { goto } from "$app/navigation";
   let user_name: string;
   let password: string;
   let tokenValue: string;
   let cookie_name_value: string;
   let own_user_id_value: string;
+  let ip:string
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
+
 
   async function checkLoggedIn() { // Check if you already logged in
     cookie_name_value = await getCookie("username");
@@ -44,6 +50,8 @@
     token.set(tokenValue);
     let name = await getCookie("username");
     console.log(name);
+    await goto("/")
+    location.reload();
   }
 
   async function login() { //Login & store the values in cookies
@@ -70,9 +78,12 @@
     token.set(tokenValue);
     let name = await getCookie("username");
     console.log(name);
+    await goto("/")
+    location.reload();
   }
 
   onMount(async () => { // Write in Cookie values in writable stores
+    await get_server_ip();
     checkLoggedIn();
     if (document.cookie != undefined) {
       let tokenValue = await getCookie("tokenValue");
@@ -113,8 +124,8 @@
     <form on:submit|preventDefault>
       <Input placeholder="Username" type="text" bind:value={user_name} />
       <Input placeholder="Password" type="password" bind:value={password} />
-      <Button color="primary" on:click={signUp} on:click={() => location.reload()} >Sign Up</Button> 
-      <Button color="primary" on:click={login} on:click={() => location.reload()} >Login</Button>
+      <Button color="primary" on:click={signUp}  >Sign Up</Button> 
+      <Button color="primary" on:click={login}  >Login</Button>
     </form>
   </div>
 {/if}

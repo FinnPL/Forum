@@ -9,6 +9,13 @@
     Input
   } from 'sveltestrap';
   import { token } from "../../lib/Login/login.js"
+  let ip:string
+
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
+
 
 
   let input:string;
@@ -23,7 +30,7 @@
 
   async function search_post() {
     searchType = "Post"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/post/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
@@ -34,7 +41,7 @@
   }
   async function first_search_post() {
     searchType = "Post"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/post/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/post/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
@@ -49,7 +56,7 @@
 
 async function search_user() {
   searchType = "User"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/user/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
@@ -59,7 +66,7 @@ async function search_user() {
 }
 async function first_search_user() {
   searchType = "User"
-    const dataRes = await fetch("http://127.0.0.1:8080/api/v1/user/search/" + input + "/" + page, {
+    const dataRes = await fetch(ip+"api/v1/user/search/" + input + "/" + page, {
       method: "GET",
       headers: { "Authorization": "Bearer "+ tokenValue}
     })
@@ -71,6 +78,7 @@ async function first_search_user() {
     console.log(searchList)
 }
 onMount(async () => {
+  await get_server_ip();
     window.onscroll = function (ev) { // Dymamic loading of searchlist items
       if (
         window.innerHeight + window.pageYOffset >=
@@ -141,7 +149,7 @@ onMount(async () => {
       <br />
       <p2>Name: {post.user_name}</p2><br />
       <br />
-      <p><a href={"/profile/" + post.user_id}>Author: {post.id}</a></p>
+      <p><a href={"/profile/" + post.user_id}>Author: {post.user_name}</a></p>
       </a>
     </div>
   {/each}

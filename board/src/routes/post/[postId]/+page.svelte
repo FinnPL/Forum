@@ -12,9 +12,11 @@
   import { onMount } from "svelte";
   import { token, cookie_name, own_user_id } from "../../../lib/Login/login";
   import { getCookie } from "../../../lib/functions";
-  import { ip } from "../../../lib/const.js";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
+  let ip:string
+
+
 
   export let data: any;
 
@@ -34,6 +36,7 @@
   let own_user_id_value: string;
   let title_update: string;
   let content_update: string;
+  let isEdited:boolean;
 
   let imageSrc:any = null;
   let file:any;
@@ -45,6 +48,10 @@
 
   console.log(thisID);
 
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
   async function checkLoggedIn() {
     cookie_name_value = await getCookie("username");
     cookie_name.set(cookie_name_value);
@@ -68,6 +75,7 @@
   }
 
   onMount(async () => {
+    await get_server_ip();
     await checkLoggedIn();
     await subStores();
     getPost();
@@ -89,6 +97,7 @@
     }
 
     const fetchedData = await fetchedDataRes.json();
+    console.log(fetchedData)
     title = fetchedData.title;
     content = fetchedData.content;
     date = fetchedData.date;
@@ -96,6 +105,7 @@
     userID = fetchedData.user_id;
     title_update = title;
     content_update = content;
+    isEdited = fetchedData.edited;
   }
 
   async function getFirstComments() {
@@ -152,7 +162,10 @@
       }),
     });
     await update_image();
+    await goto("/")
+    await goto("/post/"+thisID)
     return res.json();
+    
   }
 
   async function post_comment() {
@@ -169,6 +182,8 @@
     });
 
     console.log(res.json());
+    await goto("/")
+    await goto("/post/"+thisID)
     return res.json();
   }
 
@@ -254,7 +269,13 @@ const handleFileChange = (event:any) => {
     <br />
     <p><a href={"/profile/" + userID}>Autor: {user_name}</a></p>
     {#if imageSrc != "data:" }
+
       <img src={imageSrc } alt="User Image" width="250" height="300">
+    {/if}
+    {#if isEdited == true}
+    <FormGroup>
+      <h8>(Post wurde bearbeitet)</h8>
+    </FormGroup>
     {/if}
     {#if own_user_id_value == userID}
       <div>
@@ -283,6 +304,7 @@ const handleFileChange = (event:any) => {
               <FormGroup>
                 <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
               </FormGroup>
+            
             </Form>
           </ModalBody>
           <ModalFooter>
@@ -290,7 +312,7 @@ const handleFileChange = (event:any) => {
               color="primary"
               on:click={toggle}
               on:click={update_post}
-              on:click={() => location.reload()}>Update Post</Button
+              >Update Post</Button
             >
             <Button color="secondary" on:click={toggle}>Cancel</Button>
           </ModalFooter>
@@ -316,7 +338,7 @@ const handleFileChange = (event:any) => {
         </div>
       </FormGroup>
       <div class="button">
-        <Button color="primary" on:click={post_comment} on:click={() => location.reload()} >Post Comment</Button>
+        <Button color="primary" on:click={post_comment}  >Post Comment</Button>
       </div>
     </Form>
   </div>

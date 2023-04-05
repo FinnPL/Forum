@@ -2,8 +2,8 @@
   import { getCookie } from "$lib/functions";
   import { onMount } from "svelte";
   import { own_user_id, token } from "../../../lib/Login/login";
-  import { ip } from "../../../lib/const.js"
   import { FormGroup, Input, FormText, Label, Button, Modal, ModalHeader, ModalBody, Form, ModalFooter } from "sveltestrap";
+  import { goto } from "$app/navigation";
   export let data: any;
   let postList: any = [];
   let page = 0;
@@ -18,7 +18,15 @@
   //Modal
   let open = false;
   const toggle = () => (open = !open);
+  let ip:string;
 
+
+  async function get_server_ip() {
+    ip = "http://"+location.hostname+":8080/"
+  }
+
+
+ 
 
   async function checkLoggedIn() {
 
@@ -40,11 +48,13 @@
 
 
   onMount(async () => {
+    await get_server_ip();
     await checkLoggedIn();
     await subStores();
     console.log(avatarSrc)
     getUserDetails();
     getFirstPostList();
+    
     
   });
 
@@ -60,7 +70,9 @@
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
     bio = fetchedData.bio;
-    bio_update = bio; // For the modal pre-input
+    if(bio != "null" && bio != null) {
+      bio_update = bio; // For the modal pre-input
+    } else { bio_update = ""}
     console.log(bio)
     console.log(user_name);
   }
@@ -108,6 +120,8 @@
       },
     });
     console.log(res)
+    await goto("/")
+    await goto("/profile/"+own_user_id_value)
   };
 
 
@@ -119,15 +133,11 @@ onMount(async () => {
   headers: { "Authorization": "Bearer " + bearerToken,},
   redirect: 'follow'
 };
-
 const path = window.location.pathname.split("/");
 const userid = path[path.length-1]; // Get userid from url path
 
-
-
-
   async function loadAvatar() {
-const res = await fetch("http://127.0.0.1:8080/api/v1/file/profile/"+userid+"?"+new Date().getTime(), requestOptions)
+const res = await fetch(ip+"api/v1/file/profile/"+userid+"?"+new Date().getTime(), requestOptions)
 const blob = await res.blob();
   const reader = new FileReader();
   reader.readAsDataURL(blob);
@@ -171,22 +181,23 @@ async function update_bio() {
 
 <div class="container">
   <div class="alert alert-dark">
+
     <h2>Username: {user_name}</h2>
-    {#if bio != null}
+    {#if bio != null && bio != "null"}
     <h3>Bio: {bio} </h3>
     {/if}
+    
     {#if avatarSrc != "data:"}
       <img src={avatarSrc } alt="Avatar" width="250" height="300">
     {/if}
+    
     {#if own_user_id_value == data.userId}
     
     <FormGroup>
-      <Input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
-      <Button color="primary" on:click={upload_avatar} on:click={() => location.reload()} >Hochladen</Button>
-      <Button color="info" on:click={toggle} >Update Bio</Button>
+      <Button color="info" on:click={toggle}>Edit Profile</Button>
     </FormGroup>
     <Modal isOpen={open} {toggle}>
-      <ModalHeader {toggle}>Update Bio</ModalHeader>
+      <ModalHeader {toggle}>Edit Profile</ModalHeader>
       <ModalBody>
         <Form>
           <FormGroup>
@@ -201,6 +212,9 @@ async function update_bio() {
               <label for="floatingTextarea2">Text</label>
             </div>
           </FormGroup>
+          <FormGroup>
+            <Input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange} />
+          </FormGroup>
         </Form>
       </ModalBody>
       <ModalFooter>
@@ -208,7 +222,8 @@ async function update_bio() {
           color="primary"
           on:click={toggle}
           on:click={update_bio}
-          on:click={() => location.reload()}>Update Bio</Button
+          on:click={upload_avatar}
+          >Update Profile</Button
         >
         <Button color="secondary" on:click={toggle}>Cancel</Button>
       </ModalFooter>

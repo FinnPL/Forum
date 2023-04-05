@@ -1,1 +1,9 @@
-export const ip = 'http://127.0.0.1:8080/'
+export let ip
+getPublicIP((ipAddress) => (ip = ipAddress))
+
+function getPublicIP (callback) {
+  fetch('https://api.ipify.org?format=json')
+    .then((response) => response.json())
+    .then((data) => callback(data.ip))
+    .catch((error) => console.error(error))
+}
