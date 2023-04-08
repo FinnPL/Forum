@@ -46,12 +46,11 @@ public class FileDataService {
     if (createDirectory()) throw new IOException("Could not create directory");
     if (file.getContentType() == null | !file.getContentType().startsWith("image/"))
       throw new IOException("File type not supported");
-    String contentType = file.getContentType().split("/")[1].toLowerCase();
 
     Pattern pattern = Pattern.compile("^[a-zA-Z]+/[-+.a-zA-Z0-9]+$");
-    Matcher matcher = pattern.matcher(contentType);
+    Matcher matcher = pattern.matcher(file.getContentType());
     if (!matcher.matches()) throw new IOException("File type not supported");
-    String extension = matcher.group(1).toLowerCase();
+    String extension = matcher.group(0).split("/")[1].toLowerCase();
     deleteFile(id);
     file.transferTo(Paths.get(directory, id + "-" + UUID.randomUUID() + "." + extension));
   }

@@ -36,7 +36,7 @@ public class FileDataController {
   private final PostService postService;
   private final FileDataService fileDataService;
 
-  Logger logger = LoggerFactory.getLogger(CommentController.class);
+  Logger logger = LoggerFactory.getLogger(FileDataController.class);
 
   /**
    * REST endpoint for uploading a profile picture.
