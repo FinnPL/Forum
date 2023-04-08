@@ -42,7 +42,8 @@ public class FileDataService {
    */
   public void saveFile(MultipartFile file, String id) throws IOException {
     if (createDirectory()) throw new IOException("Could not create directory");
-    if (file.getContentType() != null && !file.getContentType().startsWith("image/"))
+    String contentType = file.getContentType().split("/")[1].toLowerCase();
+    if (file.getContentType() == null || !file.getContentType().startsWith("image/") || !contentType.matches("^[a-zA-Z]+/[-+.a-zA-Z0-9]+$"))
       throw new IOException("File type not supported");
     deleteFile(id);
     file.transferTo(
@@ -52,7 +53,7 @@ public class FileDataService {
                 + "-"
                 + UUID.randomUUID()
                 + "."
-                + file.getContentType().split("/")[1].toLowerCase()));
+                +contentType));
   }
 
   /**
@@ -76,9 +77,8 @@ public class FileDataService {
    *
    * @param id of the file
    * @return a ResponseEntity with the status code and the file as a ByteArrayResource
-   * @throws IOException if the file could not be read
    */
-  private File[] getFilesWithID(String id) throws IOException {
+  private File[] getFilesWithID(String id) {
     return new File(directory).listFiles((dir, name) -> name.startsWith(id));
   }
 
