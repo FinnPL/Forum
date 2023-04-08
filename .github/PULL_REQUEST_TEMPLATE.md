@@ -1,4 +1,4 @@
-### WHAT
+## Description
 
 copilot:summary
 copilot:poem
@@ -8,7 +8,7 @@ copilot:poem
 <!--- Why is this change required? What problem does it solve? -->
 <!--- If it fixes an open issue, please link to the issue here. -->
 
-### HOW
+## HOW
 
 copilot:walkthrough
 
