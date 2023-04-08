@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,23 +44,16 @@ public class FileDataService {
    */
   public void saveFile(MultipartFile file, String id) throws IOException {
     if (createDirectory()) throw new IOException("Could not create directory");
-    if (file.getContentType() == null | !file.getContentType().startsWith("image/")) throw new IOException("File type not supported");
+    if (file.getContentType() == null | !file.getContentType().startsWith("image/"))
+      throw new IOException("File type not supported");
     String contentType = file.getContentType().split("/")[1].toLowerCase();
 
     Pattern pattern = Pattern.compile("^[a-zA-Z]+/[-+.a-zA-Z0-9]+$");
     Matcher matcher = pattern.matcher(contentType);
-    if (!matcher.matches())
-      throw new IOException("File type not supported");
+    if (!matcher.matches()) throw new IOException("File type not supported");
     String extension = matcher.group(1).toLowerCase();
     deleteFile(id);
-    file.transferTo(
-        Paths.get(
-            directory,
-            id
-                + "-"
-                + UUID.randomUUID()
-                + "."
-                +extension));
+    file.transferTo(Paths.get(directory, id + "-" + UUID.randomUUID() + "." + extension));
   }
 
   /**
