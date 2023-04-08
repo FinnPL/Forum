@@ -1,18 +1,4 @@
-# .dockerignore
-
-.vscode
-
 node_modules
-
-.git
-.gitattributes
-
-.eslintignore
-.eslintrc.cjs
-
-.prettierrc
-.pretieriignore
-
-README.md
-
-Dockerfile
+.svelte-kit
+build
+.env
