@@ -57,7 +57,7 @@ class AuthenticationControllerTest {
 
     ResponseEntity<AuthenticationResponse> response =
         restTemplate.postForEntity(
-            "/api/v1/auth/authenticate", authenticationRequest, AuthenticationResponse.class);
+            "/api/v1/auth/login", authenticationRequest, AuthenticationResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(Objects.requireNonNull(response.getBody()).getUser_id()).isNotNull();
