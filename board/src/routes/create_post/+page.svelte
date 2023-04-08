@@ -48,7 +48,7 @@
 
   async function post() {
     error = false;
-    const res = await fetch(ip + "api/v1/post/add", {
+    const res = await fetch(ip + "api/v1/post", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

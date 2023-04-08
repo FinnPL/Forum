@@ -50,7 +50,7 @@ class PostControllerTest {
 
     ResponseEntity<PostResponse> response =
         restTemplate.exchange(
-            "/api/v1/post/add",
+            "/api/v1/post",
             HttpMethod.POST,
             new HttpEntity<>(postRequest, headers),
             PostResponse.class);
@@ -88,7 +88,7 @@ class PostControllerTest {
 
     ResponseEntity<PostResponse> response =
         restTemplate.exchange(
-            "/api/v1/post/del/" + post.getId(),
+            "/api/v1/post/" + post.getId(),
             HttpMethod.DELETE,
             new HttpEntity<>(headers),
             PostResponse.class);

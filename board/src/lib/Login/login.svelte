@@ -55,7 +55,7 @@
   }
 
   async function login() { //Login & store the values in cookies
-    const res = await fetch(ip + "api/v1/auth/authenticate", {
+    const res = await fetch(ip + "api/v1/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name, password }),

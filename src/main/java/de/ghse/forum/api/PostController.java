@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import de.ghse.forum.api.request.PostRequest;
 import de.ghse.forum.api.response.PostResponse;
 import de.ghse.forum.model.Post;
+import de.ghse.forum.service.FileDataService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
 import jakarta.validation.Valid;
@@ -36,6 +37,7 @@ public class PostController {
 
   private final PostService postService;
   private final UserService userService;
+  private final FileDataService fileDataService;
   final Logger logger = LoggerFactory.getLogger(PostController.class);
 
   /**
@@ -47,7 +49,7 @@ public class PostController {
    * @return the created post as PostResponse
    * @see PostRequest PostRequest
    */
-  @PostMapping(path = "/add")
+  @PostMapping
   public ResponseEntity<PostResponse> addPost(
       @RequestBody PostRequest postRequest, Principal principal) {
     logger.info("Adding post with title: " + postRequest.getTitle());
@@ -105,13 +107,14 @@ public class PostController {
    * @see PostResponse PostResponse
    * @see Post Post
    */
-  @DeleteMapping(path = "del/{id}")
+  @DeleteMapping(path = "/{id}")
   public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id, Principal principal) {
     logger.info("Deleting post with id: " + id);
     try {
       Post post = postService.getPostById(id).orElseThrow();
       if (post.getUser().getUsername().equals(principal.getName())) {
         postService.deletePost(id);
+        fileDataService.deleteFile(String.valueOf(id));
         return ResponseEntity.ok().body(new PostResponse().convert(post));
       } else {
         throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");

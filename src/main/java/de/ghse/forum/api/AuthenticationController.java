@@ -56,7 +56,7 @@ public class AuthenticationController {
    * @see de.ghse.forum.api.request.AuthenticationRequest AuthenticationRequest
    * @see de.ghse.forum.api.response.AuthenticationResponse AuthenticationResponse
    */
-  @PostMapping(path = "/authenticate")
+  @PostMapping(path = "/login")
   public ResponseEntity<AuthenticationResponse> authentication(
       @RequestBody AuthenticationRequest request) {
     logger.info("Authenticating user with username: " + request.getUser_name());

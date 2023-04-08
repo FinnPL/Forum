@@ -55,7 +55,7 @@ class CommentControllerTest {
     headers.setBearerAuth(token);
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "/api/v1/comment/add/",
+            "/api/v1/comment",
             HttpMethod.POST,
             new HttpEntity<>(commentRequest, headers),
             String.class);
@@ -102,7 +102,7 @@ class CommentControllerTest {
     HttpEntity<String> entity = new HttpEntity<>(headers);
     ResponseEntity<String> response =
         restTemplate.exchange(
-            "/api/v1/comment/get/" + postId + "/0", HttpMethod.GET, entity, String.class);
+            "/api/v1/comment/" + postId + "/0", HttpMethod.GET, entity, String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).contains(commentId);
     assertThat(response.getBody()).contains(user.getUsername());

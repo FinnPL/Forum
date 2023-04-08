@@ -110,7 +110,7 @@
 
   async function getFirstComments() {
     const fetchedRes = await fetch(
-      ip + "api/v1/comment/get/" + thisID + "/" + page,
+      ip + "api/v1/comment/" + thisID + "/" + page,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
@@ -123,7 +123,7 @@
 
   async function getComments() {
     const fetchedRes = await fetch(
-      ip + "api/v1/comment/get/" + thisID + "/" + page,
+      ip + "api/v1/comment/" + thisID + "/" + page,
       {
         method: "GET",
         headers: {
@@ -169,8 +169,8 @@
   }
 
   async function post_comment() {
-    const res = await fetch(ip + "api/v1/comment/add/", {
-      method: "post",
+    const res = await fetch(ip + "api/v1/comment", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + tokenValue,
@@ -248,7 +248,7 @@ const handleFileChange = (event:any) => {
   };
   
   async function del_post() {
-    const res = await fetch(ip +"api/v1/post/del/" + thisID,{
+    const res = await fetch(ip +"api/v1/post/" + thisID,{
       method: 'DELETE',
       headers: { 
         Authorization: "Bearer " + tokenValue,
