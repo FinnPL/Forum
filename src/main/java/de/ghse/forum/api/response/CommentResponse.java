@@ -38,19 +38,19 @@ public class CommentResponse {
     return commentResponses;
   }
 
-    /**
-     * Converts a Comment object to a CommentResponse object.
-     *
-     * @param comment Comment object.
-     * @return CommentResponse object.
-     */
-    public CommentResponse convert(Comment comment) {
-      return CommentResponse.builder()
-              .id(comment.getId().toString())
-              .content(comment.getContent())
-              .user_id(comment.getUser().getId().toString())
-              .user_name(comment.getUser().getUsername())
-              .date(comment.getDate().toString())
-              .build();
-    }
+  /**
+   * Converts a Comment object to a CommentResponse object.
+   *
+   * @param comment Comment object.
+   * @return CommentResponse object.
+   */
+  public CommentResponse convert(Comment comment) {
+    return CommentResponse.builder()
+        .id(comment.getId().toString())
+        .content(comment.getContent())
+        .user_id(comment.getUser().getId().toString())
+        .user_name(comment.getUser().getUsername())
+        .date(comment.getDate().toString())
+        .build();
+  }
 }

@@ -38,8 +38,6 @@ public class FileDataController {
 
   Logger logger = LoggerFactory.getLogger(CommentController.class);
 
-
-
   /**
    * REST endpoint for uploading a profile picture.
    *
@@ -81,27 +79,28 @@ public class FileDataController {
     }
   }
 
-
   /**
    * REST endpoint for uploading a file allocated to a post.
    *
-   * @apiNote This endpoint is accessible under /api/v1/file/post/{id}. The Post must be owned by the Requesting User.
+   * @apiNote This endpoint is accessible under /api/v1/file/post/{id}. The Post must be owned by
+   *     the Requesting User.
    * @param id of the post
    * @return a ResponseEntity with the status code
    */
   @PostMapping("/post/{id}")
   public ResponseEntity<String> uploadFile(
-      @PathVariable("id") String id, @RequestParam("file") MultipartFile file, Principal principal){
+      @PathVariable("id") String id,
+      @RequestParam("file") MultipartFile file,
+      Principal principal) {
     logger.info("Uploading files to Post with id: " + id);
     try {
       if (isAllowedToUploadFile(id, principal)) {
         fileDataService.saveFile(file, id);
         return ResponseEntity.ok("File uploaded");
-      }
-      else {
+      } else {
         return ResponseEntity.badRequest().body("You are not allowed to upload files to this post");
       }
-    }catch (IOException e) {
+    } catch (IOException e) {
       logger.error("Could not upload file to post with id: " + id);
       return ResponseEntity.badRequest().body("Could not upload file");
     }
@@ -125,50 +124,50 @@ public class FileDataController {
     }
   }
 
-    /**
-     * REST endpoint for deleting a file allocated to a post.
-     *
-     * @apiNote This endpoint is accessible under /api/v1/file/post/{id}. The Post must be owned by the Requesting User.
-     * @param id of the post
-     * @return a ResponseEntity with the status code
-     */
+  /**
+   * REST endpoint for deleting a file allocated to a post.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/file/post/{id}. The Post must be owned by
+   *     the Requesting User.
+   * @param id of the post
+   * @return a ResponseEntity with the status code
+   */
   @DeleteMapping("/post/{id}")
-    public ResponseEntity<String> deleteFile(@PathVariable String id, Principal principal) {
-        logger.info("Deleting file from Post with id: " + id);
-        try {
-            if (isAllowedToUploadFile(id, principal)) {
-            fileDataService.deleteFile(id);
-            return ResponseEntity.ok("File deleted");
-            }
-            else {
-            return ResponseEntity.badRequest().body("You are not allowed to delete files from this post");
-            }
-        }catch (IOException e) {
-            logger.error("Could not delete file from post with id: " + id);
-            return ResponseEntity.badRequest().body("Could not delete file");
-        }
+  public ResponseEntity<String> deleteFile(@PathVariable String id, Principal principal) {
+    logger.info("Deleting file from Post with id: " + id);
+    try {
+      if (isAllowedToUploadFile(id, principal)) {
+        fileDataService.deleteFile(id);
+        return ResponseEntity.ok("File deleted");
+      } else {
+        return ResponseEntity.badRequest()
+            .body("You are not allowed to delete files from this post");
+      }
+    } catch (IOException e) {
+      logger.error("Could not delete file from post with id: " + id);
+      return ResponseEntity.badRequest().body("Could not delete file");
+    }
   }
 
-
-    /**
-     * Helper method for creating a ResponseEntity with a ByteArrayResource.
-     *
-     * @param file to be read
-     * @return a ResponseEntity with the status code and the file as a ByteArrayResource
-     * @throws IOException if the file could not be read
-     */
+  /**
+   * Helper method for creating a ResponseEntity with a ByteArrayResource.
+   *
+   * @param file to be read
+   * @return a ResponseEntity with the status code and the file as a ByteArrayResource
+   * @throws IOException if the file could not be read
+   */
   @NotNull
   private ResponseEntity<ByteArrayResource> buildResponseEntity(File file) throws IOException {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentType(
-            MediaType.parseMediaType(Files.probeContentType(Path.of(file.getAbsolutePath()))));
+        MediaType.parseMediaType(Files.probeContentType(Path.of(file.getAbsolutePath()))));
     httpHeaders.setContentDisposition(
-            ContentDisposition.parse(
-                    ContentDisposition.attachment().filename(file.getName()).build().toString()));
+        ContentDisposition.parse(
+            ContentDisposition.attachment().filename(file.getName()).build().toString()));
     httpHeaders.setCacheControl("max-age=36000");
     return ResponseEntity.ok()
-            .headers(httpHeaders)
-            .body(new ByteArrayResource(Files.readAllBytes(Paths.get(file.getAbsolutePath()))));
+        .headers(httpHeaders)
+        .body(new ByteArrayResource(Files.readAllBytes(Paths.get(file.getAbsolutePath()))));
   }
 
   /**
@@ -180,11 +179,11 @@ public class FileDataController {
    */
   private boolean isAllowedToUploadFile(String id, Principal principal) {
     return postService
-            .getPostById(UUID.fromString(id))
-            .orElseThrow()
-            .getUser()
-            .getId()
-            .toString()
-            .equals(userService.findbyUsername(principal.getName()).orElseThrow().getId().toString());
+        .getPostById(UUID.fromString(id))
+        .orElseThrow()
+        .getUser()
+        .getId()
+        .toString()
+        .equals(userService.findbyUsername(principal.getName()).orElseThrow().getId().toString());
   }
 }

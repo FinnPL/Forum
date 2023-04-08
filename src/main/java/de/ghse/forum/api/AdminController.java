@@ -5,16 +5,11 @@ import de.ghse.forum.api.response.UserResponse;
 import de.ghse.forum.service.FileDataService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
-
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +29,6 @@ public class AdminController {
   private final PostService postService;
   private final FileDataService fileDataService;
 
-
   /**
    * REST endpoint for deleting a user.
    *
@@ -45,15 +39,14 @@ public class AdminController {
   @DeleteMapping(path = "/user/{id}")
   public ResponseEntity<UserResponse> deleteUser(@PathVariable("id") UUID id) {
     logger.info("Deleting user with id: " + id);
-    return
-        userService
-            .findUserById(id)
-            .map(
-                user -> {
-                  userService.deleteUser(id);
-                  return ResponseEntity.ok(new UserResponse().convert(user));
-                })
-            .orElse(ResponseEntity.notFound().build());
+    return userService
+        .findUserById(id)
+        .map(
+            user -> {
+              userService.deleteUser(id);
+              return ResponseEntity.ok(new UserResponse().convert(user));
+            })
+        .orElse(ResponseEntity.notFound().build());
   }
 
   /**
@@ -67,7 +60,7 @@ public class AdminController {
   public ResponseEntity<PostResponse> deletePost(@PathVariable("id") UUID id) {
     logger.info("Deleting post with id: " + id);
     return postService
-            .getPostById(id)
+        .getPostById(id)
         .map(
             post -> {
               postService.deletePost(id);
@@ -75,20 +68,21 @@ public class AdminController {
             })
         .orElse(ResponseEntity.notFound().build());
   }
-    /**
-     * Deletes a file with the given id.
-     * @param id the id of the file to be deleted
-     * @return a ResponseEntity with the status code
-     */
-    @DeleteMapping("file/{id}")
-    public ResponseEntity<String> deleteFile(@PathVariable String id){
-        logger.info("Deleting file with id: " + id);
-        try {
-            fileDataService.deleteFile(id);
-            return ResponseEntity.ok("File deleted");
-        } catch (IOException e) {
-            logger.error("Could not delete file with id: " + id);
-            return ResponseEntity.badRequest().body("Could not delete file");
-        }
-     }
+  /**
+   * Deletes a file with the given id.
+   *
+   * @param id the id of the file to be deleted
+   * @return a ResponseEntity with the status code
+   */
+  @DeleteMapping("file/{id}")
+  public ResponseEntity<String> deleteFile(@PathVariable String id) {
+    logger.info("Deleting file with id: " + id);
+    try {
+      fileDataService.deleteFile(id);
+      return ResponseEntity.ok("File deleted");
+    } catch (IOException e) {
+      logger.error("Could not delete file with id: " + id);
+      return ResponseEntity.badRequest().body("Could not delete file");
+    }
+  }
 }

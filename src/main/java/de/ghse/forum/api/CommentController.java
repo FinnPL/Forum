@@ -42,10 +42,11 @@ public class CommentController {
    * @see Comment
    */
   @PostMapping
-  public ResponseEntity<CommentResponse> addComment(@RequestBody CommentRequest commentRequest, Principal principal) {
+  public ResponseEntity<CommentResponse> addComment(
+      @RequestBody CommentRequest commentRequest, Principal principal) {
     logger.info("Adding comment to post with id: " + commentRequest.getPost_id());
     try {
-        Comment comment =
+      Comment comment =
           Comment.builder()
               .content(commentRequest.getContent())
               .user(userService.findbyUsername(principal.getName()).orElseThrow())
@@ -53,9 +54,9 @@ public class CommentController {
                   postService
                       .getPostById(UUID.fromString(commentRequest.getPost_id()))
                       .orElseThrow())
-                        .build();
-        commentService.addComment(comment);
-        return ResponseEntity.ok(new CommentResponse().convert(comment));
+              .build();
+      commentService.addComment(comment);
+      return ResponseEntity.ok(new CommentResponse().convert(comment));
     } catch (Exception e) {
       logger.error("Error adding comment" + e.getMessage());
       return ResponseEntity.badRequest().build();
