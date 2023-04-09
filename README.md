@@ -50,19 +50,25 @@ Feel free to take a look at the [**Documentation in Github Wiki**](https://githu
 - Fork the project
 - Create your feature branch (git checkout -b feature/fooBar)
 - Make your changes
+- Test and Build
 - Commit your changes (git commit -m 'Add some fooBar')
 - Push to the branch (git push origin feature/fooBar)
 - Create a new Pull Request
 
 ### Building
 
-Whole project:
+#### Using Docker Desktop:
+
+https://user-images.githubusercontent.com/77006988/230790915-b05777d8-1a56-4c6c-ac6d-e52b293728f7.mp4
+
+
+#### Whole project:
 
 ```bash
 docker-compose up --build
 ```
 
-Backend:
+#### Backend:
 
 ```bash
 mvn clean install
