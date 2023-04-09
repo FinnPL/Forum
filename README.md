@@ -19,22 +19,22 @@ git clone https://github.com/FinnPL/Forum
 
 Make the install script executable
 
-``` bash
+```bash
 cd Forum/
 chmod +x install.sh
 ```
 
 Run the script
 
-``` bash
+```bash
 sudo ./install.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
 ```
 
 ### Conection
 
-* The Frontend is located at `localhost`. (Port 80)
-* Spring server's REST API at `localhost:8080`  
-* Grafana at `localhost:3000`. Use the default user admin and your chosen password from the install script.
+- The Frontend is located at `localhost`. (Port 80)
+- Spring server's REST API at `localhost:8080`
+- Grafana at `localhost:3000`. Use the default user admin and your chosen password from the install script.
 
 > **_NOTE:_** If you are using an cloud provider you might need to disable the firewall for these ports and replace localhost with the ip of your server.
 
@@ -47,12 +47,12 @@ Feel free to take a look at the [Documentation in Github Wiki](https://github.co
 
 ### Contributing Guide
 
-* Fork the project
-* Create your feature branch (git checkout -b feature/fooBar)
-* Make your changes
-* Commit your changes (git commit -m 'Add some fooBar')
-* Push to the branch (git push origin feature/fooBar)
-* Create a new Pull Request
+- Fork the project
+- Create your feature branch (git checkout -b feature/fooBar)
+- Make your changes
+- Commit your changes (git commit -m 'Add some fooBar')
+- Push to the branch (git push origin feature/fooBar)
+- Create a new Pull Request
 
 ### Building
 
