@@ -7,11 +7,11 @@
 
 ## A Full Stack Forum for the GHSE built with Spring Boot and SvelteKit
 
-This GHSE Forum allows students to create posts and comments. It consists of a Spring Boot backend providing a REST API for the SvelteKit frontend. Data is stored in a MySQL database, and the Forum's performance can be monitored via a Grafana dashboard. Use the included shell script to easily install with Docker Compose.
+This GHSE Forum allows students to create posts and comments. It consists of a Spring Boot backend providing a REST API for the SvelteKit frontend. Data is stored in a MySQL database, and the Forum's performance can be monitored via a Grafana dashboard.
 
 ## Installation
 
-Clone Projekt
+Clone Project
 
 ```bash
 git clone https://github.com/FinnPL/Forum
@@ -30,7 +30,7 @@ Run the script
 sudo ./install.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
 ```
 
-### Conection
+### Connection
 
 - The Frontend is located at `localhost`. (Port 80)
 - Spring server's REST API at `localhost:8080`
