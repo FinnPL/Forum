@@ -43,7 +43,7 @@ sudo ./install.sh <DB_PASSWORD> <DB_NAME> <GF_SECURITY_ADMIN_PASSWORD>
 If you find any bugs or have any suggestions, please open an issue.
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-Feel free to take a look at the [Documentation in Github Wiki](https://github.com/FinnPL/Forum/wiki)
+Feel free to take a look at the [**Documentation in Github Wiki**](https://github.com/FinnPL/Forum/wiki)
 
 ### Contributing Guide
 
