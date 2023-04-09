@@ -61,7 +61,6 @@ Feel free to take a look at the [**Documentation in Github Wiki**](https://githu
 
 https://user-images.githubusercontent.com/77006988/230790915-b05777d8-1a56-4c6c-ac6d-e52b293728f7.mp4
 
-
 #### Whole project:
 
 ```bash
