@@ -4,6 +4,7 @@
 [![Java CI with Maven](https://github.com/FinnPL/Forum/actions/workflows/maven.yml/badge.svg)](https://github.com/FinnPL/Forum/actions/workflows/maven.yml)
 [![.github/workflows/codeql-analysis.yml](https://github.com/FinnPL/Forum/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/FinnPL/Forum/actions/workflows/codeql-analysis.yml)
 [![Frontend Build](https://github.com/FinnPL/Forum/actions/workflows/build-frontend.yml/badge.svg)](https://github.com/FinnPL/Forum/actions/workflows/build-frontend.yml)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFinnPL%2FForum.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FFinnPL%2FForum?ref=badge_shield)
 
 ## A Full Stack Forum for the GHSE built with Spring Boot and SvelteKit
 
@@ -80,3 +81,7 @@ cd board/
 npm install
 npm run build
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFinnPL%2FForum.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FFinnPL%2FForum?ref=badge_large)
