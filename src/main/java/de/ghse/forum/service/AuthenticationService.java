@@ -12,6 +12,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+
 /**
  * Service for authentication.
  *
@@ -44,23 +51,62 @@ public class AuthenticationService {
   }
 
   /**
-   * Registers a new user.
-   *
+   * Verifies the signature of the data.
+   * Creates a new user or update the password if the user already exists.
    * @param request RegisterRequest
    * @return AuthenticationResponse with JWT token and user id
+   * @throws Exception if the signature is invalid
    */
-  public AuthenticationResponse register(RegisterRequest request) {
-    var user =
-        User.builder()
-            .username(request.getUser_name())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .role(Role.USER)
-            .build();
-    userRepository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    return AuthenticationResponse.builder()
-        .token(jwtToken)
-        .user_id(user.getId().toString())
-        .build();
+  public AuthenticationResponse noeAuth(RegisterRequest request) throws Exception {
+    String signature = request.getSignature();
+    String publicKeyString = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEaRpPYjAH0DjaNPwQSLrLmuz+deOLA4RBxTV/t0DV0zXWlYB+Ifaa6wE5QgikFs64PpHWhssiT+fdMccA4dUQPix35P8yGbccYvmUdm96WeITfgTHFSy/46vfwTm305UK";
+    String data = "\"givenname\":\"" + request.getGivenname() + "\",\"surname\":\"" + request.getSurname() + "\",\"class\":\"" + request.getClassname() + "\",\"login\":\"" + request.getUser_name() + "\""; //Dont ask 💀
+    if (verifyData(data, signature, publicKeyString)) {
+      if (userRepository.findByUsername(request.getUser_name()).isPresent()) {
+        User user = userRepository.findByUsername(request.getUser_name()).get();
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+      } else {
+        User user = User.builder()
+                .username(request.getUser_name())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .username(request.getUser_name())
+                .build();
+        userRepository.save(user);
+      }
+      return authenticate(AuthenticationRequest.builder()
+              .user_name(request.getUser_name())
+              .password(request.getPassword())
+              .build());
+    } else {
+      throw new Exception("Signature is not valid");
+    }
+  }
+
+  /**
+   * Verifies Data with a signature and a public key.
+   * @param data JSON data
+   * @param signature Signature of the data
+   * @param publicKeyString Public key
+   * @return true if the signature is valid
+   */
+  private boolean verifyData(String data, String signature, String publicKeyString) {
+    try {
+      byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyString);
+      X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
+      KeyFactory keyFactory = KeyFactory.getInstance("EC");
+      PublicKey publicKey = keyFactory.generatePublic(keySpec);
+
+      Signature sig = Signature.getInstance("SHA256withECDSA");
+      sig.initVerify(publicKey);
+      sig.update(data.getBytes(StandardCharsets.UTF_8));
+
+      byte[] signatureBytes = Base64.getDecoder().decode(signature);
+      return sig.verify(signatureBytes);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 }
