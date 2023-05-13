@@ -1,7 +1,6 @@
 FROM gradle:jdk17 as buildstage
 WORKDIR /app
 COPY build.gradle .
-COPY settings.gradle .
 COPY gradlew .
 COPY gradle gradle
 COPY src src
