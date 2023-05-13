@@ -20,8 +20,5 @@ export DB_PASSWORD=$1
 export DB_NAME=$2
 export GF_SECURITY_ADMIN_PASSWORD=$3
 
-# Make the mvnw file executable
-chmod +x mvnw
-
 # Run Docker Compose
 docker-compose up -d
