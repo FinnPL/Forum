@@ -69,8 +69,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: test
-        run: |
-          chmod +x mvnw
+        run: chmod +x gradlew
           
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action

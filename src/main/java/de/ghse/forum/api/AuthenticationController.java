@@ -71,6 +71,7 @@ public class AuthenticationController {
    * @deprecated This endpoint is only for testing purposes and will be removed in the future.
    */
   @GetMapping(path = "/test")
+  @Deprecated
   public ResponseEntity<String> test() {
     return ResponseEntity.ok("test");
   }

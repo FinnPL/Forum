@@ -74,12 +74,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: maven
+        cache: gradle
         
     - name: Autobuild
-      run: mvn -B package --file pom.xml
-    
-    #  uses: github/codeql-action/autobuild@v2
+      run: ./gradlew build
+      #  uses: github/codeql-action/autobuild@v2
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun

@@ -43,5 +43,5 @@ public class Post {
 
   private final java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 
-  private boolean edited = false;
+  @Builder.Default private boolean edited = false;
 }
