@@ -2,7 +2,6 @@ package de.ghse.forum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.javafaker.Faker;
 import de.ghse.forum.api.response.UserResponse;
 import de.ghse.forum.model.Role;
 import de.ghse.forum.model.User;
@@ -10,6 +9,8 @@ import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
 import java.util.Objects;
 import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,16 +22,20 @@ class UserControllerTest {
   @Autowired private UserRepository userRepository;
   @Autowired private JwtService jwtService;
   @Autowired private TestRestTemplate restTemplate;
+  private User user;
 
+  @BeforeEach
+  void setUp() {
+    user =
+            User.builder()
+                    .username("Benjaman")
+                    .password("wE3ON1mmZUlqTy0IFgb")
+                    .role(Role.USER)
+                    .build();
+    userRepository.save(user);
+  }
   @Test
   void getUser() {
-    User user =
-        User.builder()
-            .username(new Faker().name().username())
-            .password(new Faker().internet().password())
-            .role(Role.USER)
-            .build();
-    userRepository.save(user);
     String id = user.getId().toString();
     String token = jwtService.generateToken(user);
     HttpHeaders headers = new HttpHeaders();
@@ -46,13 +51,6 @@ class UserControllerTest {
 
   @Test
   void getUserWithWrongId() {
-    User user =
-        User.builder()
-            .username(new Faker().name().username())
-            .password(new Faker().internet().password())
-            .role(Role.USER)
-            .build();
-    userRepository.save(user);
     String id = UUID.randomUUID().toString();
     String token = jwtService.generateToken(user);
     HttpHeaders headers = new HttpHeaders();

@@ -2,7 +2,6 @@ package de.ghse.forum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.javafaker.Faker;
 import de.ghse.forum.api.request.CommentRequest;
 import de.ghse.forum.model.Comment;
 import de.ghse.forum.model.Post;
@@ -13,6 +12,9 @@ import de.ghse.forum.repository.PostRepository;
 import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
 import java.util.UUID;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,29 +29,40 @@ class CommentControllerTest {
   @Autowired private TestRestTemplate restTemplate;
   @Autowired private PostRepository postRepository;
   @Autowired private CommentRepository commentRepository;
+  private User user;
+  private Post post;
+  @BeforeEach
+  void setUp(){
+     user =
+            User.builder()
+                    .username("Kiira")
+                    .password("vavGPcuEwPZkyst5s")
+                    .role(Role.USER)
+                    .build();
+    userRepository.save(user);
+
+     post =
+            Post.builder()
+                    .title("figured")
+                    .content("Terms guides invited main hand gardening tail, claire significant why engineering handled mounted topics, methods selecting want frozen calendar terrorist distinction, bar fought scout workout.")
+                    .user(user)
+                    .build();
+    postRepository.save(post);
+  }
+
+  @AfterEach
+  void disassemble(){
+    postRepository.delete(post);
+    userRepository.delete(user);
+  }
 
   @Test
   void addComment() {
-    User user =
-        User.builder()
-            .username(new Faker().name().username())
-            .password(new Faker().internet().password())
-            .role(Role.USER)
-            .build();
-    userRepository.save(user);
     String token = jwtService.generateToken(user);
-
-    Post post =
-        Post.builder()
-            .title(new Faker().book().title())
-            .content(new Faker().book().title())
-            .user(user)
-            .build();
-    postRepository.save(post);
     String postId = post.getId().toString();
 
     CommentRequest commentRequest =
-        CommentRequest.builder().content(new Faker().book().title()).post_id(postId).build();
+        CommentRequest.builder().content("Were updated engineers acrobat variable swing fund, weblog. ").post_id(postId).build();
 
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(token);
@@ -74,26 +87,11 @@ class CommentControllerTest {
 
   @Test
   void getComment() {
-    User user =
-        User.builder()
-            .username(new Faker().name().username())
-            .password(new Faker().internet().password())
-            .role(Role.USER)
-            .build();
-    userRepository.save(user);
     String token = jwtService.generateToken(user);
-
-    Post post =
-        Post.builder()
-            .title(new Faker().book().title())
-            .content(new Faker().book().title())
-            .user(user)
-            .build();
-    postRepository.save(post);
     String postId = post.getId().toString();
 
     Comment comment =
-        Comment.builder().content(new Faker().book().title()).user(user).post(post).build();
+        Comment.builder().content("Automatic river towards ascii qty washing humanities, wagon objectives championships go impact temple worry, type cet gadgets.").user(user).post(post).build();
     commentRepository.save(comment);
     String commentId = comment.getId().toString();
 
