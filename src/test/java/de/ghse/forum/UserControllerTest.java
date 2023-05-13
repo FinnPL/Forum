@@ -9,7 +9,6 @@ import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
 import java.util.Objects;
 import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +26,10 @@ class UserControllerTest {
   @BeforeEach
   void setUp() {
     user =
-            User.builder()
-                    .username("Benjaman")
-                    .password("wE3ON1mmZUlqTy0IFgb")
-                    .role(Role.USER)
-                    .build();
+        User.builder().username("Benjaman").password("wE3ON1mmZUlqTy0IFgb").role(Role.USER).build();
     userRepository.save(user);
   }
+
   @Test
   void getUser() {
     String id = user.getId().toString();

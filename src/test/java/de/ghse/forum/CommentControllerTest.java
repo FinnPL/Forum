@@ -12,7 +12,6 @@ import de.ghse.forum.repository.PostRepository;
 import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
 import java.util.UUID;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,27 +30,26 @@ class CommentControllerTest {
   @Autowired private CommentRepository commentRepository;
   private User user;
   private Post post;
+
   @BeforeEach
-  void setUp(){
-     user =
-            User.builder()
-                    .username("Kiira")
-                    .password("vavGPcuEwPZkyst5s")
-                    .role(Role.USER)
-                    .build();
+  void setUp() {
+    user = User.builder().username("Kiira").password("vavGPcuEwPZkyst5s").role(Role.USER).build();
     userRepository.save(user);
 
-     post =
-            Post.builder()
-                    .title("figured")
-                    .content("Terms guides invited main hand gardening tail, claire significant why engineering handled mounted topics, methods selecting want frozen calendar terrorist distinction, bar fought scout workout.")
-                    .user(user)
-                    .build();
+    post =
+        Post.builder()
+            .title("figured")
+            .content(
+                "Terms guides invited main hand gardening tail, claire significant why engineering"
+                    + " handled mounted topics, methods selecting want frozen calendar terrorist"
+                    + " distinction, bar fought scout workout.")
+            .user(user)
+            .build();
     postRepository.save(post);
   }
 
   @AfterEach
-  void disassemble(){
+  void disassemble() {
     postRepository.delete(post);
     userRepository.delete(user);
   }
@@ -62,7 +60,10 @@ class CommentControllerTest {
     String postId = post.getId().toString();
 
     CommentRequest commentRequest =
-        CommentRequest.builder().content("Were updated engineers acrobat variable swing fund, weblog. ").post_id(postId).build();
+        CommentRequest.builder()
+            .content("Were updated engineers acrobat variable swing fund, weblog. ")
+            .post_id(postId)
+            .build();
 
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(token);
@@ -91,7 +92,13 @@ class CommentControllerTest {
     String postId = post.getId().toString();
 
     Comment comment =
-        Comment.builder().content("Automatic river towards ascii qty washing humanities, wagon objectives championships go impact temple worry, type cet gadgets.").user(user).post(post).build();
+        Comment.builder()
+            .content(
+                "Automatic river towards ascii qty washing humanities, wagon objectives"
+                    + " championships go impact temple worry, type cet gadgets.")
+            .user(user)
+            .post(post)
+            .build();
     commentRepository.save(comment);
     String commentId = comment.getId().toString();
 

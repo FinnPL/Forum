@@ -29,15 +29,12 @@ class PostControllerTest {
   private User user;
 
   @BeforeEach
-  void setUp(){
+  void setUp() {
     user =
-            User.builder()
-                    .username("Louvenia")
-                    .password("mH0c4TETcCddPT0Sm")
-                    .role(Role.USER)
-                    .build();
+        User.builder().username("Louvenia").password("mH0c4TETcCddPT0Sm").role(Role.USER).build();
     userRepository.save(user);
   }
+
   @Test
   void addPost() {
     String token = jwtService.generateToken(user);
@@ -48,7 +45,9 @@ class PostControllerTest {
     PostRequest postRequest =
         PostRequest.builder()
             .title("covering")
-            .content("Historical center telecommunications book expressions discounted actions, email largest heater peru kept scotland agricultural, strike ghana case mali.")
+            .content(
+                "Historical center telecommunications book expressions discounted actions, email"
+                    + " largest heater peru kept scotland agricultural, strike ghana case mali.")
             .build();
 
     ResponseEntity<PostResponse> response =
@@ -72,7 +71,11 @@ class PostControllerTest {
     Post post =
         Post.builder()
             .title("between")
-            .content("Extended everyday installed sony listprice restoration feedback, smoke washington brooklyn range cheese hard garlic, smoking oral collectors secretariat pathology prove pressed, political republican applies servers certificates hopkins.")
+            .content(
+                "Extended everyday installed sony listprice restoration feedback, smoke washington"
+                    + " brooklyn range cheese hard garlic, smoking oral collectors secretariat"
+                    + " pathology prove pressed, political republican applies servers certificates"
+                    + " hopkins.")
             .user(user)
             .build();
     postRepository.save(post);

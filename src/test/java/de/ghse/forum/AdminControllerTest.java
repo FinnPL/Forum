@@ -9,7 +9,6 @@ import de.ghse.forum.repository.PostRepository;
 import de.ghse.forum.repository.UserRepository;
 import de.ghse.forum.service.JwtService;
 import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,30 +27,27 @@ class AdminControllerTest {
   private User adminUser;
 
   @BeforeEach
-    void setUp() {
-     user =
-            User.builder()
-                    .username("Daria")
-                    .password("R0igSkXKSYQ49vyhiw")
-                    .role(Role.USER)
-                    .build();
+  void setUp() {
+    user = User.builder().username("Daria").password("R0igSkXKSYQ49vyhiw").role(Role.USER).build();
     userRepository.save(user);
 
     adminUser =
-            User.builder()
-                    .username("Keishawn")
-                    .password("hJLgx5emcAp3Gl7qrp5K1fIP")
-                    .role(Role.ADMIN)
-                    .build();
+        User.builder()
+            .username("Keishawn")
+            .password("hJLgx5emcAp3Gl7qrp5K1fIP")
+            .role(Role.ADMIN)
+            .build();
     userRepository.save(adminUser);
-    }
+  }
 
   @Test
   void deletePostAsAdmin() {
     Post post =
         Post.builder()
             .title("designs")
-            .content("Advocacy alternatively swaziland brokers charter peterson honor, movement fellow another toolkit protection strong flashers.")
+            .content(
+                "Advocacy alternatively swaziland brokers charter peterson honor, movement fellow"
+                    + " another toolkit protection strong flashers.")
             .user(user)
             .build();
     postRepository.save(post);
