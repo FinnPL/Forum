@@ -5,7 +5,7 @@ COPY settings.gradle.kts .
 COPY gradlew .
 COPY gradle gradle
 COPY src src
-RUN ./gradlew build --no-daemon
+RUN ./gradlew build --exclude-task test -i
 
 FROM openjdk:17
 COPY --from=buildstage /app/build/libs/*.jar app.jar
