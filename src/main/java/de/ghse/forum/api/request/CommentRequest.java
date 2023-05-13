@@ -1,8 +1,11 @@
 package de.ghse.forum.api.request;
 
 import java.security.Principal;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * JSON model used for creating a new Comment.
@@ -12,6 +15,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentRequest {
   private String content;
   private String post_id;

@@ -43,5 +43,6 @@ public class Post {
 
   private final java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 
+  @Builder.Default
   private boolean edited = false;
 }
