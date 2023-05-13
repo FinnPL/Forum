@@ -1,7 +1,6 @@
 package de.ghse.forum.api.request;
 
 import java.security.Principal;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
