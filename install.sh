@@ -20,5 +20,7 @@ export DB_PASSWORD=$1
 export DB_NAME=$2
 export GF_SECURITY_ADMIN_PASSWORD=$3
 
+# Make the gradlew file executable
+chmod +x gradlew
 # Run Docker Compose
 docker-compose up -d
