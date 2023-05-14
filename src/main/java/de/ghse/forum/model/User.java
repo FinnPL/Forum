@@ -1,10 +1,10 @@
 package de.ghse.forum.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,11 +38,10 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private Collection<Comment> comments;
 
-  @Column(unique=true)
+  @Column(unique = true)
   private String username;
 
-  @NotBlank
-  private String password;
+  @NotBlank private String password;
   private String bio;
 
   @Enumerated(EnumType.STRING)
