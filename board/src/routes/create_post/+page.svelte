@@ -1,24 +1,41 @@
 <script lang="ts">
-  import { Form, FormGroup, Input} from "sveltestrap";
+  import { Form, FormGroup, Input } from "sveltestrap";
   import "bootstrap/dist/css/bootstrap.min.css";
   import { Button } from "sveltestrap";
   import { token, cookie_name } from "../../lib/Login/login.js";
   import { getCookie } from "../../lib/functions";
   import { onMount } from "svelte";
-  import  Error  from "../../lib/Error/error.svelte"
+  import Error from "../../lib/Error/error.svelte";
   import { goto } from "$app/navigation";
+  import type { Snapshot } from "@sveltejs/kit";
   let post_title: string;
   let post_body: string;
   let post_id: string;
   let tokenValue: string;
   let cookie_name_value: string;
   let error = false;
-  let file:any;
-  let image_file:any;
-  let ip:string
+  let file: any;
+  let image_file: any;
+  let ip: string;
+  $: saved_data = { post_title, post_body };
+
+  export const snapshot: Snapshot = {
+    capture: () => saved_data,
+    restore: (value) => (
+      (post_title = value.post_title), (post_body = value.post_body)
+    ),
+  };
+
+  /*
+   export const snapshot_body: Snapshot = {
+     capture: () => post_body,
+     restore: (value) => (post_body = value)
+     
+   }
+*/
 
   async function get_server_ip() {
-    ip = "http://"+location.hostname+":8080/"
+    ip = "http://" + location.hostname + ":8080/";
   }
 
   async function checkLoggedIn() {
@@ -68,31 +85,27 @@
     return res.json();
   }
 
-  const handleFileChange = (event:any) => {
+  const handleFileChange = (event: any) => {
     file = event.target.files[0];
   };
 
-  async function upload_image (post_id:string) {
-  
+  async function upload_image(post_id: string) {
     const formData = new FormData();
-    formData.append('file', file);
-    const res = await fetch(ip +"api/v1/file/post/" + post_id,{
-      method: 'POST',
+    formData.append("file", file);
+    const res = await fetch(ip + "api/v1/file/post/" + post_id, {
+      method: "POST",
       body: formData,
-      headers: { 
+      headers: {
         Authorization: "Bearer " + tokenValue,
       },
     });
-    console.log(res)
-    await goto("/post/"+post_id)
-  };
-
-
+    console.log(res);
+    await goto("/post/" + post_id);
+  }
 </script>
 
 {#if error}
-<Error></Error>
-
+  <Error />
 {/if}
 
 <div class="container">
@@ -115,12 +128,17 @@
         </div>
       </FormGroup>
       <FormGroup>
-        <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+        <Input
+          type="file"
+          name="file"
+          id="AvatarFile"
+          bind:this={image_file}
+          on:change={handleFileChange}
+        />
       </FormGroup>
       <Button color="primary" on:click={post}>Post</Button>
     </Form>
   </div>
-  
 </div>
 
 <style>
