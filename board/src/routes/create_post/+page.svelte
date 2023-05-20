@@ -26,14 +26,6 @@
     ),
   };
 
-  /*
-   export const snapshot_body: Snapshot = {
-     capture: () => post_body,
-     restore: (value) => (post_body = value)
-     
-   }
-*/
-
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
   }
