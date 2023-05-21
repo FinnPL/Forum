@@ -14,9 +14,14 @@
   import { getCookie } from "../../../lib/functions";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
-  let ip:string
+  import type { Snapshot } from "@sveltejs/kit";
+  let ip: string;
+  let canScroll = true;
 
-
+  export const snapshot: Snapshot = {
+    capture: () => comment_text,
+    restore: (value) => (comment_text = value),
+  };
 
   export let data: any;
 
@@ -36,11 +41,11 @@
   let own_user_id_value: string;
   let title_update: string;
   let content_update: string;
-  let isEdited:boolean;
+  let isEdited: boolean;
 
-  let imageSrc:any = null;
-  let file:any;
-  let image_file:any;
+  let imageSrc: any = null;
+  let file: any;
+  let image_file: any;
 
   //Modal
   let open = false;
@@ -48,9 +53,8 @@
 
   console.log(thisID);
 
-
   async function get_server_ip() {
-    ip = "http://"+location.hostname+":8080/"
+    ip = "http://" + location.hostname + ":8080/";
   }
   async function checkLoggedIn() {
     cookie_name_value = await getCookie("username");
@@ -97,7 +101,7 @@
     }
 
     const fetchedData = await fetchedDataRes.json();
-    console.log(fetchedData)
+    console.log(fetchedData);
     title = fetchedData.title;
     content = fetchedData.content;
     date = fetchedData.date;
@@ -162,10 +166,9 @@
       }),
     });
     await update_image();
-    await goto("/")
-    await goto("/post/"+thisID)
+    await goto("/");
+    await goto("/post/" + thisID);
     return res.json();
-    
   }
 
   async function post_comment() {
@@ -182,82 +185,89 @@
     });
 
     console.log(res.json());
-    await goto("/")
-    await goto("/post/"+thisID)
+    await goto("/");
+    await goto("/post/" + thisID);
     return res.json();
   }
 
+  async function scrollTimeout() {
+    canScroll = !canScroll;
+
+    if (!canScroll) setTimeout(scrollTimeout, 1000);
+  }
+
   onMount(async () => {
-    window.onscroll = function (ev) { // Dynamic site loading
-      if (
-        window.innerHeight + window.pageYOffset >=
-        document.body.offsetHeight
-      ) {
-        page += 1;
-        getComments();
-      }
+    window.onscroll = function (ev) {
+      // Dynamic site loading
+      if (canScroll)
+        if (
+          window.innerHeight + window.pageYOffset >=
+          document.body.offsetHeight
+        ) {
+          page += 1;
+          getComments();
+          scrollTimeout();
+        }
     };
   });
 
-  onMount(async () => { 
-  let bearerToken = await getCookie("tokenValue");
-  console.log(bearerToken)
-  let requestOptions:any = {
-  method: 'GET',
-  headers: { "Authorization": "Bearer " + bearerToken,},
-  redirect: 'follow'
-};
+  onMount(async () => {
+    let bearerToken = await getCookie("tokenValue");
+    console.log(bearerToken);
+    let requestOptions: any = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + bearerToken },
+      redirect: "follow",
+    };
 
-const path = window.location.pathname.split("/"); 
-const post_id = path[path.length-1]; // Get the url params
+    const path = window.location.pathname.split("/");
+    const post_id = path[path.length - 1]; // Get the url params
 
-
-
-
-  async function loadImage() {
-const res = await fetch(ip + "api/v1/file/post/"+post_id+"?"+new Date().getTime(), requestOptions) // Add unique params to the image to avoid cache issues
-const blob = await res.blob();
-  const reader = new FileReader();
-  reader.readAsDataURL(blob);
-  reader.onloadend = (event) => {
-    if(event.target && event.target.result) {
-      imageSrc = event.target.result; 
+    async function loadImage() {
+      const res = await fetch(
+        ip + "api/v1/file/post/" + post_id + "?" + new Date().getTime(),
+        requestOptions
+      ); // Add unique params to the image to avoid cache issues
+      const blob = await res.blob();
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = (event) => {
+        if (event.target && event.target.result) {
+          imageSrc = event.target.result;
+        }
+      };
     }
-}
-}
-loadImage();
-console.log(imageSrc)
-})
+    loadImage();
+    console.log(imageSrc);
+  });
 
-const handleFileChange = (event:any) => {
+  const handleFileChange = (event: any) => {
     file = event.target.files[0];
   };
 
-  async function update_image () {
-  
+  async function update_image() {
     const formData = new FormData();
-    formData.append('file', file);
-    const res = await fetch(ip +"api/v1/file/post/" + thisID,{
-      method: 'POST',
+    formData.append("file", file);
+    const res = await fetch(ip + "api/v1/file/post/" + thisID, {
+      method: "POST",
       body: formData,
-      headers: { 
+      headers: {
         Authorization: "Bearer " + tokenValue,
       },
     });
-    console.log(res)
-  };
-  
-  async function del_post() {
-    const res = await fetch(ip +"api/v1/post/" + thisID,{
-      method: 'DELETE',
-      headers: { 
-        Authorization: "Bearer " + tokenValue,
-      }, 
-    });
-    console.log(res)
-    await goto("/")
+    console.log(res);
   }
 
+  async function del_post() {
+    const res = await fetch(ip + "api/v1/post/" + thisID, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + tokenValue,
+      },
+    });
+    console.log(res);
+    await goto("/");
+  }
 </script>
 
 <div class="container">
@@ -268,14 +278,13 @@ const handleFileChange = (event:any) => {
     <p2>Datum: {date}</p2><br />
     <br />
     <p><a href={"/profile/" + userID}>Autor: {user_name}</a></p>
-    {#if imageSrc != "data:" }
-
-      <img src={imageSrc } alt="User Image" width="250" height="300">
+    {#if imageSrc != "data:"}
+      <img src={imageSrc} alt="User Image" width="250" height="300" />
     {/if}
     {#if isEdited == true}
-    <FormGroup>
-      <h8>(Post wurde bearbeitet)</h8>
-    </FormGroup>
+      <FormGroup>
+        <h8>(Post wurde bearbeitet)</h8>
+      </FormGroup>
     {/if}
     {#if own_user_id_value == userID}
       <div>
@@ -302,23 +311,25 @@ const handleFileChange = (event:any) => {
                 </div>
               </FormGroup>
               <FormGroup>
-                <Input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange} accept="image.png, image.jpeg, image.jpg"/>
+                <Input
+                  type="file"
+                  name="file"
+                  id="AvatarFile"
+                  bind:this={image_file}
+                  on:change={handleFileChange}
+                  accept="image.png, image.jpeg, image.jpg"
+                />
               </FormGroup>
-            
             </Form>
           </ModalBody>
           <ModalFooter>
-            <Button
-              color="primary"
-              on:click={toggle}
-              on:click={update_post}
+            <Button color="primary" on:click={toggle} on:click={update_post}
               >Update Post</Button
             >
             <Button color="secondary" on:click={toggle}>Cancel</Button>
           </ModalFooter>
         </Modal>
       </div>
-
     {/if}
     <br />
 
@@ -338,7 +349,7 @@ const handleFileChange = (event:any) => {
         </div>
       </FormGroup>
       <div class="button">
-        <Button color="primary" on:click={post_comment}  >Post Comment</Button>
+        <Button color="primary" on:click={post_comment}>Post Comment</Button>
       </div>
     </Form>
   </div>
@@ -375,5 +386,4 @@ const handleFileChange = (event:any) => {
   .button {
     text-align: center;
   }
-  
 </style>
