@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * REST controller for comment related endpoints.
@@ -62,6 +65,50 @@ public class CommentController {
       return ResponseEntity.badRequest().build();
     }
   }
+
+
+  /**
+   * REST endpoint for deleting comments by id.
+   *
+   * @param id the UUID of the comment to be deleted
+   * @param principal the principal of the user (Spring internal)
+   * @return the deleted comment as CommentResponse
+   * @apiNote This endpoint is accessible under /api/v1/comment/del/{id}.
+   * @see CommentResponse CommentResponse
+   * @see Comment Comment
+   */
+  @DeleteMapping(path = "/{id}")
+  public ResponseEntity<CommentResponse> deleteComment(@PathVariable("id") UUID id, Principal principal) {
+    logger.info("Deleting comment with id: " + id);
+    try {
+      Comment comment = commentService.getCommentById(id).orElseThrow();
+      if (comment.getUser().getUsername().equals(principal.getName())) {
+        commentService.deleteComment(id);
+        return ResponseEntity.ok().body(new CommentResponse().convert(comment));
+      } else {
+        throw new ResponseStatusException(NOT_FOUND, "Can not delete Post: \nPost not found");
+      }
+    } catch (Exception e) {
+      logger.error("Error deleting post " + e.getMessage());
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+
+  /**
+   * REST endpoint for getting comments by id.
+   *
+   * @apiNote This endpoint is accessible under /api/v1/comment/{id}.
+   * @param id the UUID of the comment to be retrieved
+   * @return the comment as CommentResponse
+   * @see CommentResponse PostResponse
+   * @see Comment Comment
+   */
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<CommentResponse> getPostById(@PathVariable("id") UUID id) {
+    return ResponseEntity.ok().body(new CommentResponse().convert(commentService.getCommentById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not get Post: \nPost not found"))));
+  }
+
 
   /**
    * REST endpoint for getting comments of a post.

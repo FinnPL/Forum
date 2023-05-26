@@ -3,6 +3,7 @@ package de.ghse.forum.service;
 import de.ghse.forum.model.Comment;
 import de.ghse.forum.repository.CommentRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,31 @@ public class CommentService {
   public void addComment(Comment comment) {
     commentRepository.save(comment);
   }
+
+
+  /**
+   * Delete a comment from the database.
+   *
+   * @param id The id of the comment to delete.
+   */
+
+  public void deleteComment(UUID id) {
+    commentRepository.deleteById(id);
+  }
+
+
+  /**
+   * Find a comment by its id.
+   *
+   * @param id The id of the comment to find.
+   * @return The comment.
+   */
+
+  public Optional<Comment> getCommentById(UUID id) {
+    return commentRepository.findById(id);
+  }
+
+
 
   /**
    * Find all comments for a post.
