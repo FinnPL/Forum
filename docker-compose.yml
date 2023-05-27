@@ -18,7 +18,7 @@ services:
       - db
     environment:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-root}
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME:-forum}
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/${DB_NAME:-forum}
       SERVER_IP: ${SERVER_IP:-localhost}
     volumes:
       - files:/files
