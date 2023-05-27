@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class Post {
 
   @Id
-  @Column(name = "id", columnDefinition = "BINARY(16)")
+  @Column(name = "id", columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
