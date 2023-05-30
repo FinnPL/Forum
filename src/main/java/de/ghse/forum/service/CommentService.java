@@ -2,13 +2,14 @@ package de.ghse.forum.service;
 
 import de.ghse.forum.model.Comment;
 import de.ghse.forum.repository.CommentRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service for comments.
@@ -43,6 +44,21 @@ public class CommentService {
 
   public void deleteComment(UUID id) {
     commentRepository.deleteById(id);
+  }
+
+
+  /**
+   * Update a comment in the database.
+   *
+   * @param id The id of the comment to update.
+   * @param comment The comment to update.
+   */
+
+  public void updateComment(UUID id, Comment comment) {
+    Optional<Comment> comment1 = commentRepository.findById(id);
+    if (comment1.isEmpty()) return;
+    comment1.get().setContent(comment.getContent());
+    commentRepository.save(comment1.get());
   }
 
 
