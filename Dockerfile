@@ -9,7 +9,6 @@ RUN ./gradlew build --exclude-task test -i
 
 FROM openjdk:17
 COPY --from=buildstage /app/build/libs/*.jar /app/
-WORKDIR /app
-RUN mv *.jar app.jar
+RUN find /app -type f ! -name '*-plain.jar' -exec mv {} /app/app.jar ;
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
