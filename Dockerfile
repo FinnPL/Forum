@@ -8,7 +8,6 @@ COPY src src
 RUN ./gradlew build --exclude-task test -i
 
 FROM openjdk:17
-COPY --from=buildstage /app/build/libs/*.jar /app/
-RUN find /app -type f ! -name '*-plain.jar' -exec mv {} /app/app.jar ;
+COPY --from=buildstage /app/build/libs/forum-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
