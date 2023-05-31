@@ -30,25 +30,17 @@ public class SecurityConfiguration {
    */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.cors()
-        .and()
-        .csrf()
-        .disable()
-        .authorizeHttpRequests()
-        .requestMatchers(new AntPathRequestMatcher("/actuator/**"))
-        .permitAll()
-        .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**"))
-        .permitAll()
-        .requestMatchers(new AntPathRequestMatcher("/api/v1/admin/**"))
-        .hasAuthority(Role.ADMIN.name())
-        .anyRequest()
-        .authenticated()
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    http
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.disable())
+            .authorizeHttpRequests(authorize -> authorize
+                    .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**")).permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/api/v1/admin/**")).hasAuthority(Role.ADMIN.name())
+                    .anyRequest().authenticated())
+            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 }

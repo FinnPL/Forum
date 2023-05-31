@@ -34,9 +34,9 @@ jobs:
           image: mariadb:latest
           ports:
             - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: project_test
+          env:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: project_test
     env:
       SPRING_DATASOURCE_URL: jdbc:mariadb://localhost:3306/project_test
       SPRING_DATASOURCE_PASSWORD: password
