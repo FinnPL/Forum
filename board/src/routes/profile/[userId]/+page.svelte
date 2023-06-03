@@ -1,17 +1,7 @@
 <script lang="ts">
-  import { getCookie } from "$lib/functions";
+  import { getCookie } from "../../../lib/functions";
   import { onMount } from "svelte";
   import { own_user_id, token } from "../../../lib/Login/login";
-  import {
-    FormGroup,
-    Input,
-    Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    Form,
-    ModalFooter,
-  } from "sveltestrap";
   import { goto } from "$app/navigation";
   export let data: any;
   let postList: any = [];

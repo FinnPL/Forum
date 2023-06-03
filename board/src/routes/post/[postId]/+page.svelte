@@ -1,14 +1,4 @@
 <script lang="ts">
-  import { Form, FormGroup } from "sveltestrap";
-  import "bootstrap/dist/css/bootstrap.min.css";
-  import { Button } from "sveltestrap";
-  import {
-    Modal,
-    ModalBody,
-    ModalFooter,
-    Input,
-    ModalHeader,
-  } from "sveltestrap";
   import { onMount } from "svelte";
   import { token, cookie_name, own_user_id } from "../../../lib/Login/login";
   import { getCookie } from "../../../lib/functions";
@@ -271,87 +261,61 @@
 </script>
 
 <div class="container">
-  <div class="alert alert-dark">
-    <h2>{title}</h2>
-    <p1>{content}</p1><br />
-    <br />
-    <p2>Datum: {date}</p2><br />
-    <br />
-    <p><a href={"/profile/" + userID}>Autor: {user_name}</a></p>
+  <div class="bg-gray-900 text-white p-4">
+    <h2 class="text-xl font-bold">{title}</h2>
+    <p class="text-sm">{content}</p>
+    <p class="text-sm">Datum: {date}</p>
+    <p><a href={"/profile/" + userID} class="text-blue-500">Autor: {user_name}</a></p>
     {#if imageSrc != "data:"}
-      <img src={imageSrc} alt="User Image" width="250" height="300" />
+      <img src={imageSrc} alt="User Image" class="w-64 h-72" />
     {/if}
     {#if isEdited == true}
-      <FormGroup>
-        <h8>(Post wurde bearbeitet)</h8>
-      </FormGroup>
+      <div class="mt-4">
+        <h6>(Post wurde bearbeitet)</h6>
+      </div>
     {/if}
     {#if own_user_id_value == userID}
       <div>
-        <Button color="primary" on:click={toggle}>Edit Post</Button>
-        <Button color="danger" on:click={del_post}>Delete Post</Button>
-        <Modal isOpen={open} {toggle}>
-          <ModalHeader {toggle}>Update Post</ModalHeader>
-          <ModalBody>
-            <Form>
-              <FormGroup floating label="Titel">
-                <Input placeholder="Titel" required bind:value={title_update} />
-              </FormGroup>
-
-              <FormGroup>
-                <div class="form-floating">
-                  <textarea
-                    class="form-control"
-                    placeholder="Body"
-                    bind:value={content_update}
-                    id="floatingTextarea2"
-                    style="height: 100px"
-                  />
-                  <label for="floatingTextarea2">Text</label>
-                </div>
-              </FormGroup>
-              <FormGroup>
-                <Input
-                  type="file"
-                  name="file"
-                  id="AvatarFile"
-                  bind:this={image_file}
-                  on:change={handleFileChange}
-                  accept="image.png, image.jpeg, image.jpg"
-                />
-              </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" on:click={toggle} on:click={update_post}
-              >Update Post</Button
-            >
-            <Button color="secondary" on:click={toggle}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={toggle}>Edit Post</button>
+        <button class="bg-red-500 text-white px-4 py-2 rounded" on:click={del_post}>Delete Post</button>
+        <div class={open ? "block" : "hidden"}>
+          <div class="fixed inset-0 flex items-center justify-center">
+            <div class="bg-white p-4 rounded w-96">
+              <h2 class="text-lg font-bold mb-4">Update Post</h2>
+              <div class="mb-4">
+                <label for="title_update" class="block mb-2">Titel</label>
+                <input id="title_update" type="text" class="border border-gray-300 p-2 rounded w-full" placeholder="Titel" required bind:value={title_update} />
+              </div>
+              <div class="mb-4">
+                <label for="content_update" class="block mb-2">Text</label>
+                <textarea id="content_update" class="border border-gray-300 p-2 rounded w-full" placeholder="Body" bind:value={content_update} style="height: 100px"></textarea>
+              </div>
+              <div class="mb-4">
+                <label for="AvatarFile" class="block mb-2">Image</label>
+                <input id="AvatarFile" type="file" name="file" bind:this={image_file} on:change={handleFileChange} accept="image/png, image/jpeg, image/jpg" />
+              </div>
+              <div class="flex justify-end">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={toggle} on:click={update_post}>Update Post</button>
+                <button class="bg-gray-500 text-white px-4 py-2 rounded ml-2" on:click={toggle}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     {/if}
     <br />
-
-    <Form>
-      <FormGroup>
-        <h3>Comment:</h3>
-        <div class="form-floating">
-          <textarea
-            class="form-control"
-            placeholder="Body"
-            bind:value={comment_text}
-            id="comment_text"
-            name="comment_text"
-            style="height: 100px"
-          />
-          <label for="floatingTextarea2">Text</label>
+    <form>
+      <div class="mb-4">
+        <h3 class="text-lg font-bold">Comment:</h3>
+        <div class="mt-2">
+          <label for="comment_text" class="block mb-2">Text</label>
+          <textarea id="comment_text" class="border border-gray-300 p-2 rounded w-full" placeholder="Body" bind:value={comment_text} style="height: 100px"></textarea>
         </div>
-      </FormGroup>
-      <div class="button">
-        <Button color="primary" on:click={post_comment}>Post Comment</Button>
       </div>
-    </Form>
+      <div class="flex justify-end">
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" on:click={post_comment}>Post Comment</button>
+      </div>
+    </form>
   </div>
 
   {#each comment_list as comment (comment.id)}
@@ -364,26 +328,3 @@
     </div>
   {/each}
 </div>
-
-<style>
-  .container {
-    padding: 10px 16px;
-    margin: 40px auto;
-    max-width: 800px;
-  }
-  .container h2 {
-    font-size: 30px;
-    color: #3538f1d0;
-    margin-bottom: 8px;
-  }
-  .container p1 {
-    font-size: 20px;
-  }
-  .container a {
-    text-decoration: none;
-    color: inherit;
-  }
-  .button {
-    text-align: center;
-  }
-</style>

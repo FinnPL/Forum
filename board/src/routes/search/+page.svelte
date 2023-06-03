@@ -1,7 +1,5 @@
 <script lang="ts">
-  import "bootstrap/dist/css/bootstrap.min.css";
   import { onMount } from "svelte";
-  import { Alert, Button, Form, FormGroup, Input } from "sveltestrap";
   import { token } from "../../lib/Login/login.js";
   let ip: string;
 
@@ -34,6 +32,7 @@
 
     console.log(searchList);
   }
+  
   async function first_search_post() {
     searchType = "Post";
     const dataRes = await fetch(
@@ -148,9 +147,9 @@
         {#if searchList[0] == "keinErgebnis"}
           <div class="alert alert-warning" role="alert">Kein Ergebnis</div>
         {/if}
-      </div></Form
-    >
+      </div></Form>
     <br />
+
 
     {#if searchType == "Post" && searchList[0] != "keinErgebnis"}
       {#each searchList as post (post.id)}
