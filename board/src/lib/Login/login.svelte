@@ -110,17 +110,11 @@
   }
 </script>
 
-{#if cookie_name_value == undefined}
-  <div class="container">
-    <h1 class="tw-text-lg">Login or Register!</h1>
-  </div>
-{/if}
-
 {#if cookie_name_value == "undefined" || cookie_name_value == undefined}
   <div class="container">
     <form on:submit|preventDefault>
-      <input class="text-white" placeholder="Username" type="text" bind:value={user_name} />
-      <input class="text-white" placeholder="Password" type="password" bind:value={password} />
+      <input class="text-black" placeholder="Username" type="text" bind:value={user_name} />
+      <input class="text-black" placeholder="Password" type="password" bind:value={password} />
       <button on:click={signUp}>Sign Up </button>
       <button on:click={login}>Login </button>
     </form>

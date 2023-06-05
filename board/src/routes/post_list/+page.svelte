@@ -122,21 +122,18 @@ async function fetchProfilePicture(post: { user_id: string; avatarSrc: string | 
       <a class="bg-postBG flex rounded-md px-5 py-5 border-2 border-border hover:border-hover" href={"/post/" + post.id}>
         <div>
           <div class="font-semibold text-xl flex">
-          <a href={"/profile/" + post.user_id}>
-            {#if post.avatarSrc}
-              <img class="rounded-full" src={post.avatarSrc} alt="Avatar" width="50" height="50" />
-            {:else}
-              <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
-            {/if} 
-          </a>
-          <span class="pl-3 pt-2"> {post.title}</span>
-          <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + post.user_id}>{post.user_name}</a>
-          <span class="pl-1 pt-3.5 text-text text-sm">• {post.date}</span>
+            <a href={"/profile/" + post.user_id}>
+              {#if post.avatarSrc}
+                <img class="rounded-full" src={post.avatarSrc} alt="Avatar" width="50" height="50" />
+              {:else}
+                <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
+              {/if} 
+            </a>
+            <span class="pl-3 pt-2"> {post.title}</span>
+            <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + post.user_id}>{post.user_name}</a>
+            <span class="pl-1 pt-3.5 text-text text-sm">• {post.date}</span>
           </div>
           <div class="py-3">{post.content}</div><br />
-          <p>
-
-          </p>
         </div>
       </a>
     </div>
