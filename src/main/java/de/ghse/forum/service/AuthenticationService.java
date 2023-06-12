@@ -60,7 +60,7 @@ public class AuthenticationService {
   public AuthenticationResponse noeAuth(RegisterRequest request) throws Exception {
     String signature = request.getSignature();
     String publicKeyString = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEaRpPYjAH0DjaNPwQSLrLmuz+deOLA4RBxTV/t0DV0zXWlYB+Ifaa6wE5QgikFs64PpHWhssiT+fdMccA4dUQPix35P8yGbccYvmUdm96WeITfgTHFSy/46vfwTm305UK";
-    String data = "\"givenname\":\"" + request.getGivenname() + "\",\"surname\":\"" + request.getSurname() + "\",\"class\":\"" + request.getClassname() + "\",\"login\":\"" + request.getUser_name() + "\""; //Dont ask 💀
+    String data = "{\"givenname\":\"" + request.getGivenname() + "\",\"surname\":\"" + request.getSurname() + "\",\"class\":\"" + request.getClassname() + "\",\"login\":\"" + request.getUser_name() + "\"}"; //Dont ask 💀
     if (verifyData(data, signature, publicKeyString)) {
       if (userRepository.findByUsername(request.getUser_name()).isPresent()) {
         User user = userRepository.findByUsername(request.getUser_name()).get();
