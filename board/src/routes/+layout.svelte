@@ -8,13 +8,16 @@
     NavLink,
     Button,
   } from "sveltestrap";
-  import { own_user_id } from "../lib/Login/login";
   import { goto } from "$app/navigation";
+  import { getCookie } from "$lib/functions";
+  import { onMount } from "svelte";
   let own_user_id_value: string;
+  let tokenValue: string;
 
-  own_user_id.subscribe((value: string) => {
-    own_user_id_value = value;
-  });
+  async function initial_load() {
+    tokenValue = await getCookie("tokenValue");
+    own_user_id_value = await getCookie("userid");
+  }
 
   async function signOut() {
     document.cookie.split(";").forEach(function (c) {
@@ -28,14 +31,22 @@
 
   async function gotoProfile() {
     const path = window.location.pathname.split("/");
-    const userid = path[path.length-1]; // Get userid from url path
-    if(userid != own_user_id_value) {
-      await goto("/profile/"+own_user_id_value)
+    const userid = path[path.length - 1]; // Get userid from url path
+    if (userid != tokenValue) {
+      await goto("/profile/" + tokenValue);
       location.reload();
     }
-    
   }
-
+  
+  onMount(async () => {
+    await initial_load();
+    const currentURL = window.location.href;
+    if(!currentURL.includes("/noeskauth/")) {
+    if (tokenValue == undefined && location.pathname != "/") {
+      await goto("/");
+      location.reload();
+    }}
+  }); 
 </script>
 
 <Navbar>
@@ -44,7 +55,9 @@
   <Nav class="ms-auto">
     {#if own_user_id_value != undefined && own_user_id_value != "undefined"}
       <NavItem>
-        <NavLink href={"/profile/" + own_user_id_value } on:click={gotoProfile}>Profil</NavLink>
+        <NavLink href={"/profile/" + own_user_id_value} on:click={gotoProfile}
+          >Profil</NavLink
+        >
       </NavItem>
       <NavItem>
         <NavLink href="/create_post">Post erstellen</NavLink>

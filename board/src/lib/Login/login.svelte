@@ -5,19 +5,32 @@
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
   import { goto } from "$app/navigation";
-  let user_name: string;
   let password: string;
   let tokenValue: string;
   let cookie_name_value: string;
   let own_user_id_value: string;
-  let ip:string
+  let ip: string;
+
+  //Auth sachen:
+  export let givenname:string;
+  export let surname:string;
+  export let classname:string;
+  export let signature:string;
+  export let login_name:string;
+  let user_name = login_name;
+
+  $: console.log(signature)
+
+  export let show_sign_up = "true";
+
+
 
   async function get_server_ip() {
-    ip = "http://"+location.hostname+":8080/"
+    ip = "http://" + location.hostname + ":8080/";
   }
 
-
-  async function checkLoggedIn() { // Check if you already logged in
+  async function checkLoggedIn() {
+    // Check if you already logged in
     cookie_name_value = await getCookie("username");
     cookie_name.set(cookie_name_value);
     tokenValue = await getCookie("tokenValue");
@@ -26,12 +39,15 @@
     own_user_id.set(own_user_id_value);
   }
 
-  async function signUp() { // Sign up & store the values in cookies
+  async function signUp() {
+    // Sign up & store the values in cookies
+    console.log(JSON.stringify({ givenname,surname, classname, user_name, signature, password}),)
     const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_name, password }),
+      body: JSON.stringify({ givenname,surname, classname, user_name, signature, password}),
     });
+    
     const data = await res.json();
     token.set(data.token);
     token.subscribe((token: any) => {
@@ -50,15 +66,16 @@
     token.set(tokenValue);
     let name = await getCookie("username");
     console.log(name);
-    await goto("/")
+    await goto("/");
     location.reload();
   }
 
-  async function login() { //Login & store the values in cookies
+  async function login() {
+    //Login & store the values in cookies
     const res = await fetch(ip + "api/v1/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_name, password }),
+      body: JSON.stringify({ user_name, password}),
     });
     const data = await res.json();
     token.set(data.token);
@@ -78,11 +95,12 @@
     token.set(tokenValue);
     let name = await getCookie("username");
     console.log(name);
-    await goto("/")
+    await goto("/");
     location.reload();
   }
 
-  onMount(async () => { // Write in Cookie values in writable stores
+  onMount(async () => {
+    // Write in Cookie values in writable stores
     await get_server_ip();
     checkLoggedIn();
     if (document.cookie != undefined) {
@@ -94,7 +112,8 @@
     }
   });
 
-  async function subStores() { // Subscribe to writable stores
+  async function subStores() {
+    // Subscribe to writable stores
     token.subscribe((value: string) => {
       tokenValue = value;
       console.log(tokenValue);
@@ -104,16 +123,14 @@
       cookie_name_value = value;
       console.log(cookie_name_value);
     });
-    
   }
-
 </script>
 
 {#if cookie_name_value != undefined}
   <div class="container">
     <h1>Eingeloggt als {cookie_name_value}</h1>
   </div>
-  {:else}
+{:else}
   <div class="container">
     <h1>Login or Register!</h1>
   </div>
@@ -124,8 +141,11 @@
     <form on:submit|preventDefault>
       <Input placeholder="Username" type="text" bind:value={user_name} />
       <Input placeholder="Password" type="password" bind:value={password} />
-      <Button color="primary" on:click={signUp}  >Sign Up</Button> 
-      <Button color="primary" on:click={login}  >Login</Button>
+
+      {#if show_sign_up == "true"}
+      <Button color="primary" on:click={signUp}>Sign Up</Button>
+      {/if}
+      <Button color="primary" on:click={login}>Login</Button>
     </form>
   </div>
 {/if}

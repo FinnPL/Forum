@@ -1,13 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
+  import { Button } from "sveltestrap";
   let postList: any = [];
   let page: number = 0;
   let tokenValue: string;
-  let ip:string
+  let ip: string;
+  let canScroll = true;
 
   async function get_server_ip() {
-    ip = "http://"+location.hostname+":8080/"
+    ip = "http://" + location.hostname + ":8080/";
   }
 
   token.subscribe((value: string) => {
@@ -15,46 +17,48 @@
   });
 
   async function getFirstPostList() {
-    const dataRes = await fetch(
-      ip + "api/v1/post/page/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
+    const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + tokenValue },
+    });
     const data = await dataRes.json();
 
     postList = data;
   }
 
   async function getPostList() {
-    const dataRes = await fetch(
-      ip + "api/v1/post/page/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
+    const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + tokenValue },
+    });
     const data = await dataRes.json();
 
     postList = postList.concat(data);
   }
 
+  async function scrollTimeout() {
+    canScroll = !canScroll;
+
+    if (!canScroll) setTimeout(scrollTimeout, 1000);
+  }
+
   onMount(async () => {
     await get_server_ip();
     getFirstPostList();
+
     window.onscroll = function () {
-      if (
-        window.innerHeight + window.pageYOffset >=
-        document.body.offsetHeight
-      ) {
-        page += 1;
-        getPostList();
+      if (canScroll) {
+        if (
+          window.innerHeight + window.pageYOffset >=
+          document.body.offsetHeight
+        ) {
+          page += 1;
+          scrollTimeout();
+          getPostList();
+        }
       }
     };
   });
-
- 
 </script>
 
 {#if postList != undefined}
