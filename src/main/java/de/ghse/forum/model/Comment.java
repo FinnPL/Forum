@@ -35,4 +35,6 @@ public class Comment {
   @ManyToOne private Post post;
 
   @Builder.Default private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
+
+  @Builder.Default private boolean edited = false;
 }
