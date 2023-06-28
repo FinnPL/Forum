@@ -4,7 +4,6 @@
   import { getCookie } from "../functions";
   import { goto } from "$app/navigation";
 
-  let user_name: string;
   let password: string;
   let tokenValue: string;
   let cookie_name_value: string;
