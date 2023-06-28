@@ -1,20 +1,25 @@
 <script lang="ts">
-  import "bootstrap/dist/css/bootstrap.min.css";
   import { onMount } from "svelte";
-  import { Alert, Button, Form, FormGroup, Input } from "sveltestrap";
-  import { token } from "../../lib/Login/login.js";
+  import { token } from "../../lib/Login/login";
+  import { getCookie } from "../../lib/functions";
+  import { page } from "$app/stores";
+  import { default as defaultAvatar } from "../../lib/assets/defaultAvatar.png";
+  import PostItem from "$lib/PostItem.svelte";
+  import { fetchProfilePicture } from "../../lib/functions";
+  import { goto } from "$app/navigation";
   let ip: string;
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
   }
 
-  let input: string;
   let searchList: any = [];
-  let page: number = 0;
+  let pageN: number = 0;
   let searchType: string;
   let tokenValue: string;
   let canScroll = true;
+  $: input = $page.url.searchParams.get("q") || '';
+  $: type = $page.url.searchParams.get("type") || '';
 
   token.subscribe((value: string) => {
     tokenValue = value;
@@ -23,57 +28,75 @@
   async function search_post() {
     searchType = "Post";
     const dataRes = await fetch(
-      ip + "api/v1/post/search/" + input + "/" + page,
+      ip + "api/v1/post/search/" + input + "/" + pageN,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
       }
     );
     const data = await dataRes.json();
+
+    for (const post of data) {
+      await fetchProfilePicture(ip, tokenValue, post);
+    }
+
     searchList = searchList.concat(data); // Expand current searchlist
 
     console.log(searchList);
   }
+  
   async function first_search_post() {
     searchType = "Post";
     const dataRes = await fetch(
-      ip + "api/v1/post/search/" + input + "/" + page,
+      ip + "api/v1/post/search/" + input + "/" + pageN
+  ,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
       }
     );
+
     const data = await dataRes.json();
+    for (const post of data) {
+      await fetchProfilePicture(ip, tokenValue, post);
+    }
     searchList = data;
+
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
-    }
+    } 
     console.log(searchList);
   }
 
   async function search_user() {
     searchType = "User";
     const dataRes = await fetch(
-      ip + "api/v1/user/search/" + input + "/" + page,
+      ip + "api/v1/user/search/" + input + "/" + pageN
+  ,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
       }
     );
     const data = await dataRes.json();
+
     searchList = searchList.concat(data); // Expand current searchlist
     console.log(searchList);
   }
+
   async function first_search_user() {
     searchType = "User";
     const dataRes = await fetch(
-      ip + "api/v1/user/search/" + input + "/" + page,
+      ip + "api/v1/user/search/" + input + "/" + pageN
+  ,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
       }
     );
     const data = await dataRes.json();
+
+
     searchList = data;
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
@@ -89,6 +112,9 @@
 
   onMount(async () => {
     await get_server_ip();
+    tokenValue = await getCookie("tokenValue");
+    if (type == "post" || type == '') first_search_post();
+    if (type == "user") first_search_user();
     window.onscroll = function (ev) {
       // Dymamic loading of searchlist items
       if (canScroll)
@@ -97,12 +123,14 @@
           document.body.offsetHeight
         ) {
           if (searchType == "Post") {
-            page += 1;
+            pageN
+         += 1;
             search_post();
             scrollTimeout();
           }
           if (searchType == "User") {
-            page += 1;
+            pageN
+         += 1;
             search_user();
             scrollTimeout();
           }
@@ -111,88 +139,64 @@
   });
 
   async function resetPage() {
-    page = 0;
+    pageN = 0;
   }
+
+  async function search(type: string) {
+    const params = new URLSearchParams($page.url.searchParams);
+    if (type === "post") {
+      params.set("type", "post");
+      resetPage();
+      first_search_post();
+    } else if (type === "user") {
+      params.set("type", "user");
+      resetPage();
+      first_search_user();
+    }
+    goto("/search?" + params.toString());
+  }
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  
 </script>
 
-<div class="container">
-  <div class="alert alert-dark" role="alert">
-    <h1>Suche</h1>
-
-    <Form>
-      <FormGroup floating label="Gib hier Suchwörter ein">
-        <Input required bind:value={input} />
-      </FormGroup>
-
-      {#if input}
-        <Button
-          color="primary"
-          on:click={resetPage}
-          on:click={first_search_post}
-        >
-          Search Post
-        </Button>
-        <Button
-          color="primary"
-          on:click={resetPage}
-          on:click={first_search_user}
-        >
-          Search User
-        </Button>
-      {:else}
-        <div class="alert alert-warning" role="alert">
-          Suchfeld darf nicht leer sein!
-        </div>
-      {/if}
-      <div class="container">
-        {#if searchList[0] == "keinErgebnis"}
-          <div class="alert alert-warning" role="alert">Kein Ergebnis</div>
-        {/if}
-      </div></Form
-    >
-    <br />
-
-    {#if searchType == "Post" && searchList[0] != "keinErgebnis"}
-      {#each searchList as post (post.id)}
-        <div class="alert alert-secondary" role="alert">
-          <a href={"/post/" + post.id}>
-            <h2>Title: {post.title}</h2>
-            <p2>Body: {post.content}</p2><br />
-            <br />
-            <p2>Name: {post.user_name}</p2><br />
-            <br />
-            <p>
-              <a href={"/profile/" + post.user_id}>Author: {post.user_name}</a>
-            </p>
-          </a>
-        </div>
-      {/each}
-    {/if}
-
-    {#if searchType == "User" && searchList[0] != "keinErgebnis"}
-      {#each searchList as user (user.id)}
-        <div class="resultlist">
-          <div class="alert alert-secondary" role="alert">
-            <a href={"/profile/" + user.id}>
-              <br />
-              <h2>Username: {user.user_name}</h2>
-            </a>
-          </div>
-        </div>
-      {/each}
-    {/if}
-  </div>
+<div class="container pt-5 mx-auto max-w-5xl space-x-2">
+  <button class="bg-ui hover:bg-hover rounded-full px-5 py-2" on:click={() => search("post")}>Posts</button>
+  <button class="bg-ui hover:bg-hover rounded-full px-5 py-2" on:click={() => search("user")}>Benutzer</button>
 </div>
 
-<style>
-  .container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-  }
-  .resultlist a {
-    text-decoration: none;
-    color: inherit;
-  }
-</style>
+<div class="fixed py-2 bottom-0 right-4 text-white">
+  <button class="bg-ui px-3 py-3 rounded-full hover:bg-hover" on:click={scrollToTop}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  </button>
+</div>
+
+{#if searchType == "Post" && searchList[0] != "keinErgebnis"}
+  {#each searchList as post (post.id)}
+    <PostItem post={post}/>
+  {/each}
+{/if}
+
+{#if searchType == "User" && searchList[0] != "keinErgebnis"}
+  {#each searchList as user (user.id)}
+    <div class="container mx-auto pt-5 max-w-5xl">
+      <a class="bg-postBG flex flex-col rounded-md px-5 py-2 border-2 border-border hover:border-hover" href={"/profile/" + user.id}>
+        <div class="font-semibold text-xl flex">
+          {#if user.avatarSrc}
+            <img class="rounded-full" src={user.avatarSrc} alt="Avatar" width="50" height="50" />
+          {:else}
+            <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
+          {/if} 
+          <div class="pl-5 truncate">
+            <p> {user.user_name} </p>
+            <p class="text-text text-sm truncate">{user.user_name}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  {/each}
+{/if}

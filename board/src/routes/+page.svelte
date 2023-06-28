@@ -3,12 +3,10 @@
   import { token } from "../lib/Login/login";
   import Post_List from "./post_list/+page.svelte";
   import { onMount } from "svelte";
-  import { Button } from "sveltestrap";
 
 
   let tokenValue: string;
 
-  
 
   token.subscribe((value: string) => {
     tokenValue = value;
@@ -39,7 +37,7 @@
   </form>
 
   
-  <Button color="primary" on:click={submitForm}>Authentifizierung</Button>
+  <button color="primary" on:click={submitForm}>Authentifizierung</button>
 
   
 </div>

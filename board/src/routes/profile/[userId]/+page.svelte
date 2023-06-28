@@ -1,19 +1,12 @@
 <script lang="ts">
-  import { getCookie } from "$lib/functions";
+  import { getCookie } from "../../../lib/functions";
   import { onMount } from "svelte";
   import { own_user_id, token } from "../../../lib/Login/login";
-  import {
-    FormGroup,
-    Input,
-    Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    Form,
-    ModalFooter,
-  } from "sveltestrap";
   import { goto } from "$app/navigation";
+  import PostItem from "$lib/PostItem.svelte";
+  import { fetchProfilePicture } from "../../../lib/functions";
   export let data: any;
+
   let postList: any = [];
   let page = 0;
   let user_name: string;
@@ -86,6 +79,11 @@
       }
     );
     const fetchedData = await fetchedDataRes.json();
+
+    for(const post of fetchedData) {
+      post.avatarSrc = avatarSrc;
+    }
+
     postList = fetchedData;
     console.log(postList);
   }
@@ -98,8 +96,17 @@
         headers: { Authorization: "Bearer " + tokenValue },
       }
     );
+
     const fetchedData = await fetchedDataRes.json();
+
+    for(const post of fetchedData) {
+      post.avatarSrc = avatarSrc;
+    }
+
     console.log(fetchedData);
+
+    
+
     postList = postList.concat(fetchedData);
     console.log(postList);
   }
@@ -176,7 +183,7 @@
   }
 </script>
 
-<div class="container">
+<div class="container mx-auto py-5 max-w-5xl">
   <div class="alert alert-dark">
     <h2>Username: {user_name}</h2>
     {#if bio != null && bio != "null"}
@@ -184,85 +191,40 @@
     {/if}
 
     {#if avatarSrc != "data:"}
-      <img src={avatarSrc} alt="Avatar" width="250" height="300" />
+      <img src={avatarSrc} alt="Avatar" width="125" height="125" />
     {/if}
 
     {#if own_user_id_value == data.userId}
-      <FormGroup>
-        <Button color="info" on:click={toggle}>Edit Profile</Button>
-      </FormGroup>
-      <Modal isOpen={open} {toggle}>
-        <ModalHeader {toggle}>Edit Profile</ModalHeader>
-        <ModalBody>
-          <Form>
-            <FormGroup>
-              <div class="form-floating">
-                <textarea
-                  class="form-control"
-                  placeholder="Body"
-                  bind:value={bio_update}
-                  id="floatingTextarea2"
-                  style="height: 100px"
-                />
-                <label for="floatingTextarea2">Text</label>
-              </div>
-            </FormGroup>
-            <FormGroup>
-              <Input
-                type="file"
-                name="file"
-                id="AvatarFile"
-                bind:this={avatar_file}
-                on:change={handleFileChange}
-              />
-            </FormGroup>
-          </Form>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="primary"
-            on:click={toggle}
-            on:click={update_bio}
-            on:click={upload_avatar}>Update Profile</Button
-          >
-          <Button color="secondary" on:click={toggle}>Cancel</Button>
-        </ModalFooter>
-      </Modal>
-    {/if}
-  </div>
-</div>
-<div class="container">
-  <div class="profilePostList">
-    {#if postList[0] != undefined}
-      {#each postList as post (post.id)}
-        <div class="container">
-          <div class="alert alert-dark">
-            <a href={"/post/" + post.id}>
-              <h2>Title: {post.title}</h2>
-              <p2>Body: {post.content}</p2><br />
-              <br />
-              <p2>Created: {post.date}</p2><br />
-              <br />
-              <p>
-                <a href={"/profile/" + post.user_id}>Author: {post.date}</a>
-              </p>
-            </a>
+      <button class="bg-blue-500 text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={toggle}>Profil bearbeiten</button>
+
+      <div class={open ? "block" : "hidden"}>
+        <div class="fixed inset-0 flex items-center justify-center">
+          <div class="bg-border p-4 rounded w-96">
+            <h2 class="text-lg font-bold mb-4">Profil bearbeiten</h2>
+            <div class="mb-4">
+                <textarea class="text-black" placeholder="Body" bind:value={bio_update} style="height: 100px"/>
+            </div>
+            <div class="mb-4">
+              <input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange}/>
+            </div>
+
+            <div class="flex justify-end">
+              <button class="bg-ui hover:bg-hover text-white px-4 py-2 rounded" on:click={toggle}>Cancel</button>
+              <button class="bg-ui hover:bg-hover text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Update Profile</button>
+            </div>
           </div>
         </div>
-      {/each}
+      </div>
+
     {/if}
   </div>
 </div>
 
-<style>
-  .container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-  }
-  .profilePostList a {
-    text-decoration: none;
-    color: inherit;
-  }
-</style>
+{#if postList[0] != undefined}
+  {#each postList as post (post.id)}
+    <PostItem post={post}/>
+  {/each}
+{/if}
+
+
+

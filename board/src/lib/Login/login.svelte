@@ -1,10 +1,9 @@
 <script lang="ts">
   import { token, cookie_name, own_user_id } from "./login";
-  import { Button, Input } from "sveltestrap";
-  import "bootstrap/dist/css/bootstrap.min.css";
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
   import { goto } from "$app/navigation";
+
   let password: string;
   let tokenValue: string;
   let cookie_name_value: string;
@@ -129,35 +128,18 @@
   }
 </script>
 
-{#if cookie_name_value != undefined}
-  <div class="container">
-    <h1>Eingeloggt als {cookie_name_value}</h1>
-  </div>
-{:else}
-  <div class="container">
-    <h1>Login or Register!</h1>
-  </div>
-{/if}
-
 {#if cookie_name_value == "undefined" || cookie_name_value == undefined}
   <div class="container">
     <form on:submit|preventDefault>
-      <Input placeholder="Username" type="text" bind:value={user_name} />
-      <Input placeholder="Password" type="password" bind:value={password} />
+
+      <input class="text-black" placeholder="Username" type="text" bind:value={user_name} />
+      <input class="text-black" placeholder="Password" type="password" bind:value={password} />
 
       {#if show_sign_up == "true"}
-      <Button color="primary" on:click={signUp}>Sign Up</Button>
+      <button on:click={signUp}>Sign Up </button>
       {/if}
-      <Button color="primary" on:click={login}>Login</Button>
+      <button on:click={login}>Login </button>
     </form>
   </div>
 {/if}
 
-<style>
-  .container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-  }
-</style>

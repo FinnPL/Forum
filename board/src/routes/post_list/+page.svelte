@@ -1,7 +1,10 @@
-<script lang="ts">
+ <script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
-  import { Button } from "sveltestrap";
+  import PostItem from '../../lib/PostItem.svelte';
+  import { fetchProfilePicture } from "../../lib/functions";
+  
+
   let postList: any = [];
   let page: number = 0;
   let tokenValue: string;
@@ -23,6 +26,10 @@
     });
     const data = await dataRes.json();
 
+    for (const post of data) {
+      await fetchProfilePicture(ip, tokenValue, post);
+    }
+
     postList = data;
   }
 
@@ -32,6 +39,10 @@
       headers: { Authorization: "Bearer " + tokenValue },
     });
     const data = await dataRes.json();
+
+    for (const post of data) {
+      await fetchProfilePicture(ip, tokenValue, post);
+    }
 
     postList = postList.concat(data);
   }
@@ -59,42 +70,26 @@
       }
     };
   });
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  
 </script>
 
 {#if postList != undefined}
+  <div class="fixed py-2 bottom-0 right-4 text-white">
+    <a href="/create_post" class="button bg-ui px-5 py-3 rounded-full hover:bg-hover">Post erstellen</a>
+
+    <button class="bg-ui px-3 py-3 rounded-full hover:bg-hover" on:click={scrollToTop}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </button>
+  </div>
+
+
   {#each postList as post (post.id)}
-    <div class="container">
-      <div class="alert alert-dark">
-        <a href={"/post/" + post.id}>
-          <h2>{post.title}</h2>
-          <p2>{post.content}</p2><br />
-          <br />
-          <p2>Datum: {post.date}</p2><br />
-          <br />
-          <p>
-            <a href={"/profile/" + post.user_id}>Autor: {post.user_name}</a>
-          </p>
-        </a>
-      </div>
-    </div>
+    <PostItem post={post}/>
   {/each}
 {/if}
-
-<style>
-  .container {
-    padding: 10px 16px;
-    margin: 40px auto;
-    max-width: 800px;
-  }
-
-  .container h2 {
-    font-size: 20px;
-    color: #3538f1d0;
-    margin-bottom: 8px;
-  }
-
-  .container a {
-    text-decoration: none;
-    color: inherit;
-  }
-</style>
