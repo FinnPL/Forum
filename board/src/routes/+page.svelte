@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { Button } from "sveltestrap";
 
+
   let tokenValue: string;
 
   
@@ -13,11 +14,13 @@
     tokenValue = value;
   });
 
+
   function submitForm() {
     const form = document.getElementById('oauthTriggerForm') as HTMLFormElement;
     form.submit();
   }
   
+
 </script>
 
 <Login show_sign_up="false" />

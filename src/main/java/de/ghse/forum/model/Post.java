@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class Post {
 
   @Id
-  @Column(name = "id", columnDefinition = "BINARY(16)")
+  @Column(name = "id", columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
@@ -43,5 +43,5 @@ public class Post {
 
   private final java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
 
-  private boolean edited = false;
+  @Builder.Default private boolean edited = false;
 }

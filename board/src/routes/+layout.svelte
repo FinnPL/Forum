@@ -47,6 +47,7 @@
       location.reload();
     }}
   }); 
+
 </script>
 
 <Navbar>

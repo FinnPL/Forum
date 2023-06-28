@@ -2,7 +2,6 @@ package de.ghse.forum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.javafaker.Faker;
 import de.ghse.forum.api.request.AuthenticationRequest;
 import de.ghse.forum.api.response.AuthenticationResponse;
 import de.ghse.forum.model.Role;
@@ -28,8 +27,8 @@ class AuthenticationControllerTest {
   void register() {
     AuthenticationRequest authenticationRequest =
         AuthenticationRequest.builder()
-            .user_name(new Faker().name().username())
-            .password(passwordEncoder.encode(new Faker().internet().password()))
+            .user_name("Shaen")
+            .password(passwordEncoder.encode("sC8Xzltaorcozjky"))
             .build();
 
     ResponseEntity<AuthenticationResponse> response =
@@ -39,14 +38,15 @@ class AuthenticationControllerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(Objects.requireNonNull(response.getBody()).getUser_id()).isNotNull();
     assertThat(response.getBody().getToken()).isNotNull();
+    userRepository.delete(userRepository.findByUsername("Shaen").get());
   }
 
   @Test
   void login() {
-    String password = new Faker().internet().password();
+    String password = "c5Urg26VKO";
     User user =
         User.builder()
-            .username(new Faker().name().username())
+            .username("Ginny")
             .password(passwordEncoder.encode(password))
             .role(Role.USER)
             .build();
@@ -62,5 +62,6 @@ class AuthenticationControllerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(Objects.requireNonNull(response.getBody()).getUser_id()).isNotNull();
     assertThat(response.getBody().getToken()).isNotNull();
+    userRepository.delete(user);
   }
 }

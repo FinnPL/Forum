@@ -5,7 +5,11 @@
 
 version: 2
 updates:
-  - package-ecosystem: "maven" 
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'npm'
+    directory: '/board/'
     schedule:
-      interval: "weekly"
+      interval: 'daily'
+  - package-ecosystem: 'gradle'
+    directory: '/'
+    schedule:
+      interval: 'daily'
