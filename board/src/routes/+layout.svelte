@@ -23,6 +23,7 @@
         cookie_name_value = await getCookie("username");
     }
 
+
     async function signOut() {
       document.cookie.split(";").forEach(function (c) {
         document.cookie = c
@@ -47,28 +48,32 @@
       window.location.href = `/search?q=${input}`;
     }
 
-    onMount(async () => {
+  onMount(async () => {
       await get_server_ip();
       await initial_load();
-      if (tokenValue == undefined && location.pathname != "/") {
-        await goto("/");
-        location.reload();
-      } else {  
-        const profilePictureRes = await fetch(
-        ip + "api/v1/file/profile/" + own_user_id_value,
-          {
-            method: "GET",
-            headers: { Authorization: "Bearer " + tokenValue },
-          }
-        );
+      if(!currentURL.includes("/noeskauth/")) {
+        if (tokenValue == undefined && location.pathname != "/") {
+          await goto("/");
+          location.reload();
+        } else {
+          const profilePictureRes = await fetch(
+          ip + "api/v1/file/profile/" + own_user_id_value,
+            {
+              method: "GET",
+              headers: { Authorization: "Bearer " + tokenValue },
+            }
+          );
 
-        if (profilePictureRes.ok) {
-          const blob = await profilePictureRes.blob();
-          const url = URL.createObjectURL(blob);
-          avatarSrc = url;
+          if (profilePictureRes.ok) {
+            const blob = await profilePictureRes.blob();
+            const url = URL.createObjectURL(blob);
+            avatarSrc = url;
+          }
         }
       }
     });
+
+
 </script>
 
 {#if own_user_id_value != undefined && own_user_id_value != "undefined"}

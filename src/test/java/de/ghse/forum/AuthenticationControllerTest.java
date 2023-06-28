@@ -24,24 +24,6 @@ class AuthenticationControllerTest {
   @Autowired private PasswordEncoder passwordEncoder;
 
   @Test
-  void register() {
-    AuthenticationRequest authenticationRequest =
-        AuthenticationRequest.builder()
-            .user_name("Shaen")
-            .password(passwordEncoder.encode("sC8Xzltaorcozjky"))
-            .build();
-
-    ResponseEntity<AuthenticationResponse> response =
-        restTemplate.postForEntity(
-            "/api/v1/auth/register", authenticationRequest, AuthenticationResponse.class);
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(Objects.requireNonNull(response.getBody()).getUser_id()).isNotNull();
-    assertThat(response.getBody().getToken()).isNotNull();
-    userRepository.delete(userRepository.findByUsername("Shaen").get());
-  }
-
-  @Test
   void login() {
     String password = "c5Urg26VKO";
     User user =

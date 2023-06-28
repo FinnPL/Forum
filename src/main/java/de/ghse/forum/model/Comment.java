@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Comment {
   @Id
-  @Column(name = "id", columnDefinition = "BINARY(16)")
+  @Column(name = "id", columnDefinition = "UUID")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
@@ -35,4 +35,6 @@ public class Comment {
   @ManyToOne private Post post;
 
   @Builder.Default private java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
+
+  @Builder.Default private boolean edited = false;
 }

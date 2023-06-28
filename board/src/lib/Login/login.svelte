@@ -11,6 +11,21 @@
   let own_user_id_value: string;
   let ip: string;
 
+
+  //Auth sachen:
+  export let givenname:string;
+  export let surname:string;
+  export let classname:string;
+  export let signature:string;
+  export let login_name:string;
+  let user_name = login_name;
+
+  $: console.log(signature)
+
+  export let show_sign_up = "true";
+
+
+
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
   }
@@ -27,11 +42,15 @@
 
   async function signUp() {
     // Sign up & store the values in cookies
+
+    console.log(JSON.stringify({ givenname,surname, classname, user_name, signature, password}),)
+
     const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_name, password }),
+      body: JSON.stringify({ givenname,surname, classname, user_name, signature, password}),
     });
+    
     const data = await res.json();
     token.set(data.token);
     token.subscribe((token: any) => {
@@ -59,7 +78,7 @@
     const res = await fetch(ip + "api/v1/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_name, password }),
+      body: JSON.stringify({ user_name, password}),
     });
     const data = await res.json();
     token.set(data.token);
@@ -113,9 +132,13 @@
 {#if cookie_name_value == "undefined" || cookie_name_value == undefined}
   <div class="container">
     <form on:submit|preventDefault>
+
       <input class="text-black" placeholder="Username" type="text" bind:value={user_name} />
       <input class="text-black" placeholder="Password" type="password" bind:value={password} />
+
+      {#if show_sign_up == "true"}
       <button on:click={signUp}>Sign Up </button>
+      {/if}
       <button on:click={login}>Login </button>
     </form>
   </div>
