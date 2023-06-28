@@ -1,5 +1,7 @@
 package de.ghse.forum.api;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import de.ghse.forum.api.request.CommentRequest;
 import de.ghse.forum.api.request.PostRequest;
 import de.ghse.forum.api.response.CommentResponse;
@@ -8,6 +10,9 @@ import de.ghse.forum.service.CommentService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
 import jakarta.validation.Valid;
+import java.security.Principal;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.security.Principal;
-import java.util.List;
-import java.util.UUID;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * REST controller for comment related endpoints.
@@ -70,7 +69,6 @@ public class CommentController {
     }
   }
 
-
   /**
    * REST endpoint for deleting comments by id.
    *
@@ -82,7 +80,8 @@ public class CommentController {
    * @see Comment Comment
    */
   @DeleteMapping(path = "/{id}")
-  public ResponseEntity<CommentResponse> deleteComment(@PathVariable("id") UUID id, Principal principal) {
+  public ResponseEntity<CommentResponse> deleteComment(
+      @PathVariable("id") UUID id, Principal principal) {
     logger.info("Deleting comment with id: " + id);
     try {
       Comment comment = commentService.getCommentById(id).orElseThrow();
@@ -98,7 +97,6 @@ public class CommentController {
     return ResponseEntity.badRequest().build();
   }
 
-
   /**
    * REST endpoint for updating comments by id.
    *
@@ -112,9 +110,9 @@ public class CommentController {
    */
   @PutMapping(path = "/{id}")
   public ResponseEntity<CommentResponse> updateComment(
-          @PathVariable("id") UUID id,
-          @Valid @NonNull @RequestBody PostRequest commentRequest,
-          Principal principal) {
+      @PathVariable("id") UUID id,
+      @Valid @NonNull @RequestBody PostRequest commentRequest,
+      Principal principal) {
     logger.info("Updating comment with id: " + id);
     try {
       Comment comment = commentService.getCommentById(id).orElseThrow();
@@ -132,7 +130,6 @@ public class CommentController {
     return ResponseEntity.badRequest().build();
   }
 
-
   /**
    * REST endpoint for getting comments by id.
    *
@@ -144,9 +141,17 @@ public class CommentController {
    */
   @GetMapping(path = "/{id}")
   public ResponseEntity<CommentResponse> getPostById(@PathVariable("id") UUID id) {
-    return ResponseEntity.ok().body(new CommentResponse().convert(commentService.getCommentById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Can not get Post: \nPost not found"))));
+    return ResponseEntity.ok()
+        .body(
+            new CommentResponse()
+                .convert(
+                    commentService
+                        .getCommentById(id)
+                        .orElseThrow(
+                            () ->
+                                new ResponseStatusException(
+                                    NOT_FOUND, "Can not get Post: \nPost not found"))));
   }
-
 
   /**
    * REST endpoint for getting comments of a post.
