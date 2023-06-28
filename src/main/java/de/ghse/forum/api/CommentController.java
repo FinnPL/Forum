@@ -111,7 +111,7 @@ public class CommentController {
   @PutMapping(path = "/{id}")
   public ResponseEntity<CommentResponse> updateComment(
       @PathVariable("id") UUID id,
-      @Valid @NonNull @RequestBody PostRequest commentRequest,
+      @Valid @NonNull @RequestBody CommentRequest commentRequest,
       Principal principal) {
     logger.info("Updating comment with id: " + id);
     try {
