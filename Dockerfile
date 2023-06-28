@@ -8,6 +8,6 @@ COPY src src
 RUN ./gradlew build --exclude-task test -i
 
 FROM openjdk:17
-COPY --from=buildstage /app/build/libs/forum-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=buildstage /app/build/libs/Forum-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]
