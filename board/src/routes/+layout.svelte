@@ -37,13 +37,17 @@
       location.reload();
     }
   }
+  
   onMount(async () => {
     await initial_load();
+    const currentURL = window.location.href;
+    if(!currentURL.includes("/noeskauth/")) {
     if (tokenValue == undefined && location.pathname != "/") {
       await goto("/");
       location.reload();
-    }
-  });
+    }}
+  }); 
+
 </script>
 
 <Navbar>
