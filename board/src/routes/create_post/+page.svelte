@@ -97,9 +97,25 @@
   <Error />
 {/if}
 
-<div class="container">
-  <div class="alert alert-dark" role="alert">
+<div class="container mx-auto py-5 max-w-5xl">
+  <div class=" px-3 py-3 mb-4 border rounded bg-gray-400 border-gray-500 text-gray-900">
+    <form>
+      <input class="text-black mb-4 py-1 px-2" placeholder="Titel" required bind:value={post_title} />
 
+      <textarea
+        class="w-full py-1 px-2 mb-4 bg-white text-black"
+        placeholder="Body"
+        bind:value={post_body}
+        id="floatingTextarea2"
+        style="height: 100px"
+      />
+
+      <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+
+      <div class="flex justify-end">
+        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
+      </div>
+    </form>
   </div>
 </div>
 

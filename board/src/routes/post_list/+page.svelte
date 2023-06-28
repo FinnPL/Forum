@@ -1,14 +1,15 @@
  <script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
-  import { default as defaultAvatar } from "../../lib/assets/defaultAvatar.png";
+  import PostItem from '../../lib/PostItem.svelte';
+  import { fetchProfilePicture } from "../../lib/functions";
+  
 
   let postList: any = [];
   let page: number = 0;
   let tokenValue: string;
   let ip: string;
   let canScroll = true;
-  let profilePictureMap = new Map();
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
@@ -19,61 +20,32 @@
   });
 
   async function getFirstPostList() {
-  const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
-    method: "GET",
-    headers: { Authorization: "Bearer " + tokenValue },
-  });
-  const data = await dataRes.json();
-
-  for (const post of data) {
-    if(profilePictureMap.has(post.user_id)) {
-      post.avatarSrc = profilePictureMap.get(post.user_id);
-    } else {
-      await fetchProfilePicture(post);
-      profilePictureMap.set(post.user_id, post.avatarSrc);
-    }
-  }
-
-  postList = data;
-}
-
-async function getPostList() {
-  const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
-    method: "GET",
-    headers: { Authorization: "Bearer " + tokenValue },
-  });
-  const data = await dataRes.json();
-
-  for (const post of data) {
-    if(profilePictureMap.has(post.user_id)) {
-      post.avatarSrc = profilePictureMap.get(post.user_id);
-    } else {
-      await fetchProfilePicture(post);
-      profilePictureMap.set(post.user_id, post.avatarSrc);
-    }
-  }
-
-
-  postList = postList.concat(data);
-}
-
-async function fetchProfilePicture(post: { user_id: string; avatarSrc: string | null; }) {
-  const profilePictureRes = await fetch(
-    ip + "api/v1/file/profile/" + post.user_id,
-    {
+    const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
       method: "GET",
       headers: { Authorization: "Bearer " + tokenValue },
-    }
-  );
+    });
+    const data = await dataRes.json();
 
-  if (profilePictureRes.ok) {
-    const blob = await profilePictureRes.blob();
-    const url = URL.createObjectURL(blob);
-    post.avatarSrc = url;
-  } else {
-    post.avatarSrc = null;
+    for (const post of data) {
+      await fetchProfilePicture(ip, tokenValue, post);
+    }
+
+    postList = data;
   }
-}
+
+  async function getPostList() {
+    const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + tokenValue },
+    });
+    const data = await dataRes.json();
+
+    for (const post of data) {
+      await fetchProfilePicture(ip, tokenValue, post);
+    }
+
+    postList = postList.concat(data);
+  }
 
   async function scrollTimeout() {
     canScroll = !canScroll;
@@ -118,24 +90,6 @@ async function fetchProfilePicture(post: { user_id: string; avatarSrc: string | 
 
 
   {#each postList as post (post.id)}
-    <div class="container mx-auto py-5 max-w-5xl">
-      <a class="bg-postBG flex rounded-md px-5 py-5 border-2 border-border hover:border-hover" href={"/post/" + post.id}>
-        <div>
-          <div class="font-semibold text-xl flex">
-            <a href={"/profile/" + post.user_id}>
-              {#if post.avatarSrc}
-                <img class="rounded-full" src={post.avatarSrc} alt="Avatar" width="50" height="50" />
-              {:else}
-                <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
-              {/if} 
-            </a>
-            <span class="pl-3 pt-2"> {post.title}</span>
-            <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + post.user_id}>{post.user_name}</a>
-            <span class="pl-1 pt-3.5 text-text text-sm">• {post.date}</span>
-          </div>
-          <div class="py-3">{post.content}</div><br />
-        </div>
-      </a>
-    </div>
+    <PostItem post={post}/>
   {/each}
 {/if}

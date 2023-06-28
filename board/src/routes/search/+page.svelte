@@ -4,6 +4,8 @@
   import { getCookie } from "../../lib/functions";
   import { page } from "$app/stores";
   import { default as defaultAvatar } from "../../lib/assets/defaultAvatar.png";
+  import PostItem from "$lib/PostItem.svelte";
+  import { fetchProfilePicture } from "../../lib/functions";
   import { goto } from "$app/navigation";
   let ip: string;
 
@@ -16,7 +18,6 @@
   let searchType: string;
   let tokenValue: string;
   let canScroll = true;
-  let profilePictureMap = new Map();
   $: input = $page.url.searchParams.get("q") || '';
   $: type = $page.url.searchParams.get("type") || '';
 
@@ -36,12 +37,7 @@
     const data = await dataRes.json();
 
     for (const post of data) {
-      if(profilePictureMap.has(post.user_id)) {
-        post.avatarSrc = profilePictureMap.get(post.user_id);
-      } else {
-        await fetchProfilePicture(post);
-        profilePictureMap.set(post.user_id, post.avatarSrc);
-      }
+      await fetchProfilePicture(ip, tokenValue, post);
     }
 
     searchList = searchList.concat(data); // Expand current searchlist
@@ -62,14 +58,8 @@
 
     const data = await dataRes.json();
     for (const post of data) {
-        if(profilePictureMap.has(post.user_id)) {
-          post.avatarSrc = profilePictureMap.get(post.user_id);
-        } else {
-          await fetchProfilePicture(post);
-        profilePictureMap.set(post.user_id, post.avatarSrc);
-        }
-      }
-
+      await fetchProfilePicture(ip, tokenValue, post);
+    }
     searchList = data;
 
     if (searchList.length == 0) {
@@ -152,24 +142,6 @@
     pageN = 0;
   }
 
-  async function fetchProfilePicture(post: { user_id: string; avatarSrc: string | null; }) {
-    const profilePictureRes = await fetch(
-      ip + "api/v1/file/profile/" + post.user_id,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-
-    if (profilePictureRes.ok) {
-      const blob = await profilePictureRes.blob();
-      const url = URL.createObjectURL(blob);
-      post.avatarSrc = url;
-    } else {
-      post.avatarSrc = null;
-    }
-  }
-
   async function search(type: string) {
     const params = new URLSearchParams($page.url.searchParams);
     if (type === "post") {
@@ -205,25 +177,7 @@
 
 {#if searchType == "Post" && searchList[0] != "keinErgebnis"}
   {#each searchList as post (post.id)}
-  <div class="container mx-auto py-5 max-w-5xl">
-    <a class="bg-postBG flex rounded-md px-5 py-5 border-2 border-border hover:border-hover" href={"/post/" + post.id}>
-      <div>
-        <div class="font-semibold text-xl flex">
-        <a href={"/profile/" + post.user_id}>
-          {#if post.avatarSrc}
-            <img class="rounded-full" src={post.avatarSrc} alt="Avatar" width="50" height="50" />
-          {:else}
-            <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
-          {/if} 
-        </a>
-        <span class="pl-3 pt-2"> {post.title}</span>
-        <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + post.user_id}>{post.user_name}</a>
-        <span class="pl-1 pt-3.5 text-text text-sm">• {post.date}</span>
-        </div>
-        <div class="py-3">{post.content}</div><br />
-      </div>
-    </a>
-  </div>
+    <PostItem post={post}/>
   {/each}
 {/if}
 
@@ -239,7 +193,7 @@
           {/if} 
           <div class="pl-5 truncate">
             <p> {user.user_name} </p>
-            <p class="text-text text-sm truncate">{user.user_id}</p>
+            <p class="text-text text-sm truncate">{user.user_name}</p>
           </div>
         </div>
       </a>
