@@ -3,7 +3,6 @@ package de.ghse.forum.api;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import de.ghse.forum.api.request.CommentRequest;
-import de.ghse.forum.api.request.PostRequest;
 import de.ghse.forum.api.response.CommentResponse;
 import de.ghse.forum.model.Comment;
 import de.ghse.forum.service.CommentService;
