@@ -36,13 +36,13 @@ public class AuthenticationController {
    */
   @PostMapping(path = "/register")
   public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-   logger.info("NoeAuth User: " + request.getUser_name());
-   try {
-     return ResponseEntity.ok(authenticationService.noeAuth(request));
-   } catch (Exception e) {
-        logger.error("NoeAuth Error: " + e.getMessage());
-        return ResponseEntity.badRequest().build();
-   }
+    logger.info("NoeAuth User: " + request.getUser_name());
+    try {
+      return ResponseEntity.ok(authenticationService.noeAuth(request));
+    } catch (Exception e) {
+      logger.error("NoeAuth Error: " + e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
   }
 
   /**

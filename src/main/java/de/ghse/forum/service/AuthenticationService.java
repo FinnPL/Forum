@@ -6,18 +6,17 @@ import de.ghse.forum.api.response.AuthenticationResponse;
 import de.ghse.forum.model.Role;
 import de.ghse.forum.model.User;
 import de.ghse.forum.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 /**
  * Service for authentication.
@@ -51,23 +50,35 @@ public class AuthenticationService {
   }
 
   /**
-   * Verifies the signature of the data.
-   * Creates a new user or update the password if the user already exists.
+   * Verifies the signature of the data. Creates a new user or update the password if the user
+   * already exists.
+   *
    * @param request RegisterRequest
    * @return AuthenticationResponse with JWT token and user id
    * @throws Exception if the signature is invalid
    */
   public AuthenticationResponse noeAuth(RegisterRequest request) throws Exception {
     String signature = request.getSignature();
-    String publicKeyString = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEaRpPYjAH0DjaNPwQSLrLmuz+deOLA4RBxTV/t0DV0zXWlYB+Ifaa6wE5QgikFs64PpHWhssiT+fdMccA4dUQPix35P8yGbccYvmUdm96WeITfgTHFSy/46vfwTm305UK";
-    String data = "{\"givenname\":\"" + request.getGivenname() + "\",\"surname\":\"" + request.getSurname() + "\",\"class\":\"" + request.getClassname() + "\",\"login\":\"" + request.getUser_name() + "\"}"; //Dont ask 💀
+    String publicKeyString =
+        "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEaRpPYjAH0DjaNPwQSLrLmuz+deOLA4RBxTV/t0DV0zXWlYB+Ifaa6wE5QgikFs64PpHWhssiT+fdMccA4dUQPix35P8yGbccYvmUdm96WeITfgTHFSy/46vfwTm305UK";
+    String data =
+        "{\"givenname\":\""
+            + request.getGivenname()
+            + "\",\"surname\":\""
+            + request.getSurname()
+            + "\",\"class\":\""
+            + request.getClassname()
+            + "\",\"login\":\""
+            + request.getUser_name()
+            + "\"}"; // Dont ask 💀
     if (verifyData(data, signature, publicKeyString)) {
       if (userRepository.findByUsername(request.getUser_name()).isPresent()) {
         User user = userRepository.findByUsername(request.getUser_name()).get();
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
       } else {
-        User user = User.builder()
+        User user =
+            User.builder()
                 .username(request.getUser_name())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
@@ -75,7 +86,8 @@ public class AuthenticationService {
                 .build();
         userRepository.save(user);
       }
-      return authenticate(AuthenticationRequest.builder()
+      return authenticate(
+          AuthenticationRequest.builder()
               .user_name(request.getUser_name())
               .password(request.getPassword())
               .build());
@@ -86,6 +98,7 @@ public class AuthenticationService {
 
   /**
    * Verifies Data with a signature and a public key.
+   *
    * @param data JSON data
    * @param signature Signature of the data
    * @param publicKeyString Public key
