@@ -77,7 +77,7 @@ jobs:
         cache: gradle
         
     - name: Autobuild
-      run: ./gradlew build
+      run: ./server/gradlew build
       #  uses: github/codeql-action/autobuild@v2
 
     # ℹ️ Command-line programs to run using the OS shell.
