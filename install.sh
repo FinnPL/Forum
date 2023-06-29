@@ -18,7 +18,7 @@ else
 fi
 
 # Make the gradlew file executable
-chmod +x gradlew
+chmod +x ./server/gradlew
 
 # Start Docker Compose
 docker-compose up -d
