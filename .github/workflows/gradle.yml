@@ -43,6 +43,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Make Gradlew Executable
-        run: chmod +x ./server/gradlew
+        run: |
+          cd server
+          chmod +x ./gradlew
       - name: Execute Gradle build
-        run: ./server/gradlew build
+        run: ./gradlew build
