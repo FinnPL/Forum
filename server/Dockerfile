@@ -5,6 +5,7 @@ COPY settings.gradle.kts .
 COPY gradlew .
 COPY gradle gradle
 COPY src src
+RUN ls
 RUN ./gradlew build --exclude-task test -i
 
 FROM openjdk:17
