@@ -47,4 +47,6 @@ jobs:
           cd server
           chmod +x ./gradlew
       - name: Execute Gradle build
-        run: ./gradlew build
+        run: |
+          cd server
+          ./gradlew build
