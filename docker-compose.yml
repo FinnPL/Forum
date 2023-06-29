@@ -47,7 +47,7 @@ services:
       - "9104:9104"
     restart: always
     environment:
-      DATA_SOURCE_NAME: root:${DB_PASSWORD:-root}@tcp(db:3306)/${DB_NAME:-forum}
+      DATA_SOURCE_NAME: "root:${DB_PASSWORD:-root}@(db:3306)/"
     depends_on:
       - db
 
