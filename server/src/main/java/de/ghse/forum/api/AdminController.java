@@ -68,6 +68,7 @@ public class AdminController {
             })
         .orElse(ResponseEntity.notFound().build());
   }
+
   /**
    * Deletes a file with the given id.
    *

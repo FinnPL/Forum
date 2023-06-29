@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
-          cd board
+          cd web
           npm install
           npm run build
         shell: bash
