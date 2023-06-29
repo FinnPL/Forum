@@ -1,10 +1,10 @@
 FROM gradle:jdk17 as buildstage
 WORKDIR /app
+RUN ls
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY gradlew .
 COPY gradle gradle
-RUN ls
 COPY src src
 RUN ./gradlew build --exclude-task test -i
 
