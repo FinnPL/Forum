@@ -1,6 +1,5 @@
 FROM gradle:jdk17 as buildstage
 WORKDIR /app
-RUN ls
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY gradlew .

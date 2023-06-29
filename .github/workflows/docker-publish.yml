@@ -70,9 +70,9 @@ jobs:
 
       - name: test
         run: |
-          cd server 
+          cp -r ./server/* ./
           chmod +x ./gradlew
-          
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
