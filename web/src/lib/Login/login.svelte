@@ -22,6 +22,8 @@
   $: console.log(signature)
 
   export let show_sign_up = "true";
+  
+  
 
 
 
@@ -132,9 +134,12 @@
   <div class="container">
     <form on:submit|preventDefault>
 
+      {#if show_sign_up == "true"}
+      <input class="text-black pointer-events-none" placeholder="Username" type="text" bind:value={user_name} />
+      {:else}
       <input class="text-black" placeholder="Username" type="text" bind:value={user_name} />
+      {/if}
       <input class="text-black" placeholder="Password" type="password" bind:value={password} />
-
       {#if show_sign_up == "true"}
       <button on:click={signUp}>Sign Up </button>
       {/if}

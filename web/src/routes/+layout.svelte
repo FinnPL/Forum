@@ -51,6 +51,7 @@
   onMount(async () => {
       await get_server_ip();
       await initial_load();
+      const currentURL = window.location.href
       if(!currentURL.includes("/noeskauth/")) {
         if (tokenValue == undefined && location.pathname != "/") {
           await goto("/");
