@@ -113,8 +113,9 @@ class CommentControllerTest {
     assertThat(response.getBody()).contains(user.getUsername());
     commentRepository.delete(comment);
   }
+
   @Test
-  void deleteComment(){
+  void deleteComment() {
     String token = jwtService.generateToken(user);
 
     Comment comment =
@@ -139,7 +140,7 @@ class CommentControllerTest {
   }
 
   @Test
-  void updateComment(){
+  void updateComment() {
     String token = jwtService.generateToken(user);
     String postId = post.getId().toString();
 
@@ -169,7 +170,8 @@ class CommentControllerTest {
             new HttpEntity<>(commentRequest, headers),
             String.class);
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(commentRepository.findById(UUID.fromString(commentId)).get().getContent()).isEqualTo(commentRequest.getContent());
+    assertThat(commentRepository.findById(UUID.fromString(commentId)).get().getContent())
+        .isEqualTo(commentRequest.getContent());
     commentRepository.delete(comment);
   }
 }
