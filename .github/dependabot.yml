@@ -6,10 +6,10 @@
 version: 2
 updates:
   - package-ecosystem: 'npm'
-    directory: '/board/'
+    directory: '/web/'
     schedule:
       interval: 'daily'
   - package-ecosystem: 'gradle'
-    directory: '/'
+    directory: '/server/'
     schedule:
       interval: 'daily'
