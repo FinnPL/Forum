@@ -60,9 +60,9 @@
     });
     own_user_id.set(data.user_id);
 
-    document.cookie = "tokenValue=" + tokenValue;
-    document.cookie = "username=" + user_name;
-    document.cookie = "userid=" + own_user_id_value;
+     document.cookie = "tokenValue=" + tokenValue+";path=/";
+     document.cookie = "username=" + user_name+";path=/";
+     document.cookie = "userid=" + own_user_id_value+";path=/";
 
     console.log("Der Cookie ist:" + document.cookie);
     token.set(tokenValue);
