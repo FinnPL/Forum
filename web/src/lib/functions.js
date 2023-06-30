@@ -20,7 +20,7 @@ export async function fetchProfilePicture(ip, tokenValue, entity) {
     entity.avatarSrc = profilePictureMap.get(entity.user_id);
   } else {
     const profilePictureRes = await fetch(
-      ip + 'api/v1/file/profile/' + entity.user_id,
+      ip + 'api/v1/file/profile/' + entity.user_id + "?" + new Date().getTime(),
       {
         method: 'GET',
         headers: { Authorization: 'Bearer ' + tokenValue },

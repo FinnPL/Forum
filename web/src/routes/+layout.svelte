@@ -58,7 +58,7 @@
           location.reload();
         } else {
           const profilePictureRes = await fetch(
-          ip + "api/v1/file/profile/" + own_user_id_value,
+          ip + "api/v1/file/profile/" + own_user_id_value + "?" + new Date().getTime(),
             {
               method: "GET",
               headers: { Authorization: "Bearer " + tokenValue },

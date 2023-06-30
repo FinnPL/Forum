@@ -128,6 +128,7 @@
     console.log(res);
     await goto("/");
     await goto("/profile/" + own_user_id_value);
+    location.reload();
   }
 
   onMount(async () => {
