@@ -13,27 +13,27 @@ const profilePictureMap = new Map()
 /**
  * @param {string} ip
  * @param {string} tokenValue
- * @param {{ user_id: string; avatarSrc: string | null; }} post
+ * @param {{ user_id: string; avatarSrc: string | null; }} entity
  */
-export async function fetchProfilePicture (ip, tokenValue, post) {
-  if (profilePictureMap.has(post.user_id)) {
-    post.avatarSrc = profilePictureMap.get(post.user_id)
+export async function fetchProfilePicture(ip, tokenValue, entity) {
+  if (profilePictureMap.has(entity.user_id)) {
+    entity.avatarSrc = profilePictureMap.get(entity.user_id);
   } else {
     const profilePictureRes = await fetch(
-      ip + 'api/v1/file/profile/' + post.user_id,
+      ip + 'api/v1/file/profile/' + entity.user_id,
       {
         method: 'GET',
-        headers: { Authorization: 'Bearer ' + tokenValue }
+        headers: { Authorization: 'Bearer ' + tokenValue },
       }
-    )
+    );
 
     if (profilePictureRes.ok) {
-      const blob = await profilePictureRes.blob()
-      post.avatarSrc = URL.createObjectURL(blob)
+      const blob = await profilePictureRes.blob();
+      entity.avatarSrc = URL.createObjectURL(blob);
     } else {
-      post.avatarSrc = null
+      entity.avatarSrc = null;
     }
 
-    profilePictureMap.set(post.user_id, post.avatarSrc)
+    profilePictureMap.set(entity.user_id, entity.avatarSrc);
   }
 }

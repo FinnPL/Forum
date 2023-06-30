@@ -115,8 +115,8 @@
     );
     const fetchedData = await fetchedRes.json();
 
-    for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
+    for (const comment of fetchedData) {
+      await fetchProfilePicture(ip, tokenValue, comment);
     }
 
     comment_list = fetchedData;
@@ -135,8 +135,8 @@
     );
     const fetchedData = await fetchedRes.json();
 
-    for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
+    for (const comment of fetchedData) {
+      await fetchProfilePicture(ip, tokenValue, comment);
     }
 
     comment_list = comment_list.concat(fetchedData);
