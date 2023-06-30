@@ -214,6 +214,8 @@
 
   onMount(async () => {
     let bearerToken = await getCookie("tokenValue");
+    let myid = await getCookie("userid");
+
     console.log(bearerToken);
     let requestOptions: any = {
       method: "GET",
@@ -242,9 +244,11 @@
 
     async function loadAvatar() {
       const res = await fetch(
-        ip + "api/v1/file/profile/" + userID + "?" + new Date().getTime(),
+        ip + "api/v1/file/profile/" + myid + "?" + new Date().getTime(),
         requestOptions
       );
+      
+
       const blob = await res.blob();
       const reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -252,7 +256,7 @@
         if (event.target && event.target.result) {
           avatarSrc = event.target.result;
         }
-        console.log(avatarSrc);
+        
       };
     }
     loadAvatar();
@@ -294,6 +298,7 @@
       <div class="font-semibold text-xl flex">
         <a href={"/profile/" + userID}>
           {#if avatarSrc}
+          
             <img class="rounded-full" src={avatarSrc} alt="Avatar" width="50" height="50" />
           {:else}
             <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />

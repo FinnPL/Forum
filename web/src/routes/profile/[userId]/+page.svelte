@@ -21,6 +21,7 @@
   let open = false;
   const toggle = () => (open = !open);
   let ip: string;
+  let canScroll = true;
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
@@ -89,6 +90,7 @@
   }
 
   async function getPostList() {
+    console.log(tokenValue+"SUSS")
     const fetchedDataRes = await fetch(
       ip + "api/v1/post/page/" + data.userId + "/" + page,
       {
@@ -109,6 +111,12 @@
 
     postList = postList.concat(fetchedData);
     console.log(postList);
+  }
+
+  async function scrollTimeout() {
+    canScroll = !canScroll;
+
+    if (!canScroll) setTimeout(scrollTimeout, 1000);
   }
 
   const handleFileChange = (event: any) => {
@@ -163,14 +171,16 @@
 
   onMount(async () => {
     window.onscroll = function (ev) {
+      if (canScroll) {
       if (
         window.innerHeight + window.pageYOffset >=
         document.body.offsetHeight
       ) {
         page += 1;
+        scrollTimeout();
         getPostList();
       }
-    };
+    }};
   });
 
   async function update_bio() {
