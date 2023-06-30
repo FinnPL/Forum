@@ -10,14 +10,7 @@
 
   token.subscribe((value: string) => {
     tokenValue = value;
-  });
-
-
-  function submitForm() {
-    const form = document.getElementById('oauthTriggerForm') as HTMLFormElement;
-    form.submit();
-  }
-  
+  });  
 
 </script>
 
@@ -25,23 +18,7 @@
 
 {#if tokenValue != undefined}
   <Post_List />
-
-  {:else }
-  <div class="container">
-
-    <form id="oauthTriggerForm" action="https://ghse.de/auth/auth.php" method="post">
-      <input type="hidden" name="application" value="GHSE_TGI_Forum"/>
-      <input type="hidden" name="clientID" value="GHSE_TGI_Forum"/>
-      <input type="hidden" name="response_type" value="data"/>
-      <input type="hidden" name="state" value="6484ab38ad017"/>
-  </form>
-
-  
-  <button color="primary" on:click={submitForm}>Authentifizierung</button>
-
-  
-</div>
-  {/if}
+{/if}
 
   <style>
     .container {

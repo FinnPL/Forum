@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
   import { goto } from "$app/navigation";
+  import logoFull from "../assets/logoFull.png";
 
   let password: string;
   let tokenValue: string;
@@ -23,9 +24,6 @@
 
   export let show_sign_up = "true";
   
-  
-
-
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
@@ -128,23 +126,68 @@
       console.log(cookie_name_value);
     });
   }
+
+  function submitForm() {
+    const form = document.getElementById('oauthTriggerForm') as HTMLFormElement;
+    form.submit();
+  }
 </script>
 
 {#if cookie_name_value == "undefined" || cookie_name_value == undefined}
-  <div class="container">
-    <form on:submit|preventDefault>
+  <div class="flex flex-col items-center justify-center mx-auto px-60 md:h-screen">
+    <span class="flex items-center justify-center mb-6">
+      <img src={logoFull} class="w-1/2" alt="Forum"/>
+    </span>
 
-      {#if show_sign_up == "true"}
-      <input class="text-black pointer-events-none" placeholder="Username" type="text" bind:value={user_name} />
-      {:else}
-      <input class="text-black" placeholder="Username" type="text" bind:value={user_name} />
-      {/if}
-      <input class="text-black" placeholder="Password" type="password" bind:value={password} />
-      {#if show_sign_up == "true"}
-      <button on:click={signUp}>Sign Up </button>
-      {/if}
-      <button on:click={login}>Login </button>
-    </form>
+    <div class="w-full max-w-lg bg-postBG rounded-lg border border-border">
+      <div class="p-6 space-y-4">
+        {#if show_sign_up == "true"}
+          <h1 class="font-bold text-xl leading-tight tracking-tight">Passwort erstellen</h1>
+        {:else}
+          <h1 class="font-bold text-xl leading-tight tracking-tight">Melde dich mit deinem Account an</h1>
+        {/if}
+
+        <form class="space-y-3" on:submit|preventDefault>
+          <div class="pt-2">
+            <label for="username" class="block mb-2 text-sm font-medium">Nutzername</label>
+            {#if show_sign_up == "true"}
+              <input class="text-white bg-ui border border-border rounded-lg block w-full p-2.5 pointer-events-none" type="text" bind:value={user_name} />
+            {:else}
+              <input class="text-white bg-ui border border-border rounded-lg block w-full p-2.5" type="text" bind:value={user_name} />
+            {/if}
+          </div>
+
+          <div class="pt-2">
+            <label for="password" class="block mb-2 text-sm font-medium">Passwort</label>
+            <input class="text-white bg-ui border border-border rounded-lg block w-full p-2.5" type="password" bind:value={password} />
+          </div>
+
+          {#if show_sign_up == "true"}
+            <div class="pt-2">
+              <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={signUp}>Sign Up</button>
+            </div>
+          {:else}
+            <div class="flex items-end justify-end">
+              <button class="hover:underline text-primary" on:click={submitForm}>Passwort vergessen?</button>
+            </div>
+            <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={login}>Login</button>
+          {/if}
+        </form>
+
+        {#if show_sign_up == "false"}
+          <div class="pt-5">
+            <hr class="h-0.5 border-t-0 bg-text" />
+          </div>
+          <h1 class="py-3 font-bold text-xl leading-tight tracking-tight">Erstelle einen neuen Account</h1>
+          <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={submitForm}>Authentifizierung</button>  
+          <form id="oauthTriggerForm" action="https://ghse.de/auth/auth.php" method="post">
+            <input type="hidden" name="application" value="GHSE_TGI_Forum"/>
+            <input type="hidden" name="clientID" value="GHSE_TGI_Forum"/>
+            <input type="hidden" name="response_type" value="data"/>
+            <input type="hidden" name="state" value="6484ab38ad017"/>
+          </form>
+        {/if}
+      </div>
+    </div>
   </div>
 {/if}
-
