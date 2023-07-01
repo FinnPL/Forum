@@ -237,7 +237,7 @@
             </div>
 
             <div class="pt-2">
-              <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={signUp} disabled={passwordStrengthValue !== "Mittel" && passwordStrengthValue !== "Stark" && password == confirmPassword}>Sign Up</button>
+              <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={signUp} disabled={passwordStrengthValue !== "Mittel" && passwordStrengthValue !== "Stark" || password != confirmPassword || password == undefined}>Sign Up</button>
             </div>
           {:else}
             <div class="flex items-end justify-end">
