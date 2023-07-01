@@ -3,15 +3,45 @@
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
   import { goto } from "$app/navigation";
-  import {signOut} from "../functions"
+  import {signOut} from "../functions";
+  import { passwordStrength } from 'check-password-strength'
   import logoFull from "../assets/logoFull.png";
 
   let password: string;
+  let confirmPassword: string;
   let tokenValue: string;
   let cookie_name_value: string;
   let own_user_id_value: string;
   let ip: string;
+  let passwordStrengthValue: string;
+  let login_error: boolean = false;
 
+  $: passwordStrengthValue = passwordStrength(password, [
+    {
+      id: 0,
+      value: "Zu Schwach",
+      minDiversity: 0,
+      minLength: 0
+    },
+    {
+      id: 1,
+      value: "Schwach",
+      minDiversity: 2,
+      minLength: 6
+    },
+    {
+      id: 2,
+      value: "Mittel",
+      minDiversity: 4,
+      minLength: 8
+    },
+    {
+      id: 3,
+      value: "Stark",
+      minDiversity: 4,
+      minLength: 10
+    }
+  ]).value;
 
   //Auth sachen:
   export let givenname:string;
@@ -80,7 +110,15 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name, password}),
     });
+
+    if(res.status == 403) {
+      login_error = true;
+      password = "";
+      return;
+    }
+
     const data = await res.json();
+
     token.set(data.token);
     token.subscribe((token: any) => {
       tokenValue = token;
@@ -138,17 +176,20 @@
 
 {#if cookie_name_value == "undefined" || cookie_name_value == undefined}
   <div class="flex flex-col items-center justify-center mx-auto px-60 md:h-screen">
-    <span class="flex items-center justify-center mb-6">
+    <a href="/" class="flex items-center justify-center mb-6">
       <img src={logoFull} class="w-1/2" alt="Forum"/>
-    </span>
+    </a>
 
     <div class="w-full max-w-lg bg-postBG rounded-lg border border-border">
       <div class="p-6 space-y-4">
-        {#if show_sign_up == "true"}
-          <h1 class="font-bold text-xl leading-tight tracking-tight">Passwort erstellen</h1>
-        {:else}
-          <h1 class="font-bold text-xl leading-tight tracking-tight">Melde dich mit deinem Account an</h1>
-        {/if}
+
+          <h1 class="font-bold text-xl leading-tight tracking-tight"> 
+            {#if show_sign_up == "true"}
+              Passwort erstellen
+            {:else}
+              Melde dich mit deinem Account an
+            {/if}
+          </h1>
 
         <form class="space-y-3" on:submit|preventDefault>
           <div class="pt-2">
@@ -166,14 +207,52 @@
           </div>
 
           {#if show_sign_up == "true"}
+        
+            <div class="flex items-center">
+              {#if passwordStrengthValue == "Stark" || passwordStrengthValue == "Mittel"}
+                <svg class={`w-4 h-4 mr-1 mt-0.5 ${passwordStrengthValue == "Stark" ? "stroke-green-500" : "stroke-yellow-500"}`} fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18L18 6M12 18l-4 -6"/>
+                </svg>
+                <p class={`${passwordStrengthValue == "Stark" ? "text-green-500" : "text-yellow-500"}`}>{passwordStrengthValue}</p>
+              {:else}
+                <svg class={`w-4 h-4 mr-1 mt-0.5 ${passwordStrengthValue == "Schwach" ? "stroke-red-400" : "stroke-red-500"}`} fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <p class={`${passwordStrengthValue == "Schwach" ? "text-red-400" : "text-red-500"}`}>{passwordStrengthValue}</p>
+              {/if}
+            </div>
+
             <div class="pt-2">
-              <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={signUp}>Sign Up</button>
+              <label for="confirmPassword" class="block mb-2 text-sm font-medium">Passwort bestätigen</label>
+              <input class="text-white bg-ui border border-border rounded-lg block w-full p-2.5" type="password" id="cpw" bind:value={confirmPassword} />
+
+              <div class="pt-2 flex items-center">
+                {#if password != confirmPassword}
+                  <svg class="w-4 h-4 mr-1 mt-0.5 stroke-red-500" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                  <p class="text-red-500">Passwörter stimmen nicht überein</p>
+                {/if}
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={signUp} disabled={passwordStrengthValue !== "Mittel" && passwordStrengthValue !== "Stark" && password == confirmPassword}>Sign Up</button>
             </div>
           {:else}
             <div class="flex items-end justify-end">
               <button class="hover:underline text-primary" on:click={submitForm}>Passwort vergessen?</button>
             </div>
-            <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={login}>Login</button>
+            <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={login} disabled={password == undefined || password == ""}>Login</button>
+            
+            {#if login_error}
+              <div class="pt-5 flex items-center">
+                <svg class="w-4 h-4 mr-1 mt-0.5 stroke-red-500" fill="none" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <p class="text-red-500">Nutzername oder Passwort inkorrekt</p>
+              </div>
+            {/if}
           {/if}
         </form>
 

@@ -19,12 +19,3 @@
 {#if tokenValue != undefined}
   <Post_List />
 {/if}
-
-  <style>
-    .container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;
-    }
-  </style>
