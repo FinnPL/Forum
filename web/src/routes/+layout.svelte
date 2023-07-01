@@ -4,6 +4,7 @@
     import { onMount } from "svelte";
     import { default as defaultAvatar } from "../lib/assets/defaultAvatar.png";
     import logoFull from "../lib/assets/logoFull.png";
+    import {signOut} from "../lib/functions"
     import "../app.css";
 
     let own_user_id_value: string;
@@ -24,15 +25,7 @@
     }
 
 
-    async function signOut() {
-      document.cookie.split(";").forEach(function (c) {
-        document.cookie = c
-          .replace(/^ +/, "")
-          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); // Sets every cookie as expired to delete them
-      });
-      await goto("/");
-      location.reload();
-    }
+    
 
     async function gotoProfile() {
       const path = window.location.pathname.split("/");

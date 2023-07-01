@@ -37,3 +37,15 @@ export async function fetchProfilePicture(ip, tokenValue, entity) {
     profilePictureMap.set(entity.user_id, entity.avatarSrc);
   }
 }
+
+import { goto } from "$app/navigation";
+
+export async function signOut() {
+  document.cookie.split(";").forEach(function (c) {
+    document.cookie = c
+      .replace(/^ +/, "")
+      .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); // Sets every cookie as expired to delete them
+  });
+  await goto("/");
+  location.reload();
+}

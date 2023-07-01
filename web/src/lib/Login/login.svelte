@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import { getCookie } from "../functions";
   import { goto } from "$app/navigation";
+  import {signOut} from "../functions"
   import logoFull from "../assets/logoFull.png";
 
   let password: string;
@@ -127,9 +128,11 @@
     });
   }
 
-  function submitForm() {
+  async function submitForm() {
+    await signOut()
     const form = document.getElementById('oauthTriggerForm') as HTMLFormElement;
     form.submit();
+    
   }
 </script>
 
