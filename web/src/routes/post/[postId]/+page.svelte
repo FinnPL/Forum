@@ -173,6 +173,9 @@
   }
 
   async function post_comment() {
+    if(comment_text == null) {
+      return;
+    }
     const res = await fetch(ip + "api/v1/comment", {
       method: "POST",
       headers: {
