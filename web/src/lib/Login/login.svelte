@@ -166,6 +166,16 @@
     });
   }
 
+  function handleKeyDown(event:any) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  }
+
+  onMount(()=>{
+    document.addEventListener('keydown', handleKeyDown);
+  })
+
   async function submitForm() {
     await signOut()
     const form = document.getElementById('oauthTriggerForm') as HTMLFormElement;
@@ -261,12 +271,12 @@
             <hr class="h-0.5 border-t-0 bg-text" />
           </div>
           <h1 class="py-3 font-bold text-xl leading-tight tracking-tight">Erstelle einen neuen Account</h1>
-          <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={submitForm}>Authentifizierung</button>  
-          <form id="oauthTriggerForm" action="https://ghse.de/auth/auth.php" method="post">
+          <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={submitForm} >Authentifizierung</button>  
+          <form id="oauthTriggerForm" action="https://ghse.de/auth/auth.php" method="post" on:keydown={handleKeyDown} >
             <input type="hidden" name="application" value="GHSE_TGI_Forum"/>
             <input type="hidden" name="clientID" value="GHSE_TGI_Forum"/>
             <input type="hidden" name="response_type" value="data"/>
-            <input type="hidden" name="state" value="6484ab38ad017"/>
+            <input type="hidden" name="state" value={new Date().getTime()}/>
           </form>
         {/if}
       </div>
