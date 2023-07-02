@@ -1,8 +1,8 @@
- <script lang="ts">
+<script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
   import PostItem from '../../lib/PostItem.svelte';
-  import { fetchProfilePicture } from "../../lib/functions";
+  import { fetchProfilePicture, formatDate } from "../../lib/functions";
   
 
   let postList: any = [];
@@ -19,6 +19,8 @@
     tokenValue = value;
   });
 
+
+
   async function getPostList() {
     console.log(tokenValue+" SUS")
     const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
@@ -28,11 +30,11 @@
     const data = await dataRes.json();
 
     for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
+      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
+      post.date = await formatDate(post.date);
     }
 
     postList = postList.concat(data);
-    
   }
 
   async function scrollTimeout() {
