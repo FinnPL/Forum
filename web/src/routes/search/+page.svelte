@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
-  import { getCookie } from "../../lib/functions";
+  import { formatDate, getCookie } from "../../lib/functions";
   import { page } from "$app/stores";
   import { default as defaultAvatar } from "../../lib/assets/defaultAvatar.png";
   import PostItem from "$lib/PostItem.svelte";
@@ -37,7 +37,8 @@
     const data = await dataRes.json();
 
     for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
+      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
+      post.date = await formatDate(post.date);
     }
 
     searchList = searchList.concat(data); // Expand current searchlist
@@ -58,7 +59,8 @@
 
     const data = await dataRes.json();
     for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
+      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
+      post.date = await formatDate(post.date);
     }
     searchList = data;
 

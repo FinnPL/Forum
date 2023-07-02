@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { getCookie } from "../../../lib/functions";
+  import { formatDate, getCookie } from "../../../lib/functions";
   import { onMount } from "svelte";
   import { own_user_id, token } from "../../../lib/Login/login";
   import { goto } from "$app/navigation";
   import PostItem from "$lib/PostItem.svelte";
-  import { fetchProfilePicture } from "../../../lib/functions";
   export let data: any;
 
   let postList: any = [];
@@ -83,6 +82,7 @@
 
     for(const post of fetchedData) {
       post.avatarSrc = avatarSrc;
+      post.date = await formatDate(post.date);
     }
 
     postList = fetchedData;
@@ -103,6 +103,7 @@
 
     for(const post of fetchedData) {
       post.avatarSrc = avatarSrc;
+      post.date = await formatDate(post.date);
     }
 
     console.log(fetchedData);
