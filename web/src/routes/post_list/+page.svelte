@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
   import PostItem from '../../lib/PostItem.svelte';
-  import { fetchProfilePicture } from "../../lib/functions";
+  import { fetchProfilePicture, formatDate } from "../../lib/functions";
   
 
   let postList: any = [];
@@ -27,7 +27,8 @@
     const data = await dataRes.json();
 
     for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
+      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
+      post.date = await formatDate(post.date);
     }
 
     postList = data;
@@ -42,7 +43,8 @@
     const data = await dataRes.json();
 
     for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
+      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
+      post.date = await formatDate(post.date);
     }
 
     postList = postList.concat(data);
