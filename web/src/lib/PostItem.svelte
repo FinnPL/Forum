@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
     import { default as defaultAvatar } from "./assets/defaultAvatar.png";
 
     /**
     * @type {{ id: string; user_id: string; avatarSrc: any; title: any; user_name: any; date: any; content: any; }}
     */
-    export let post;
+    export let post:any ;
+    export let avatarSrc:any;
 </script>
   
 
@@ -13,11 +14,15 @@
       <div>
         <div class="font-semibold flex">
           <a href={"/profile/" + post.user_id}>
-            {#if post.avatarSrc}
-              <img class="rounded-full" src={post.avatarSrc} alt="Avatar" width="50" height="50" />
+            {#if avatarSrc}
+              <img class="rounded-full" src={avatarSrc} alt="Avatar" width="50" height="50" />
             {:else}
+              {#if post.avatarSrc}
+                <img class="rounded-full" src={post.avatarSrc} alt="Avatar" width="50" height="50" />
+              {:else}
               <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
-            {/if} 
+              {/if} 
+            {/if}
           </a>
           <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + post.user_id}>{post.user_name}</a>
           <span class="pl-1 pt-3.5 text-text text-sm">• {post.date}</span>
