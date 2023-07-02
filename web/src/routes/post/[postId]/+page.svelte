@@ -88,10 +88,8 @@
     });
 
     if (!fetchedDataRes.ok) {
-      console.log("Test");
-      throw error(404, {
-        message: "Not found",
-      });
+      await goto("/");
+      
     }
 
     const fetchedData = await fetchedDataRes.json();

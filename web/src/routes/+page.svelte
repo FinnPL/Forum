@@ -14,8 +14,11 @@
 
 </script>
 
+
 <Login show_sign_up="false" />
 
 {#if tokenValue != undefined}
   <Post_List />
+  {:else}
+  <Login show_sign_up="false" />
 {/if}
