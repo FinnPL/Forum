@@ -14,6 +14,7 @@
   let file: any;
   let image_file: File;
   let ip: string;
+  let buttonPressed = false;
   $: saved_data = { post_title, post_body };
 
   export const snapshot: Snapshot = {
@@ -52,9 +53,12 @@
     });
   }
 
+ 
+
   async function post() {
+    buttonPressed = true;
     error = false;
-    if(post_title == null) {
+    if(post_title == null || post_body == null) {
       return;
     }
     const res = await fetch(ip + "api/v1/post", {
@@ -67,13 +71,14 @@
         title: post_title,
         content: post_body,
       }),
-    });
-    if (!res.ok) {
-      error = true;
-    }
+    });  
     const json = await res.json();
     await upload_image(json.id);
     post_id = json.id;
+    if(!res.ok) {
+      buttonPressed = false;
+      error = true;
+    }
     return res.json();
   }
 
@@ -116,7 +121,11 @@
       <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
 
       <div class="flex justify-end">
+        {#if buttonPressed == false}
         <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
+        {:else}
+        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
+        {/if}
       </div>
     </form>
   </div>

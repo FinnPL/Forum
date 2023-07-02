@@ -22,7 +22,6 @@
 
 
   async function getPostList() {
-    console.log(tokenValue+" SUS")
     const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
       method: "GET",
       headers: { Authorization: "Bearer " + tokenValue },
