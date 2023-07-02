@@ -29,7 +29,8 @@ public class Comment {
   private UUID id;
 
   @Column(columnDefinition = "TEXT")
-  @NotBlank private String content;
+  @NotBlank
+  private String content;
 
   @ManyToOne private User user;
 
