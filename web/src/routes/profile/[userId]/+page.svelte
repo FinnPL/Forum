@@ -58,6 +58,10 @@
       method: "GET",
       headers: { Authorization: "Bearer " + tokenValue },
     });
+    if (!fetchedDataRes.ok) {
+      await goto("/");
+    }
+
     const fetchedData = await fetchedDataRes.json();
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
