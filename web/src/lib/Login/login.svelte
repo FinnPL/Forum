@@ -166,9 +166,13 @@
     });
   }
 
-  function handleKeyDown(event:any) {
+  function handleKeyDown(event: any) {
     if (event.key === 'Enter') {
       event.preventDefault();
+
+      if (show_sign_up === "false" && user_name && password) {
+        login();
+      }
     }
   }
 
