@@ -12,7 +12,7 @@
   let cookie_name_value: string;
   let error = false;
   let file: any;
-  let image_file: any;
+  let image_file: File;
   let ip: string;
   $: saved_data = { post_title, post_body };
 

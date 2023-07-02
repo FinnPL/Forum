@@ -21,6 +21,7 @@
   let open = false;
   const toggle = () => (open = !open);
   let ip: string;
+  let canScroll = true;
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
@@ -49,7 +50,7 @@
     await subStores();
     console.log(avatarSrc);
     getUserDetails();
-    getFirstPostList();
+    getPostList();
   });
 
   async function getUserDetails() {
@@ -57,6 +58,10 @@
       method: "GET",
       headers: { Authorization: "Bearer " + tokenValue },
     });
+    if (!fetchedDataRes.ok) {
+      await goto("/");
+    }
+
     const fetchedData = await fetchedDataRes.json();
     console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
@@ -70,7 +75,7 @@
     console.log(user_name);
   }
 
-  async function getFirstPostList() {
+  async function getPostList() {
     const fetchedDataRes = await fetch(
       ip + "api/v1/post/user/" + data.userId + "/" + page,
       {
@@ -78,37 +83,21 @@
         headers: { Authorization: "Bearer " + tokenValue },
       }
     );
-    const fetchedData = await fetchedDataRes.json();
-
-    for(const post of fetchedData) {
-      post.avatarSrc = avatarSrc;
-    }
-
-    postList = fetchedData;
-    console.log(postList);
-  }
-
-  async function getPostList() {
-    const fetchedDataRes = await fetch(
-      ip + "api/v1/post/page/" + data.userId + "/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
 
     const fetchedData = await fetchedDataRes.json();
 
     for(const post of fetchedData) {
       post.avatarSrc = avatarSrc;
     }
-
-    console.log(fetchedData);
-
-    
 
     postList = postList.concat(fetchedData);
-    console.log(postList);
+
+  }
+
+  async function scrollTimeout() {
+    canScroll = !canScroll;
+
+    if (!canScroll) setTimeout(scrollTimeout, 1000);
   }
 
   const handleFileChange = (event: any) => {
@@ -128,6 +117,7 @@
     console.log(res);
     await goto("/");
     await goto("/profile/" + own_user_id_value);
+    location.reload();
   }
 
   onMount(async () => {
@@ -162,14 +152,16 @@
 
   onMount(async () => {
     window.onscroll = function (ev) {
+      if (canScroll) {
       if (
         window.innerHeight + window.pageYOffset >=
         document.body.offsetHeight
       ) {
         page += 1;
+        scrollTimeout();
         getPostList();
       }
-    };
+    }};
   });
 
   async function update_bio() {
