@@ -32,7 +32,9 @@ public class Post {
 
   @NotBlank private String title;
 
-  @NotBlank private String content;
+  @Column(columnDefinition = "TEXT")
+  @NotBlank
+  private String content;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

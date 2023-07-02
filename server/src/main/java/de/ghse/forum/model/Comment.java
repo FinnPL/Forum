@@ -28,7 +28,9 @@ public class Comment {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @NotBlank private String content;
+  @Column(columnDefinition = "TEXT")
+  @NotBlank
+  private String content;
 
   @ManyToOne private User user;
 

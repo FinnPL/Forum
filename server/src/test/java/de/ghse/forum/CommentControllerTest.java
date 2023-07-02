@@ -113,4 +113,65 @@ class CommentControllerTest {
     assertThat(response.getBody()).contains(user.getUsername());
     commentRepository.delete(comment);
   }
+
+  @Test
+  void deleteComment() {
+    String token = jwtService.generateToken(user);
+
+    Comment comment =
+        Comment.builder()
+            .content(
+                "Automatic river towards ascii qty washing humanities, wagon objectives"
+                    + " championships go impact temple worry, type cet gadgets.")
+            .user(user)
+            .post(post)
+            .build();
+    commentRepository.save(comment);
+    String commentId = comment.getId().toString();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            "/api/v1/comment/" + commentId, HttpMethod.DELETE, entity, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(commentRepository.findById(UUID.fromString(commentId))).isEmpty();
+  }
+
+  @Test
+  void updateComment() {
+    String token = jwtService.generateToken(user);
+    String postId = post.getId().toString();
+
+    Comment comment =
+        Comment.builder()
+            .content(
+                "Automatic river towards ascii qty washing humanities, wagon objectives"
+                    + " championships go impact temple worry, type cet gadgets.")
+            .user(user)
+            .post(post)
+            .build();
+    commentRepository.save(comment);
+    String commentId = comment.getId().toString();
+
+    CommentRequest commentRequest =
+        CommentRequest.builder()
+            .content("Were updated engineers acrobat variable swing fund, weblog. ")
+            .post_id(postId)
+            .build();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(token);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            "/api/v1/comment/" + commentId,
+            HttpMethod.PUT,
+            new HttpEntity<>(commentRequest, headers),
+            String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(commentRepository.findById(UUID.fromString(commentId)).get().getContent())
+        .isEqualTo(commentRequest.getContent());
+    commentRepository.delete(comment);
+  }
 }
