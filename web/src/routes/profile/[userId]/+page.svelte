@@ -214,7 +214,7 @@
 
 {#if postList[0] != undefined}
   {#each postList as post (post.id)}
-    <PostItem post={post}/>
+    <PostItem post={post} avatarSrc={avatarSrc}/>
   {/each}
 {/if}
 

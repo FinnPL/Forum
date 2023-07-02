@@ -35,6 +35,7 @@
   let content_update: string;
   let isEdited: boolean;
   let avatarSrc: any;
+  let buttonPressed = false;
 
   let imageSrc: any = null;
   let file: any;
@@ -77,7 +78,7 @@
     await checkLoggedIn();
     await subStores();
     getPost();
-    getFirstComments();
+    getComments();
   });
 
   async function getPost() {
@@ -105,22 +106,7 @@
     avatarSrc = await fetchProfilePicture(ip, tokenValue, fetchedData);
   }
 
-  async function getFirstComments() {
-    const fetchedRes = await fetch(
-      ip + "api/v1/comment/" + thisID + "/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-    const fetchedData = await fetchedRes.json();
-
-    for (const comment of fetchedData) {
-      comment.avatarSrc = await fetchProfilePicture(ip, tokenValue, comment);
-    }
-
-    comment_list = fetchedData;
-  }
+ 
 
   async function getComments() {
     const fetchedRes = await fetch(
@@ -171,11 +157,13 @@
     await goto("/post/" + thisID);
     return res.json();
   }
+  
 
   async function post_comment() {
     if(comment_text == null) {
       return;
     }
+    buttonPressed = true;
     const res = await fetch(ip + "api/v1/comment", {
       method: "POST",
       headers: {
@@ -187,10 +175,13 @@
         post_id: thisID,
       }),
     });
-
+    
     console.log(res.json());
     await goto("/");
     await goto("/post/" + thisID);
+    if(!res.ok) {
+      buttonPressed = false
+    }
     return res.json();
   }
 
@@ -345,7 +336,11 @@
       <div class="mt-2">
         <textarea id="comment_text" class="border border-border bg-postBG p-2 rounded w-full" placeholder="Body" bind:value={comment_text} style="height: 100px"></textarea>
         <div class="flex justify-end mt-1">
+          {#if !buttonPressed}
           <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
+          {:else}
+          <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
+          {/if}
         </div>
       </div>
     </div>
