@@ -167,12 +167,9 @@
   }
 
   function handleKeyDown(event: any) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && (tokenValue === undefined || tokenValue === "") && show_sign_up === "false" && user_name && password) {
       event.preventDefault();
-
-      if (show_sign_up === "false" && user_name && password) {
-        login();
-      }
+      login();
     }
   }
 
