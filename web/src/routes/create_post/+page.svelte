@@ -54,6 +54,9 @@
 
   async function post() {
     error = false;
+    if(post_title == null) {
+      return;
+    }
     const res = await fetch(ip + "api/v1/post", {
       method: "POST",
       headers: {
