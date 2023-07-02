@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { token, cookie_name, own_user_id } from "../../../lib/Login/login";
-  import { getCookie } from "../../../lib/functions";
+  import { formatDate, getCookie } from "../../../lib/functions";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
@@ -98,12 +98,13 @@
     console.log(fetchedData);
     title = fetchedData.title;
     content = fetchedData.content;
-    date = fetchedData.date;
+    date = await formatDate(fetchedData.date);
     user_name = fetchedData.user_name;
     userID = fetchedData.user_id;
     title_update = title;
     content_update = content;
     isEdited = fetchedData.edited;
+    avatarSrc = await fetchProfilePicture(ip, tokenValue, fetchedData);
   }
 
   async function getFirstComments() {
@@ -117,7 +118,7 @@
     const fetchedData = await fetchedRes.json();
 
     for (const comment of fetchedData) {
-      await fetchProfilePicture(ip, tokenValue, comment);
+      comment.avatarSrc = await fetchProfilePicture(ip, tokenValue, comment);
     }
 
     comment_list = fetchedData;
@@ -137,7 +138,7 @@
     const fetchedData = await fetchedRes.json();
 
     for (const comment of fetchedData) {
-      await fetchProfilePicture(ip, tokenValue, comment);
+      comment.avatarSrc = await fetchProfilePicture(ip, tokenValue, comment);
     }
 
     comment_list = comment_list.concat(fetchedData);
@@ -235,6 +236,11 @@
       const blob = await res.blob();
       const reader = new FileReader();
       reader.readAsDataURL(blob);
+
+      if(res.status == 400) {        
+        return;
+      }
+
       reader.onloadend = (event) => {
         if (event.target && event.target.result) {
           imageSrc = event.target.result;
@@ -243,24 +249,6 @@
     }
     loadImage();
 
-    async function loadAvatar() {
-      const res = await fetch(
-        ip + "api/v1/file/profile/" + myid + "?" + new Date().getTime(),
-        requestOptions
-      );
-      
-
-      const blob = await res.blob();
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = (event) => {
-        if (event.target && event.target.result) {
-          avatarSrc = event.target.result;
-        }
-        
-      };
-    }
-    loadAvatar();
     console.log(imageSrc);
   });
 
@@ -296,24 +284,25 @@
 <div class="container mx-auto pt-5 max-w-5xl">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
     <div>
-      <div class="font-semibold text-xl flex">
+      <div class="font-semibold flex">
         <a href={"/profile/" + userID}>
           {#if avatarSrc}
-          
             <img class="rounded-full" src={avatarSrc} alt="Avatar" width="50" height="50" />
           {:else}
             <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
           {/if} 
         </a>
-        <span class="pl-3 pt-2"> {title}</span>
-        <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + userID}>{user_name}</a>
+        <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + userID}>{user_name}</a>
         <span class="pl-1 pt-3.5 text-text text-sm">• {date}</span>
       </div>
+      
+      <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {title}</p>
 
-      <p class="break-all whitespace-pre-line pt-3 leading-relaxed">{content}</p>
+      <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{content}</p>
+      <br />
 
-      {#if imageSrc != "data:"}
-        <img src={imageSrc}/>
+      {#if imageSrc != undefined}
+        <img class="mt-5" src={imageSrc} alt="image"/>
       {/if}
       
 
@@ -362,9 +351,9 @@
   </form>
 </div>
 
-  {#each comment_list as comment (comment.id)}
-  <div class="container mx-auto max-h-96 pt-5 max-w-5xl">
-    <a class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover" href={"/post/" + comment.id}>
+{#each comment_list as comment (comment.id)}
+  <div class="container mx-auto max-h-96 py-5 max-w-5xl">
+    <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover">
       <div>
         <div class="font-semibold text-xl flex">
           <a href={"/profile/" + comment.user_id}>
@@ -377,10 +366,10 @@
           <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + comment.user_id}>{comment.user_name}</a>
           <span class="pl-1 pt-3.5 text-text text-sm">• {comment.date}</span>
         </div>
-  
-        <p class="break-all whitespace-pre-line pt-3 leading-relaxed line-clamp-5">{comment.content}</p>
+    
+        <p class="break-words whitespace-pre-line pt-3 leading-relaxed line-clamp-5">{comment.content}</p>
         <br />
       </div>
-    </a>
-</div>
-  {/each}
+    </div>
+  </div>
+{/each}

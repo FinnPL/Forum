@@ -91,7 +91,11 @@
         <div class="group">
           <div class="flex items-center">
             <span class="mr-2">{cookie_name_value}</span>
-            <img src={avatarSrc} alt={defaultAvatar} class="h-10 w-10 rounded-full">
+            {#if avatarSrc}
+              <img src={avatarSrc} alt="Avatar" class="h-10 w-10 rounded-full">
+            {:else}
+              <img src={defaultAvatar} alt="Avatar" class="h-10 w-10 rounded-full">
+            {/if}
           </div>
           <div class="absolute hidden group-hover:block pt-2 right-3">
             <div class="bg-ui border border-border rounded-md">
