@@ -32,6 +32,7 @@ public class Post {
 
   @NotBlank private String title;
 
+  @Column(columnDefinition = "TEXT")
   @NotBlank private String content;
 
   @ManyToOne
