@@ -50,7 +50,7 @@
     await subStores();
     console.log(avatarSrc);
     getUserDetails();
-    getFirstPostList();
+    getPostList();
   });
 
   async function getUserDetails() {
@@ -71,7 +71,7 @@
     console.log(user_name);
   }
 
-  async function getFirstPostList() {
+  async function getPostList() {
     const fetchedDataRes = await fetch(
       ip + "api/v1/post/user/" + data.userId + "/" + page,
       {
@@ -79,38 +79,15 @@
         headers: { Authorization: "Bearer " + tokenValue },
       }
     );
-    const fetchedData = await fetchedDataRes.json();
-
-    for(const post of fetchedData) {
-      post.avatarSrc = avatarSrc;
-    }
-
-    postList = fetchedData;
-    console.log(postList);
-  }
-
-  async function getPostList() {
-    console.log(tokenValue+"SUSS")
-    const fetchedDataRes = await fetch(
-      ip + "api/v1/post/page/" + data.userId + "/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
 
     const fetchedData = await fetchedDataRes.json();
 
     for(const post of fetchedData) {
       post.avatarSrc = avatarSrc;
     }
-
-    console.log(fetchedData);
-
-    
 
     postList = postList.concat(fetchedData);
-    console.log(postList);
+
   }
 
   async function scrollTimeout() {

@@ -34,11 +34,12 @@
   let title_update: string;
   let content_update: string;
   let isEdited: boolean;
-  let avatarSrc: any = null;
+  let avatarSrc: any;
 
   let imageSrc: any = null;
   let file: any;
-  let image_file: any;
+  let image_file: File;
+
 
   //Modal
   let open = false;

@@ -19,20 +19,6 @@
     tokenValue = value;
   });
 
-  async function getFirstPostList() {
-    const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
-      method: "GET",
-      headers: { Authorization: "Bearer " + tokenValue },
-    });
-    const data = await dataRes.json();
-
-    for (const post of data) {
-      await fetchProfilePicture(ip, tokenValue, post);
-    }
-
-    postList = data;
-  }
-
   async function getPostList() {
     console.log(tokenValue+" SUS")
     const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
@@ -46,6 +32,7 @@
     }
 
     postList = postList.concat(data);
+    
   }
 
   async function scrollTimeout() {
@@ -56,7 +43,7 @@
 
   onMount(async () => {
     await get_server_ip();
-    getFirstPostList();
+    getPostList();
 
     window.onscroll = function () {
       if (canScroll) {
