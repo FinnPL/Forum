@@ -58,6 +58,11 @@
       pageN
     );
 
+    for (const user of dataRes) {
+      user.user_id = user.id;
+      user.avatarSrc = await fetchProfilePicture(ip, tokenValue, user);
+    }
+
     searchList = searchList.concat(dataRes);
 
     if (searchList.length == 0) {
