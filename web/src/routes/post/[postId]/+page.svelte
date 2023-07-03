@@ -113,6 +113,7 @@
 
     for (const comment of fetchedRes) {
       comment.avatarSrc = await fetchProfilePicture(ip, tokenValue, comment);
+      comment.date = await formatDate(comment.date);
     }
 
     comment_list = comment_list.concat(fetchedRes);
@@ -255,15 +256,14 @@
       <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {title}</p>
 
       <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{content}</p>
-      <br />
 
       {#if imageSrc != undefined}
-        <img class="mt-5" src={imageSrc} alt="image"/>
+        <img class="mt-5 mb-5" src={imageSrc} alt="image"/>
       {/if}
       
 
       {#if own_user_id_value == userID}
-        <div class="py-5">
+        <div class="pb-5">
           <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={toggle}>Edit Post</button>
           <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={del_post}>Delete Post</button>
           <div class={open ? "block" : "hidden"}>
