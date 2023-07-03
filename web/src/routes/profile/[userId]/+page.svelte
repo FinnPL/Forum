@@ -184,31 +184,29 @@
 <div class={open ? "block pt-5" : "hidden"}>
   <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
     <div class="text-lg font-semibold mb-2">Beschreibung bearbeiten:</div>
-    <div class="mb-6">
-      <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={bio_update}/>
-    </div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={bio_update}/>
+      </div>
 
     <hr class="h-0.5 border-t-0 bg-text" />
 
     <div class="text-lg font-semibold pt-3 mb-2">Profilbild bearbeiten:</div>
-    <div class="mb-4">
-      <input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange}/>
-    </div>
+      <div class="mb-4">
+        <input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange}/>
+      </div>
 
-    <div class="flex justify-end">
-      <button class="bg-red-500 hover:bg-hover text-white px-4 py-2 rounded" on:click={toggle}>Abbrechen</button>
-      <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Update Profile</button>
+      <div class="flex justify-end">
+        <button class="bg-red-500 hover:bg-hover text-white px-4 py-2 rounded" on:click={toggle}>Abbrechen</button>
+        <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Update Profile</button>
+      </div>
     </div>
   </div>
 </div>
-</div>
-
 
 {#if postList[0] != undefined}
   {#each postList as post (post.id)}
     <PostItem post={post} avatarSrc={avatarSrc}/>
   {/each}
 {/if}
-
 
 

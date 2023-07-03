@@ -6,7 +6,7 @@
     import logoFull from "../lib/assets/logoFull.png";
     import {signOut} from "../lib/functions"
     import "../app.css";
-  import { store_token, store_userid, store_username } from "$lib/stores";
+    import { store_token, store_userid, store_username } from "$lib/stores";
 
     let avatarSrc: string | null = defaultAvatar;
     let ip: string;
