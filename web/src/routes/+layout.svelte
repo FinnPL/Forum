@@ -29,7 +29,7 @@
       const path = window.location.pathname.split("/");
       const userid = path[path.length - 1]; // Get userid from url path
       if (userid != tokenValue) {
-        await goto("/profile/" + tokenValue);
+        await goto("/profile/" + own_user_id_value);
         location.reload();
       }
     }
