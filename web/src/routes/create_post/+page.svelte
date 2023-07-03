@@ -5,6 +5,7 @@
   import Error from "../../lib/Error/error.svelte";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
+  import { fetcher } from "../../lib/functions.js";
   let post_title: string;
   let post_body: string;
   let post_id: string;
@@ -61,20 +62,13 @@
     if(post_title == null || post_body == null) {
       return;
     }
-    const res = await fetch(ip + "api/v1/post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenValue,
-      },
-      body: JSON.stringify({
+    const res = await fetcher("api/v1/post", "POST",{
         title: post_title,
         content: post_body,
-      }),
-    });  
-    const json = await res.json();
-    await upload_image(json.id);
-    post_id = json.id;
+      })
+
+    await upload_image(res.id);
+    post_id = res.id;
     if(!res.ok) {
       buttonPressed = false;
       error = true;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { token, cookie_name, own_user_id } from "../../../lib/Login/login";
-  import { formatDate, getCookie } from "../../../lib/functions";
+  import { fetchPage, fetcher, formatDate, getCookie } from "../../../lib/functions";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
@@ -109,49 +109,26 @@
  
 
   async function getComments() {
-    const fetchedRes = await fetch(
-      ip + "api/v1/comment/" + thisID + "/" + page,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenValue,
-        },
-      }
-    );
-    const fetchedData = await fetchedRes.json();
+    const fetchedRes = await fetchPage("api/v1/comment/" + thisID + "/","GET", page)
 
-    for (const comment of fetchedData) {
+    for (const comment of fetchedRes) {
       comment.avatarSrc = await fetchProfilePicture(ip, tokenValue, comment);
     }
 
-    comment_list = comment_list.concat(fetchedData);
+    comment_list = comment_list.concat(fetchedRes);
   }
 
   async function update_post() {
-    console.log(
-      thisID,
-      title_update,
-      content_update,
-      own_user_id_value,
-      cookie_name_value,
-      date
-    );
-    const res = await fetch(ip + "api/v1/post/" + thisID, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenValue,
-      },
-      body: JSON.stringify({
-        id: thisID,
-        title: title_update,
-        content: content_update,
-        user_id: own_user_id_value,
-        user_name: cookie_name_value,
-        date: "2023-03-04 14:00:05.0",
-      }),
-    });
+   
+    const res = await fetcher("api/v1/post/" + thisID,"PUT",{
+      id: thisID,
+      title: title_update,
+      content: content_update,
+      user_id: own_user_id_value,
+      user_name: cookie_name_value,
+      date: "2023-03-04 14:00:05.0",
+    })
+
     await update_image();
     await goto("/");
     await goto("/post/" + thisID);
@@ -164,25 +141,17 @@
       return;
     }
     buttonPressed = true;
-    const res = await fetch(ip + "api/v1/comment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenValue,
-      },
-      body: JSON.stringify({
-        content: comment_text,
+    const res = await fetcher("api/v1/comment","POST",{ 
+      content: comment_text,
         post_id: thisID,
-      }),
-    });
+      })
     
-    console.log(res.json());
     await goto("/");
     await goto("/post/" + thisID);
     if(!res.ok) {
       buttonPressed = false
     }
-    return res.json();
+    return res;
   }
 
   async function scrollTimeout() {
@@ -262,12 +231,7 @@
   }
 
   async function del_post() {
-    const res = await fetch(ip + "api/v1/post/" + thisID, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + tokenValue,
-      },
-    });
+    const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     console.log(res);
     await goto("/");
   }

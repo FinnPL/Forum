@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
   import PostItem from '../../lib/PostItem.svelte';
-  import { fetchProfilePicture, formatDate } from "../../lib/functions";
+  import { fetchPage, fetchProfilePicture, formatDate } from "../../lib/functions";
   
 
   let postList: any = [];
@@ -22,18 +22,14 @@
 
 
   async function getPostList() {
-    const dataRes = await fetch(ip + "api/v1/post/page/" + page, {
-      method: "GET",
-      headers: { Authorization: "Bearer " + tokenValue },
-    });
-    const data = await dataRes.json();
+    const dataRes = await fetchPage("api/v1/post/page/","GET", page);
 
-    for (const post of data) {
+    for (const post of dataRes) {
       post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
       post.date = await formatDate(post.date);
     }
 
-    postList = postList.concat(data);
+    postList = postList.concat(dataRes);
   }
 
   async function scrollTimeout() {
