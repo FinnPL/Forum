@@ -102,6 +102,7 @@
 
   async function resetPage() {
     pageN = 0;
+    searchList = [];
   }
 
   async function search(type: string) {
