@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { token } from "../../lib/Login/login";
-  import { formatDate, getCookie } from "../../lib/functions";
+  import { fetchPage, formatDate, getCookie } from "../../lib/functions";
   import { page } from "$app/stores";
   import { default as defaultAvatar } from "../../lib/assets/defaultAvatar.png";
   import PostItem from "$lib/PostItem.svelte";
@@ -25,44 +25,21 @@
     tokenValue = value;
   });
 
+  
+  
   async function search_post() {
     searchType = "Post";
-    const dataRes = await fetch(
-      ip + "api/v1/post/search/" + input + "/" + pageN,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
+    const dataRes = await fetchPage(
+     "api/v1/post/search/" + input + "/" + pageN,
+      "GET",
+      pageN
     );
-    const data = await dataRes.json();
 
-    for (const post of data) {
+    for (const post of dataRes) {
       post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
       post.date = await formatDate(post.date);
     }
-
-    searchList = searchList.concat(data); // Expand current searchlist
-
-    console.log(searchList);
-  }
-  
-  async function first_search_post() {
-    searchType = "Post";
-    const dataRes = await fetch(
-      ip + "api/v1/post/search/" + input + "/" + pageN
-  ,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-
-    const data = await dataRes.json();
-    for (const post of data) {
-      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
-      post.date = await formatDate(post.date);
-    }
-    searchList = data;
+    searchList = dataRes;
 
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
@@ -70,36 +47,17 @@
     console.log(searchList);
   }
 
+  
   async function search_user() {
     searchType = "User";
-    const dataRes = await fetch(
-      ip + "api/v1/user/search/" + input + "/" + pageN
-  ,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
+    const dataRes = await fetchPage(
+      "api/v1/user/search/" + input + "/" + pageN,
+      "GET",
+      pageN
     );
-    const data = await dataRes.json();
-
-    searchList = searchList.concat(data); // Expand current searchlist
-    console.log(searchList);
-  }
-
-  async function first_search_user() {
-    searchType = "User";
-    const dataRes = await fetch(
-      ip + "api/v1/user/search/" + input + "/" + pageN
-  ,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-    const data = await dataRes.json();
 
 
-    searchList = data;
+    searchList = dataRes;
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
     }
@@ -115,8 +73,8 @@
   onMount(async () => {
     await get_server_ip();
     tokenValue = await getCookie("tokenValue");
-    if (type == "post" || type == '') first_search_post();
-    if (type == "user") first_search_user();
+    if (type == "post" || type == '') search_post();
+    if (type == "user") search_user();
     window.onscroll = function (ev) {
       // Dymamic loading of searchlist items
       if (canScroll)
@@ -149,11 +107,11 @@
     if (type === "post") {
       params.set("type", "post");
       resetPage();
-      first_search_post();
+      search_post();
     } else if (type === "user") {
       params.set("type", "user");
       resetPage();
-      first_search_user();
+      search_user();
     }
     goto("/search?" + params.toString());
   }

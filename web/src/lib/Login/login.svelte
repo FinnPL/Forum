@@ -1,7 +1,7 @@
 <script lang="ts">
   import { token, cookie_name, own_user_id } from "./login";
   import { onMount } from "svelte";
-  import { getCookie } from "../functions";
+  import { fetcher, getCookie } from "../functions";
   import { goto } from "$app/navigation";
   import {signOut} from "../functions";
   import { passwordStrength } from 'check-password-strength'
@@ -105,28 +105,22 @@
 
   async function login() {
     //Login & store the values in cookies
-    const res = await fetch(ip + "api/v1/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_name, password}),
-    });
-
+    const res = await fetcher("api/v1/auth/login","POST", {user_name, password});
     if(res.status == 403) {
       login_error = true;
       password = "";
       return;
     }
 
-    const data = await res.json();
 
-    token.set(data.token);
+    token.set(res.token);
     token.subscribe((token: any) => {
       tokenValue = token;
     });
     own_user_id.subscribe((temp: any) => {
       own_user_id_value = temp;
     });
-    own_user_id.set(data.user_id);
+    own_user_id.set(res.user_id);
 
     document.cookie = "tokenValue=" + tokenValue;
     document.cookie = "username=" + user_name;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getCookie } from "../../../lib/functions";
+  import { fetchPage, fetcher, getCookie } from "../../../lib/functions";
   import { onMount } from "svelte";
   import { own_user_id, token } from "../../../lib/Login/login";
   import { goto } from "$app/navigation";
@@ -76,21 +76,13 @@
   }
 
   async function getPostList() {
-    const fetchedDataRes = await fetch(
-      ip + "api/v1/post/user/" + data.userId + "/" + page,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
+    const fetchedDataRes = await fetchPage("api/v1/post/user/"+ data.userId +"/" , "GET", page);
 
-    const fetchedData = await fetchedDataRes.json();
-
-    for(const post of fetchedData) {
+    for(const post of fetchedDataRes) {
       post.avatarSrc = avatarSrc;
     }
 
-    postList = postList.concat(fetchedData);
+    postList = postList.concat(fetchedDataRes);
 
   }
 
@@ -165,12 +157,7 @@
   });
 
   async function update_bio() {
-    const res = await fetch(ip + "api/v1/user/update/" + bio_update, {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + tokenValue,
-      },
-    });
+    const res = await fetcher("api/v1/user/update/" + bio_update, "PUT");
     console.log(res);
   }
 </script>
