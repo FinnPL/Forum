@@ -1,13 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { token } from "../../lib/Login/login";
   import PostItem from '../../lib/PostItem.svelte';
   import { fetchPage, fetchProfilePicture, formatDate } from "../../lib/functions";
+  import { store_token } from "$lib/stores";
   
 
   let postList: any = [];
   let page: number = 0;
-  let tokenValue: string;
   let ip: string;
   let canScroll = true;
 
@@ -15,17 +14,11 @@
     ip = "http://" + location.hostname + ":8080/";
   }
 
-  token.subscribe((value: string) => {
-    tokenValue = value;
-  });
-
-
-
   async function getPostList() {
     const dataRes = await fetchPage("api/v1/post/page/","GET", page);
 
     for (const post of dataRes) {
-      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
+      post.avatarSrc = await fetchProfilePicture(ip, $store_token, post);
       post.date = await formatDate(post.date);
     }
 

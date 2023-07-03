@@ -1,21 +1,19 @@
 <script lang="ts">
   import { fetchPage, fetcher, getCookie } from "../../../lib/functions";
   import { onMount } from "svelte";
-  import { own_user_id, token } from "../../../lib/Login/login";
   import { goto } from "$app/navigation";
   import PostItem from "$lib/PostItem.svelte";
   import { fetchProfilePicture } from "../../../lib/functions";
+  import { store_token, store_userid } from "$lib/stores";
   export let data: any;
 
   let postList: any = [];
   let page = 0;
-  let user_name: string;
   let bio: string;
   let bio_update: string;
-  let tokenValue: string;
   let file: any;
-  let own_user_id_value: string;
   let avatarSrc: any = null;
+  let user_name: string;
   let avatar_file: any;
   //Modal
   let open = false;
@@ -28,26 +26,16 @@
   }
 
   async function checkLoggedIn() {
-    tokenValue = await getCookie("tokenValue");
-    token.set(tokenValue);
+    $store_token = await getCookie("tokenValue");
+    $store_userid = await getCookie("userid");
 
-    own_user_id_value = await getCookie("userid");
-    own_user_id.set(own_user_id_value);
   }
 
-  async function subStores() {
-    token.subscribe((value: string) => {
-      tokenValue = value;
-    });
-    own_user_id.subscribe((value: string) => {
-      own_user_id_value = value;
-    });
-  }
+  
 
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    await subStores();
     console.log(avatarSrc);
     getUserDetails();
     getPostList();
@@ -56,7 +44,7 @@
   async function getUserDetails() {
     const fetchedDataRes: any = await fetch(ip + "api/v1/user/" + data.userId, {
       method: "GET",
-      headers: { Authorization: "Bearer " + tokenValue },
+      headers: { Authorization: "Bearer " + $store_token },
     });
     if (!fetchedDataRes.ok) {
       await goto("/");
@@ -103,12 +91,12 @@
       method: "POST",
       body: formData,
       headers: {
-        Authorization: "Bearer " + tokenValue,
+        Authorization: "Bearer " + $store_token,
       },
     });
     console.log(res);
     await goto("/");
-    await goto("/profile/" + own_user_id_value);
+    await goto("/profile/" + $store_userid);
     location.reload();
   }
 
@@ -173,7 +161,7 @@
       <img src={avatarSrc} alt="Avatar" width="125" height="125" />
     {/if}
 
-    {#if own_user_id_value == data.userId}
+    {#if $store_userid == data.userId}
       <button class="bg-blue-500 text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={toggle}>Profil bearbeiten</button>
 
       <div class={open ? "block" : "hidden"}>

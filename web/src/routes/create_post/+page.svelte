@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { token, cookie_name } from "../../lib/Login/login.js";
   import { getCookie } from "../../lib/functions.js";
   import { onMount } from "svelte";
   import Error from "../../lib/Error/error.svelte";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
   import { fetcher } from "../../lib/functions.js";
+  import { store_token, store_username } from "$lib/stores.js";
   let post_title: string;
   let post_body: string;
   let post_id: string;
-  let tokenValue: string;
-  let cookie_name_value: string;
   let error = false;
   let file: any;
   let image_file: File;
@@ -30,31 +28,17 @@
   }
 
   async function checkLoggedIn() {
-    cookie_name_value = await getCookie("username");
-    cookie_name.set(cookie_name_value);
-    tokenValue = await getCookie("tokenValue");
-    token.set(tokenValue);
+    $store_username = await getCookie("username");
+    $store_token = await getCookie("tokenValue");
+
   }
 
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    await subStores();
   });
 
-  async function subStores() {
-    token.subscribe((value: string) => {
-      tokenValue = value;
-      console.log(tokenValue);
-    });
-
-    cookie_name.subscribe((value: string) => {
-      cookie_name_value = value;
-      console.log(cookie_name_value);
-    });
-  }
-
- 
+  
 
   async function post() {
     buttonPressed = true;
@@ -87,10 +71,9 @@
       method: "POST",
       body: formData,
       headers: {
-        Authorization: "Bearer " + tokenValue,
+        Authorization: "Bearer " + $store_token,
       },
     });
-    console.log(res);
     await goto("/post/" + post_id);
   }
 </script>

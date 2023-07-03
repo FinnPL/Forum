@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { token } from "../../lib/Login/login";
   import { fetchPage, formatDate, getCookie } from "../../lib/functions";
   import { page } from "$app/stores";
   import { default as defaultAvatar } from "../../lib/assets/defaultAvatar.png";
@@ -8,6 +7,8 @@
   import { fetchProfilePicture } from "../../lib/functions";
   import { goto } from "$app/navigation";
   let ip: string;
+
+ 
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
@@ -21,16 +22,15 @@
   $: input = $page.url.searchParams.get("q") || '';
   $: type = $page.url.searchParams.get("type") || '';
 
-  token.subscribe((value: string) => {
-    tokenValue = value;
-  });
+  $: console.log(pageN)
 
-  
-  
   async function search_post() {
     searchType = "Post";
+    console.log("api/v1/post/search/" + input + "/",
+      "GET",
+      pageN)
     const dataRes = await fetchPage(
-     "api/v1/post/search/" + input + "/" + pageN,
+     "api/v1/post/search/" + input + "/",
       "GET",
       pageN
     );
@@ -39,7 +39,9 @@
       post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
       post.date = await formatDate(post.date);
     }
-    searchList = dataRes;
+
+    
+    searchList = searchList.concat(dataRes);
 
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
@@ -51,13 +53,13 @@
   async function search_user() {
     searchType = "User";
     const dataRes = await fetchPage(
-      "api/v1/user/search/" + input + "/" + pageN,
+      "api/v1/user/search/" + input + "/",
       "GET",
       pageN
     );
 
+    searchList = searchList.concat(dataRes);
 
-    searchList = dataRes;
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
     }

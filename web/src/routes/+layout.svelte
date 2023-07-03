@@ -6,10 +6,8 @@
     import logoFull from "../lib/assets/logoFull.png";
     import {signOut} from "../lib/functions"
     import "../app.css";
+  import { store_token, store_userid, store_username } from "$lib/stores";
 
-    let own_user_id_value: string;
-    let cookie_name_value: string;
-    let tokenValue: string;
     let avatarSrc: string | null = defaultAvatar;
     let ip: string;
     let input: string;
@@ -19,19 +17,17 @@
     }
 
     async function initial_load() {
-        tokenValue = await getCookie("tokenValue");
-        own_user_id_value = await getCookie("userid");
-        cookie_name_value = await getCookie("username");
+        $store_token = await getCookie("tokenValue");
+        $store_userid = await getCookie("userid");
+        $store_username = await getCookie("username");
     }
 
 
+    
     async function gotoProfile() {
-      const path = window.location.pathname.split("/");
-      const userid = path[path.length - 1]; // Get userid from url path
-      if (userid != tokenValue) {
-        await goto("/profile/" + own_user_id_value);
+        await goto("/profile/" + $store_userid);
         location.reload();
-      }
+      
     }
 
     async function gotoSearch() {
@@ -44,15 +40,15 @@
       await initial_load();
       const currentURL = window.location.href
       if(!currentURL.includes("/noeskauth/")) {
-        if (tokenValue == undefined && location.pathname != "/") {
+        if ($store_token == undefined && location.pathname != "/") {
           await goto("/");
           location.reload();
         } else {
           const profilePictureRes = await fetch(
-          ip + "api/v1/file/profile/" + own_user_id_value + "?" + new Date().getTime(),
+          ip + "api/v1/file/profile/" + $store_userid + "?" + new Date().getTime(),
             {
               method: "GET",
-              headers: { Authorization: "Bearer " + tokenValue },
+              headers: { Authorization: "Bearer " + $store_token },
             }
           );
 
@@ -68,7 +64,7 @@
 
 </script>
 
-{#if own_user_id_value != undefined && own_user_id_value != "undefined"}
+{#if $store_userid != undefined && $store_userid != "undefined"}
   <div class="sticky top-0 bg-gradient-to-r from-primary to-secondary p-0.5 px-0 pt-0">
     <nav class="flex w-full items-center max-h-12 p-4 bg-postBG">
       <div class="flex-1 flex justify-start">
@@ -90,7 +86,7 @@
       <div class="flex-1 flex justify-end">
         <div class="group">
           <div class="flex items-center">
-            <span class="mr-2">{cookie_name_value}</span>
+            <span class="mr-2">{$store_username}</span>
             {#if avatarSrc}
               <img src={avatarSrc} alt="Avatar" class="h-10 w-10 rounded-full">
             {:else}
@@ -100,7 +96,7 @@
           <div class="absolute hidden group-hover:block pt-2 right-3">
             <div class="bg-ui border border-border rounded-md">
               <ul>
-                <a href={"/profile/" + own_user_id_value} on:click={gotoProfile}>
+                <a href={"/profile/" + $store_userid} on:click={gotoProfile}>
                   <li class="hover:bg-hover pr-4 flex items-center">
                     <svg fill="#ffffff" height="50px" width="50px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-482.9 -482.9 1448.70 1448.70" xml:space="preserve">
                       <g id="SVGRepo_bgCarrier" stroke-width="0"/>
