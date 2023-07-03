@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { token, cookie_name, own_user_id } from "../../../lib/Login/login";
   import { fetchPage, fetcher, formatDate, getCookie } from "../../../lib/functions";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { fetchProfilePicture } from "../../../lib/functions";
-  import { store_token, store_userid, store_username } from "$lib/stores";
   let ip: string;
   let canScroll = true;
 
@@ -17,7 +17,7 @@
 
   export let data: any;
 
-
+  let tokenValue: string;
 
   let userID: string;
   let comment_text: string;
@@ -29,6 +29,8 @@
   let date: string;
   let user_name: string;
   let thisID: any = data.postId;
+  let cookie_name_value: string;
+  let own_user_id_value: string;
   let title_update: string;
   let content_update: string;
   let isEdited: boolean;
@@ -50,25 +52,40 @@
     ip = "http://" + location.hostname + ":8080/";
   }
   async function checkLoggedIn() {
-    $store_username = await getCookie("username");
-    $store_token = await getCookie("tokenValue");
-    $store_userid = await getCookie("userid");
+    cookie_name_value = await getCookie("username");
+    cookie_name.set(cookie_name_value);
+    tokenValue = await getCookie("tokenValue");
+    token.set(tokenValue);
+    own_user_id_value = await getCookie("userid");
+    own_user_id.set(own_user_id_value);
   }
 
- 
+  async function subStores() {
+    token.subscribe((value: string) => {
+      tokenValue = value;
+    });
+
+    cookie_name.subscribe((value: string) => {
+      cookie_name_value = value;
+    });
+    own_user_id.subscribe((value: string) => {
+      own_user_id_value = value;
+    });
+  }
 
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
+    await subStores();
     getPost();
     getComments();
   });
 
   async function getPost() {
-    await checkLoggedIn();
+    await subStores();
     const fetchedDataRes = await fetch(ip + "api/v1/post/" + thisID, {
       method: "GET",
-      headers: { Authorization: "Bearer " + $store_token },
+      headers: { Authorization: "Bearer " + tokenValue },
     });
 
     if (!fetchedDataRes.ok) {
@@ -86,7 +103,7 @@
     title_update = title;
     content_update = content;
     isEdited = fetchedData.edited;
-    avatarSrc = await fetchProfilePicture(ip, $store_token, fetchedData);
+    avatarSrc = await fetchProfilePicture(ip, tokenValue, fetchedData);
   }
 
  
@@ -95,7 +112,8 @@
     const fetchedRes = await fetchPage("api/v1/comment/" + thisID + "/","GET", page)
 
     for (const comment of fetchedRes) {
-      comment.avatarSrc = await fetchProfilePicture(ip, $store_token, comment);
+      comment.avatarSrc = await fetchProfilePicture(ip, tokenValue, comment);
+      comment.date = await formatDate(comment.date);
     }
 
     comment_list = comment_list.concat(fetchedRes);
@@ -107,8 +125,8 @@
       id: thisID,
       title: title_update,
       content: content_update,
-      user_id: $store_userid,
-      user_name: $store_username,
+      user_id: own_user_id_value,
+      user_name: cookie_name_value,
       date: "2023-03-04 14:00:05.0",
     })
 
@@ -207,7 +225,7 @@
       method: "POST",
       body: formData,
       headers: {
-        Authorization: "Bearer " + $store_token,
+        Authorization: "Bearer " + tokenValue,
       },
     });
     console.log(res);
@@ -238,15 +256,14 @@
       <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {title}</p>
 
       <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{content}</p>
-      <br />
 
       {#if imageSrc != undefined}
-        <img class="mt-5" src={imageSrc} alt="image"/>
+        <img class="mt-5 mb-5" src={imageSrc} alt="image"/>
       {/if}
       
 
-      {#if $store_userid == userID}
-        <div class="py-5">
+      {#if own_user_id_value == userID}
+        <div class="pb-5">
           <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={toggle}>Edit Post</button>
           <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={del_post}>Delete Post</button>
           <div class={open ? "block" : "hidden"}>
