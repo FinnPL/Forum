@@ -83,28 +83,40 @@
 {/if}
 
 <div class="container mx-auto py-5 max-w-5xl">
-  <div class=" px-3 py-3 mb-4 border rounded bg-gray-400 border-gray-500 text-gray-900">
+  <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
     <form>
-      <input class="text-black mb-4 py-1 px-2" placeholder="Titel" required bind:value={post_title} />
+      <div class="text-lg font-semibold mb-2">Titel:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={post_title}/>
+      </div>
 
-      <textarea
-        class="w-full py-1 px-2 mb-4 bg-white text-black"
-        placeholder="Body"
-        bind:value={post_body}
-        id="floatingTextarea2"
-        style="height: 100px"
-      />
+      <div class="text-lg font-semibold mb-2">Inhalt:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={post_body}/>
+      </div>
 
-      <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+      <hr class="h-0.5 border-t-0 bg-text" />
+
+      <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
+      <div class="mb-4">
+        <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+      </div>
+
 
       <div class="flex justify-end">
         {#if buttonPressed == false}
-        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
+          <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
         {:else}
-        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
+          <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
         {/if}
       </div>
     </form>
   </div>
 </div>
+
+
+
+
+  
+
 

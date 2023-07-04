@@ -278,7 +278,7 @@
       
       <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {title}</p>
 
-      <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{content}</p>
+      <p class="break-words whitespace-pre-line leading-relaxed">{content}</p>
     
       {#if imageSrc != undefined}
         <img class="mt-5 mb-5" src={imageSrc} alt="image"/>
@@ -358,7 +358,7 @@
           {/if}
         </div>
     
-        <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{comment.content}</p>
+        <p class="break-words whitespace-pre-line leading-relaxed">{comment.content}</p>
 
         {#if $store_userid == userID}
           <div class="py-5">
