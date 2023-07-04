@@ -38,7 +38,6 @@ export async function fetchProfilePicture(ip, tokenValue, entity) {
 }
 
 import { goto } from "$app/navigation";
-import { get } from "svelte/store"
 
 export async function signOut() {
   document.cookie.split(";").forEach(function (c) {
@@ -70,8 +69,10 @@ export async function formatDate(dateString) {
 
   for (const duration of durations) {
     const value = Math.floor(diff / duration.value);
+    const suffix = duration.unit === "Monat" || duration.unit === "Tag" ? 'en' : 'n';
+
     if (value > 0) {
-      return `vor ${value} ${duration.unit}${value > 1 ? 'n' : ''}`;
+      return `vor ${value} ${duration.unit}${value > 1 ? suffix : ''}`;
     }
   }
 
