@@ -39,12 +39,13 @@
   let file: any;
   let image_file: File;
 
+  let content_update_c : string;
 
-  //Modal
   let open = false;
   const toggle = () => (open = !open);
 
-  console.log(thisID);
+  let open_c: { [key: string]: boolean } = {}; 
+  let toggle_c: { [key: string]: () => void } = {}; 
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
@@ -73,7 +74,6 @@
 
     if (!fetchedDataRes.ok) {
       await goto("/");
-      
     }
 
     const fetchedData = await fetchedDataRes.json();
@@ -89,17 +89,34 @@
     avatarSrc = await fetchProfilePicture(ip, $store_token, fetchedData);
   }
 
- 
+  function createToggleFunction(commentId : string) {
+    return function() {
+      for(const comment of comment_list) {
+        if(comment.id != commentId) {
+          open_c[comment.id] = false;
+        }
+      }
 
+      open_c[commentId] = !open_c[commentId];
+      content_update_c = comment_list.find((comment : any) => comment.id == commentId).content;
+    };
+  }
+ 
   async function getComments() {
     const fetchedRes = await fetchPage("api/v1/comment/" + thisID + "/","GET", page)
 
     for (const comment of fetchedRes) {
       comment.avatarSrc = await fetchProfilePicture(ip, $store_token, comment);
       comment.date = await formatDate(comment.date);
+      open_c[comment.id] = false;
+      toggle_c[comment.id] = createToggleFunction(comment.id);
+
+      console.log(comment)
     }
+
     comment_list = comment_list.concat(fetchedRes);
   }
+
   async function update_post() {
    
     const res = await fetcher("api/v1/post/" + thisID,"PUT",{
@@ -133,6 +150,27 @@
     if(!res.ok) {
       buttonPressed = false
     }
+    return res;
+  }
+
+  async function del_comment(commentId : string) {
+    const res = await fetcher("api/v1/comment/" + commentId ,"DELETE",{})
+    await goto("/");
+    await goto("/post/" + thisID);
+    return res;
+  }
+
+  async function update_comment(commentId : string){
+    const res = await fetcher("api/v1/comment/" + commentId,"PUT",{
+      id: commentId,
+      content: content_update_c,
+      user_id: $store_userid,
+      user_name: $store_username,
+      date: "2023-03-04 14:00:05.0",
+    })
+
+    await goto("/");
+    await goto("/post/" + thisID);
     return res;
   }
 
@@ -232,69 +270,76 @@
         </a>
         <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + userID}>{user_name}</a>
         <span class="pl-1 pt-3.5 text-text text-sm">• {date}</span>
+
+        {#if isEdited}
+          <span class="pl-1 pt-3.5 text-text text-sm">• (Bearbeitet)</span>
+        {/if}
       </div>
       
       <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {title}</p>
 
       <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{content}</p>
     
-
       {#if imageSrc != undefined}
         <img class="mt-5 mb-5" src={imageSrc} alt="image"/>
       {/if}
       
-
       {#if $store_userid == userID}
-      <div class="pb-5">
-          <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={toggle}>Edit Post</button>
-          <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={del_post}>Delete Post</button>
-          <div class={open ? "block" : "hidden"}>
-            <div class="fixed inset-0 flex items-center justify-center">
-              <div class="bg-border p-4 rounded w-96">
-                <h2 class="text-lg font-bold mb-4">Post bearbeiten</h2>
-                <div class="mb-4">
-                  <input class="text-black" placeholder="Titel" required bind:value={title_update} />
-                </div>
-                <div class="mb-4">
-                  <textarea class="text-black" placeholder="Body" bind:value={content_update} style="height: 100px"></textarea>
-                </div>
-                <div class="mb-4">
-                  <input id="AvatarFile" type="file" name="file" bind:this={image_file} on:change={handleFileChange} accept="image/png, image/jpeg, image/jpg" />
-                </div>
-    
-                <div class="flex justify-end">
-                  <button class="bg-ui hover:bg-hover text-white px-4 py-2 rounded" on:click={toggle}>Cancel</button>
-                  <button class="bg-ui hover:bg-hover text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_post} >Post bearbeiten</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="py-5">
+          <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={toggle}>Post bearbeiten</button>
+          <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={del_post}>Post löschen</button>
         </div>
       {/if}
     </div>
   </div>
-</div>
 
-<div class="bg-gray-900 text-white p-4">
-  <form>
-    <div class="container mx-auto py-5 max-w-5xl">
-      <h3 class="text-lg font-bold">Kommentare:</h3>
-      <div class="mt-2">
-        <textarea id="comment_text" class="border border-border bg-postBG p-2 rounded w-full" placeholder="Body" bind:value={comment_text} style="height: 100px"></textarea>
-        <div class="flex justify-end mt-1">
-          {#if !buttonPressed}
-          <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
-          {:else}
-          <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
-          {/if}
+  <div class={open ? "block pt-5" : "hidden"}>
+    <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
+      <div class="text-lg font-semibold mb-2">Titel:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={title_update}/>
+      </div>
+
+      <div class="text-lg font-semibold mb-2">Inhalt:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={content_update}/>
+      </div>
+    
+      <hr class="h-0.5 border-t-0 bg-text" />
+    
+      <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
+        <div class="mb-4">
+          <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+        </div>
+    
+        <div class="flex justify-end">
+          <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={toggle}>Abbrechen</button>
+          <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_post}>Post aktualisieren</button>
         </div>
       </div>
     </div>
-  </form>
-</div>
+  </div>
+
+  <div class="bg-gray-900 text-white pt-5">
+    <form>
+      <div class="container mx-auto max-w-5xl">
+        <h3 class="text-lg font-bold py-3">Kommentare:</h3>
+        <div class="mt-2">
+          <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
+          <div class="flex justify-end mt-3">
+            {#if !buttonPressed}
+              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
+            {:else}
+              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
+            {/if}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 
 {#each comment_list as comment (comment.id)}
-  <div class="container mx-auto max-h-96 py-5 max-w-5xl">
+  <div class="container mx-auto py-5 max-w-5xl">
     <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover">
       <div>
         <div class="font-semibold text-xl flex">
@@ -305,12 +350,37 @@
               <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
             {/if} 
           </a>
-          <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + comment.user_id}>{comment.user_name}</a>
+          <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + comment.user_id}>{comment.user_name}</a>
           <span class="pl-1 pt-3.5 text-text text-sm">• {comment.date}</span>
+
+          {#if comment.edited}
+            <span class="pl-1 pt-3.5 text-text text-sm">• (Bearbeitet)</span>
+          {/if}
         </div>
     
-        <p class="break-words whitespace-pre-line pt-3 leading-relaxed line-clamp-5">{comment.content}</p>
-        <br />
+        <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{comment.content}</p>
+
+        {#if $store_userid == userID}
+          <div class="py-5">
+            <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={() => toggle_c[comment.id]()}>Kommentar bearbeiten</button>
+            <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={() => del_comment(comment.id)}>Kommentar löschen</button>
+          </div>
+        {/if}
+      </div>
+    </div>
+
+    <div class={open_c[comment.id] ? "block pt-5" : "hidden"}>
+      <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
+  
+        <div class="text-lg font-semibold mb-2">Inhalt:</div>
+        <div class="mb-6">
+          <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={content_update_c}/>
+        </div>
+      
+        <div class="flex justify-end">
+          <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={() => toggle_c[comment.id]()}>Abbrechen</button>
+            <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={() => toggle_c[comment.id]} on:click={() => update_comment(comment.id)}>Kommentar aktualisieren</button>
+        </div>
       </div>
     </div>
   </div>

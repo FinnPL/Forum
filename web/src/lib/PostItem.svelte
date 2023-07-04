@@ -26,6 +26,9 @@
           </a>
           <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + post.user_id}>{post.user_name}</a>
           <span class="pl-1 pt-3.5 text-text text-sm">• {post.date}</span>
+          {#if post.edited}
+            <span class="pl-1 pt-3.5 text-text text-sm">• (Bearbeitet)</span>
+          {/if}
         </div>
         
         <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {post.title}</p>
