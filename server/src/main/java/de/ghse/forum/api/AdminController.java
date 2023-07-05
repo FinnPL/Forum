@@ -2,6 +2,7 @@ package de.ghse.forum.api;
 
 import de.ghse.forum.api.response.PostResponse;
 import de.ghse.forum.api.response.UserResponse;
+import de.ghse.forum.service.AdminService;
 import de.ghse.forum.service.FileDataService;
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
@@ -25,9 +26,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminController {
   final Logger logger = LoggerFactory.getLogger(AdminController.class);
-  private final UserService userService;
-  private final PostService postService;
+  private final AdminService adminService;
   private final FileDataService fileDataService;
+  private final PostService postService;
+  private final UserService userService;
 
   /**
    * REST endpoint for deleting a user.
@@ -43,7 +45,7 @@ public class AdminController {
         .findUserById(id)
         .map(
             user -> {
-              userService.deleteUser(id);
+              adminService.recursiveUserDelete(id);
               return ResponseEntity.ok(new UserResponse().convert(user));
             })
         .orElse(ResponseEntity.notFound().build());
@@ -63,7 +65,7 @@ public class AdminController {
         .getPostById(id)
         .map(
             post -> {
-              postService.deletePost(id);
+              adminService.recursivePostDelete(id);
               return ResponseEntity.ok(new PostResponse().convert(post));
             })
         .orElse(ResponseEntity.notFound().build());
