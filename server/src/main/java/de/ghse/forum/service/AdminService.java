@@ -16,7 +16,7 @@ public class AdminService {
 
   public void recursiveUserDelete(UUID id) {
     userRepository
-        .findByUsername(String.valueOf(id))
+        .findById(id)
         .ifPresent(
             user -> {
               postRepository
