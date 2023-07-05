@@ -144,10 +144,13 @@
       content: comment_text,
         post_id: thisID,
       })
-    location.reload();
+    
     if(!res.ok) {
       buttonPressed = false
     }
+    comment_text = "";
+    location.reload();
+    
     return res;
   }
 
