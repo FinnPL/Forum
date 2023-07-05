@@ -43,7 +43,7 @@ public class Post {
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   private Collection<Comment> comment;
 
-  private final java.sql.Timestamp date = new Timestamp(System.currentTimeMillis());
+  @Builder.Default private final Timestamp date = new Timestamp(System.currentTimeMillis());
 
   @Builder.Default private boolean edited = false;
 }
