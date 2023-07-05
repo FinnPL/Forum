@@ -25,8 +25,9 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
   @Query("SELECT p FROM Post p WHERE p.user = ?1 ORDER BY p.date DESC")
   List<Post> findPostsByUserByPage(User user, Pageable pageable);
 
-  // search for posts by title or content containing a string ignore-case and order by date
-  // descending
+  @Query("SELECT p FROM Post p WHERE p.user = ?1 ORDER BY p.date DESC")
+  List<Post> findAllByUser(User user);
+
   @Query(
       "SELECT p FROM Post p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%',?1,'%')) OR LOWER(p.content)"
           + " LIKE LOWER(CONCAT('%',?1,'%')) ORDER BY p.date DESC")
