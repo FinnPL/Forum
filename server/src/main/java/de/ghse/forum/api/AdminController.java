@@ -4,11 +4,10 @@ import de.ghse.forum.api.response.PostResponse;
 import de.ghse.forum.api.response.UserResponse;
 import de.ghse.forum.service.AdminService;
 import de.ghse.forum.service.FileDataService;
-import java.io.IOException;
-import java.util.UUID;
-
 import de.ghse.forum.service.PostService;
 import de.ghse.forum.service.UserService;
+import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,7 @@ public class AdminController {
         .getPostById(id)
         .map(
             post -> {
-                adminService.recursivePostDelete(id);
+              adminService.recursivePostDelete(id);
               return ResponseEntity.ok(new PostResponse().convert(post));
             })
         .orElse(ResponseEntity.notFound().build());
