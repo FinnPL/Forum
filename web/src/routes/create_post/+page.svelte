@@ -104,7 +104,7 @@
 
 
       <div class="flex justify-end">
-        {#if buttonPressed == false}
+        {#if buttonPressed === false}
           <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
         {:else}
           <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>

@@ -284,7 +284,7 @@
         <img class="mt-5 mb-5" src={imageSrc} alt="image"/>
       {/if}
       
-      {#if $store_userid == userID}
+      {#if $store_userid === userID}
         <div class="py-5">
           <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={toggle}>Post bearbeiten</button>
           <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={del_post}>Post löschen</button>
@@ -360,7 +360,7 @@
     
         <p class="break-words whitespace-pre-line leading-relaxed">{comment.content}</p>
 
-        {#if $store_userid == userID}
+        {#if $store_userid === userID}
           <div class="py-5">
             <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={() => toggle_c[comment.id]()}>Kommentar bearbeiten</button>
             <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={() => del_comment(comment.id)}>Kommentar löschen</button>

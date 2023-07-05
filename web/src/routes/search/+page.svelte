@@ -143,7 +143,7 @@
   </button>
 </div>
 
-{#if searchType == "Post" && searchList[0] != "keinErgebnis"}
+{#if searchType === "Post" && searchList[0] !== "keinErgebnis"}
   {#each searchList as post (post.id)}
     <PostItem post={post}/>
   {/each}

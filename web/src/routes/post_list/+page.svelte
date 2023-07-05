@@ -56,7 +56,7 @@
     }
 </script>
 
-{#if postList != undefined}
+{#if postList !== undefined}
   <div class="fixed py-2 bottom-0 right-4 text-white flex items-center">
     <a href="/create_post" class="button bg-ui px-5 py-3 rounded-full hover:bg-hover">Post erstellen</a>
 
