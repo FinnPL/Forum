@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { token } from "../../lib/Login/login";
-  import { formatDate, getCookie } from "../../lib/functions";
+  import { fetchPage, formatDate, getCookie } from "../../lib/functions";
   import { page } from "$app/stores";
   import { default as defaultAvatar } from "../../lib/assets/defaultAvatar.png";
   import PostItem from "$lib/PostItem.svelte";
   import { fetchProfilePicture } from "../../lib/functions";
   import { goto } from "$app/navigation";
   let ip: string;
+
+ 
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
@@ -21,48 +22,26 @@
   $: input = $page.url.searchParams.get("q") || '';
   $: type = $page.url.searchParams.get("type") || '';
 
-  token.subscribe((value: string) => {
-    tokenValue = value;
-  });
+  $: console.log(pageN)
 
   async function search_post() {
     searchType = "Post";
-    const dataRes = await fetch(
-      ip + "api/v1/post/search/" + input + "/" + pageN,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
+    console.log("api/v1/post/search/" + input + "/",
+      "GET",
+      pageN)
+    const dataRes = await fetchPage(
+     "api/v1/post/search/" + input + "/",
+      "GET",
+      pageN
     );
-    const data = await dataRes.json();
 
-    for (const post of data) {
+    for (const post of dataRes) {
       post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
       post.date = await formatDate(post.date);
     }
 
-    searchList = searchList.concat(data); // Expand current searchlist
-
-    console.log(searchList);
-  }
-  
-  async function first_search_post() {
-    searchType = "Post";
-    const dataRes = await fetch(
-      ip + "api/v1/post/search/" + input + "/" + pageN
-  ,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-
-    const data = await dataRes.json();
-    for (const post of data) {
-      post.avatarSrc = await fetchProfilePicture(ip, tokenValue, post);
-      post.date = await formatDate(post.date);
-    }
-    searchList = data;
+    
+    searchList = searchList.concat(dataRes);
 
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
@@ -70,36 +49,22 @@
     console.log(searchList);
   }
 
+  
   async function search_user() {
     searchType = "User";
-    const dataRes = await fetch(
-      ip + "api/v1/user/search/" + input + "/" + pageN
-  ,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
+    const dataRes = await fetchPage(
+      "api/v1/user/search/" + input + "/",
+      "GET",
+      pageN
     );
-    const data = await dataRes.json();
 
-    searchList = searchList.concat(data); // Expand current searchlist
-    console.log(searchList);
-  }
+    for (const user of dataRes) {
+      user.user_id = user.id;
+      user.avatarSrc = await fetchProfilePicture(ip, tokenValue, user);
+    }
 
-  async function first_search_user() {
-    searchType = "User";
-    const dataRes = await fetch(
-      ip + "api/v1/user/search/" + input + "/" + pageN
-  ,
-      {
-        method: "GET",
-        headers: { Authorization: "Bearer " + tokenValue },
-      }
-    );
-    const data = await dataRes.json();
+    searchList = searchList.concat(dataRes);
 
-
-    searchList = data;
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
     }
@@ -109,14 +74,14 @@
   async function scrollTimeout() {
     canScroll = !canScroll;
 
-    if (!canScroll) setTimeout(scrollTimeout, 1000);
+    if (!canScroll) setTimeout(scrollTimeout, 500);
   }
 
   onMount(async () => {
     await get_server_ip();
     tokenValue = await getCookie("tokenValue");
-    if (type == "post" || type == '') first_search_post();
-    if (type == "user") first_search_user();
+    if (type == "post" || type == '') search_post();
+    if (type == "user") search_user();
     window.onscroll = function (ev) {
       // Dymamic loading of searchlist items
       if (canScroll)
@@ -142,6 +107,7 @@
 
   async function resetPage() {
     pageN = 0;
+    searchList = [];
   }
 
   async function search(type: string) {
@@ -149,11 +115,11 @@
     if (type === "post") {
       params.set("type", "post");
       resetPage();
-      first_search_post();
+      search_post();
     } else if (type === "user") {
       params.set("type", "user");
       resetPage();
-      first_search_user();
+      search_user();
     }
     goto("/search?" + params.toString());
   }
@@ -177,7 +143,7 @@
   </button>
 </div>
 
-{#if searchType == "Post" && searchList[0] != "keinErgebnis"}
+{#if searchType === "Post" && searchList[0] !== "keinErgebnis"}
   {#each searchList as post (post.id)}
     <PostItem post={post}/>
   {/each}

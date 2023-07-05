@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { token, cookie_name, own_user_id } from "./login";
   import { onMount } from "svelte";
-  import { getCookie } from "../functions";
+  import { fetcher, getCookie } from "../functions";
   import { goto } from "$app/navigation";
   import {signOut} from "../functions";
   import { passwordStrength } from 'check-password-strength'
   import logoFull from "../assets/logoFull.png";
+  import {store_username,store_userid, store_token} from "../stores";
 
+  
   let password: string;
   let confirmPassword: string;
   let tokenValue: string;
@@ -62,12 +63,9 @@
 
   async function checkLoggedIn() {
     // Check if you already logged in
-    cookie_name_value = await getCookie("username");
-    cookie_name.set(cookie_name_value);
-    tokenValue = await getCookie("tokenValue");
-    token.set(tokenValue);
-    own_user_id_value = await getCookie("userid");
-    own_user_id.set(own_user_id_value);
+    $store_username = await getCookie("username");
+    $store_token = await getCookie("tokenValue");
+    $store_userid = await getCookie("userid");
   }
 
   async function signUp() {
@@ -82,22 +80,15 @@
     });
     
     const data = await res.json();
-    token.set(data.token);
-    token.subscribe((token: any) => {
-      tokenValue = token;
-    });
-    own_user_id.subscribe((temp: any) => {
-      own_user_id_value = temp;
-    });
-    own_user_id.set(data.user_id);
+    $store_token = data.token;
+    $store_userid = data.user_id;
+    $store_username = user_name;
 
-     document.cookie = "tokenValue=" + tokenValue+";path=/";
-     document.cookie = "username=" + user_name+";path=/";
-     document.cookie = "userid=" + own_user_id_value+";path=/";
+     document.cookie = "tokenValue=" + $store_token+";path=/";
+     document.cookie = "username=" + $store_username+";path=/";
+     document.cookie = "userid=" + $store_userid+";path=/";
 
-    console.log("Der Cookie ist:" + document.cookie);
-    token.set(tokenValue);
-    let name = await getCookie("username");
+ 
     console.log(name);
     await goto("/");
     location.reload();
@@ -105,37 +96,23 @@
 
   async function login() {
     //Login & store the values in cookies
-    const res = await fetch(ip + "api/v1/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_name, password}),
-    });
-
+    const res = await fetcher("api/v1/auth/login","POST", {user_name, password});
     if(res.status == 403) {
       login_error = true;
       password = "";
       return;
     }
 
-    const data = await res.json();
 
-    token.set(data.token);
-    token.subscribe((token: any) => {
-      tokenValue = token;
-    });
-    own_user_id.subscribe((temp: any) => {
-      own_user_id_value = temp;
-    });
-    own_user_id.set(data.user_id);
+    $store_token = res.token;
+    $store_userid = res.user_id;
+    $store_username = user_name;
 
-    document.cookie = "tokenValue=" + tokenValue;
-    document.cookie = "username=" + user_name;
-    document.cookie = "userid=" + own_user_id_value;
+    document.cookie = "tokenValue=" + $store_token+";path=/";
+    document.cookie = "username=" + $store_username+";path=/";
+    document.cookie = "userid=" + $store_userid +";path=/";
 
-    console.log("Der Cookie ist:" + document.cookie);
-    token.set(tokenValue);
-    let name = await getCookie("username");
-    console.log(name);
+ 
     await goto("/");
     location.reload();
   }
@@ -144,28 +121,10 @@
     // Write in Cookie values in writable stores
     await get_server_ip();
     checkLoggedIn();
-    if (document.cookie != undefined) {
-      let tokenValue = await getCookie("tokenValue");
-      token.set(tokenValue);
-      let nameValue = await getCookie("username");
-      cookie_name.set(nameValue);
-      await subStores();
-    }
+    
   });
 
-  async function subStores() {
-    // Subscribe to writable stores
-    token.subscribe((value: string) => {
-      tokenValue = value;
-      console.log(tokenValue);
-    });
-
-    cookie_name.subscribe((value: string) => {
-      cookie_name_value = value;
-      console.log(cookie_name_value);
-    });
-  }
-
+  
   function handleKeyDown(event: any) {
     if (event.key === 'Enter' && (tokenValue === undefined || tokenValue === "") && show_sign_up === "false" && user_name && password) {
       event.preventDefault();
@@ -185,7 +144,7 @@
   }
 </script>
 
-{#if cookie_name_value == "undefined" || cookie_name_value == undefined}
+{#if $store_username == "undefined" || $store_username == undefined}
   <div class="flex flex-col items-center justify-center mx-auto px-60 md:h-screen">
     <a href="/" class="flex items-center justify-center mb-6">
       <img src={logoFull} class="w-1/2" alt="Forum"/>

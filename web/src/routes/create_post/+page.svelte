@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { token, cookie_name } from "../../lib/Login/login.js";
   import { getCookie } from "../../lib/functions.js";
   import { onMount } from "svelte";
   import Error from "../../lib/Error/error.svelte";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
+  import { fetcher } from "../../lib/functions.js";
+  import { store_token, store_username } from "$lib/stores.js";
   let post_title: string;
   let post_body: string;
   let post_id: string;
-  let tokenValue: string;
-  let cookie_name_value: string;
   let error = false;
   let file: any;
   let image_file: File;
@@ -29,31 +28,17 @@
   }
 
   async function checkLoggedIn() {
-    cookie_name_value = await getCookie("username");
-    cookie_name.set(cookie_name_value);
-    tokenValue = await getCookie("tokenValue");
-    token.set(tokenValue);
+    $store_username = await getCookie("username");
+    $store_token = await getCookie("tokenValue");
+
   }
 
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    await subStores();
   });
 
-  async function subStores() {
-    token.subscribe((value: string) => {
-      tokenValue = value;
-      console.log(tokenValue);
-    });
-
-    cookie_name.subscribe((value: string) => {
-      cookie_name_value = value;
-      console.log(cookie_name_value);
-    });
-  }
-
- 
+  
 
   async function post() {
     buttonPressed = true;
@@ -61,20 +46,13 @@
     if(post_title == null || post_body == null) {
       return;
     }
-    const res = await fetch(ip + "api/v1/post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenValue,
-      },
-      body: JSON.stringify({
+    const res = await fetcher("api/v1/post", "POST",{
         title: post_title,
         content: post_body,
-      }),
-    });  
-    const json = await res.json();
-    await upload_image(json.id);
-    post_id = json.id;
+      })
+
+    await upload_image(res.id);
+    post_id = res.id;
     if(!res.ok) {
       buttonPressed = false;
       error = true;
@@ -93,10 +71,9 @@
       method: "POST",
       body: formData,
       headers: {
-        Authorization: "Bearer " + tokenValue,
+        Authorization: "Bearer " + $store_token,
       },
     });
-    console.log(res);
     await goto("/post/" + post_id);
   }
 </script>
@@ -106,28 +83,40 @@
 {/if}
 
 <div class="container mx-auto py-5 max-w-5xl">
-  <div class=" px-3 py-3 mb-4 border rounded bg-gray-400 border-gray-500 text-gray-900">
+  <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
     <form>
-      <input class="text-black mb-4 py-1 px-2" placeholder="Titel" required bind:value={post_title} />
+      <div class="text-lg font-semibold mb-2">Titel:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={post_title}/>
+      </div>
 
-      <textarea
-        class="w-full py-1 px-2 mb-4 bg-white text-black"
-        placeholder="Body"
-        bind:value={post_body}
-        id="floatingTextarea2"
-        style="height: 100px"
-      />
+      <div class="text-lg font-semibold mb-2">Inhalt:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={post_body}/>
+      </div>
 
-      <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+      <hr class="h-0.5 border-t-0 bg-text" />
+
+      <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
+      <div class="mb-4">
+        <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+      </div>
+
 
       <div class="flex justify-end">
-        {#if buttonPressed == false}
-        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
+        {#if buttonPressed === false}
+          <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
         {:else}
-        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
+          <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
         {/if}
       </div>
     </form>
   </div>
 </div>
+
+
+
+
+  
+
 

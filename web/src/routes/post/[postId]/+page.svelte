@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { token, cookie_name, own_user_id } from "../../../lib/Login/login";
-  import { formatDate, getCookie } from "../../../lib/functions";
+  import { fetchPage, fetcher, formatDate, getCookie } from "../../../lib/functions";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { fetchProfilePicture } from "../../../lib/functions";
+  import { store_token, store_userid, store_username } from "$lib/stores";
   let ip: string;
   let canScroll = true;
 
@@ -17,7 +17,7 @@
 
   export let data: any;
 
-  let tokenValue: string;
+
 
   let userID: string;
   let comment_text: string;
@@ -29,8 +29,6 @@
   let date: string;
   let user_name: string;
   let thisID: any = data.postId;
-  let cookie_name_value: string;
-  let own_user_id_value: string;
   let title_update: string;
   let content_update: string;
   let isEdited: boolean;
@@ -41,60 +39,44 @@
   let file: any;
   let image_file: File;
 
+  let content_update_c : string;
 
-  //Modal
   let open = false;
   const toggle = () => (open = !open);
 
-  console.log(thisID);
+  let open_c: { [key: string]: boolean } = {}; 
+  let toggle_c: { [key: string]: () => void } = {}; 
 
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
   }
   async function checkLoggedIn() {
-    cookie_name_value = await getCookie("username");
-    cookie_name.set(cookie_name_value);
-    tokenValue = await getCookie("tokenValue");
-    token.set(tokenValue);
-    own_user_id_value = await getCookie("userid");
-    own_user_id.set(own_user_id_value);
+    $store_username = await getCookie("username");
+    $store_token = await getCookie("tokenValue");
+    $store_userid = await getCookie("userid");
   }
 
-  async function subStores() {
-    token.subscribe((value: string) => {
-      tokenValue = value;
-    });
-
-    cookie_name.subscribe((value: string) => {
-      cookie_name_value = value;
-    });
-    own_user_id.subscribe((value: string) => {
-      own_user_id_value = value;
-    });
-  }
+ 
 
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    await subStores();
-    getPost();
-    getComments();
+    await getPost();
+    await getComments();
   });
 
   async function getPost() {
-    await subStores();
+    await checkLoggedIn();
     const fetchedDataRes = await fetch(ip + "api/v1/post/" + thisID, {
       method: "GET",
-      headers: { Authorization: "Bearer " + tokenValue },
+      headers: { Authorization: "Bearer " + $store_token },
     });
 
     if (!fetchedDataRes.ok) {
       await goto("/");
-      
     }
 
     const fetchedData = await fetchedDataRes.json();
-    console.log(fetchedData);
     title = fetchedData.title;
     content = fetchedData.content;
     date = await formatDate(fetchedData.date);
@@ -103,55 +85,49 @@
     title_update = title;
     content_update = content;
     isEdited = fetchedData.edited;
-    avatarSrc = await fetchProfilePicture(ip, tokenValue, fetchedData);
+    avatarSrc = await fetchProfilePicture(ip, $store_token, fetchedData);
   }
 
- 
-
-  async function getComments() {
-    const fetchedRes = await fetch(
-      ip + "api/v1/comment/" + thisID + "/" + page,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenValue,
-        },
+  function createToggleFunction(commentId : string) {
+    return function() {
+      for(const comment of comment_list) {
+        if(comment.id != commentId) {
+          open_c[comment.id] = false;
+        }
       }
-    );
-    const fetchedData = await fetchedRes.json();
 
-    for (const comment of fetchedData) {
-      comment.avatarSrc = await fetchProfilePicture(ip, tokenValue, comment);
+      open_c[commentId] = !open_c[commentId];
+      content_update_c = comment_list.find((comment : any) => comment.id == commentId).content;
+    };
+  }
+ 
+  async function getComments() {
+    const fetchedRes = await fetchPage("api/v1/comment/" + thisID + "/","GET", page)
+
+    for (const comment of fetchedRes) {
+      comment.avatarSrc = await fetchProfilePicture(ip, $store_token, comment);
+      comment.date = await formatDate(comment.date);
+      open_c[comment.id] = false;
+      toggle_c[comment.id] = createToggleFunction(comment.id);
+
     }
 
-    comment_list = comment_list.concat(fetchedData);
+    comment_list = comment_list.concat(fetchedRes);
   }
 
+
+
   async function update_post() {
-    console.log(
-      thisID,
-      title_update,
-      content_update,
-      own_user_id_value,
-      cookie_name_value,
-      date
-    );
-    const res = await fetch(ip + "api/v1/post/" + thisID, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenValue,
-      },
-      body: JSON.stringify({
-        id: thisID,
-        title: title_update,
-        content: content_update,
-        user_id: own_user_id_value,
-        user_name: cookie_name_value,
-        date: "2023-03-04 14:00:05.0",
-      }),
-    });
+   
+    const res = await fetcher("api/v1/post/" + thisID,"PUT",{
+      id: thisID,
+      title: title_update,
+      content: content_update,
+      user_id: $store_userid,
+      user_name: $store_username,
+      date: "2023-03-04 14:00:05.0",
+    })
+
     await update_image();
     await goto("/");
     await goto("/post/" + thisID);
@@ -164,31 +140,40 @@
       return;
     }
     buttonPressed = true;
-    const res = await fetch(ip + "api/v1/comment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenValue,
-      },
-      body: JSON.stringify({
-        content: comment_text,
+    const res = await fetcher("api/v1/comment","POST",{ 
+      content: comment_text,
         post_id: thisID,
-      }),
-    });
-    
-    console.log(res.json());
-    await goto("/");
-    await goto("/post/" + thisID);
+      })
+    location.reload();
     if(!res.ok) {
       buttonPressed = false
     }
-    return res.json();
+    return res;
+  }
+
+  async function del_comment(commentId : string) {
+    const res = await fetcher("api/v1/comment/" + commentId ,"DELETE",{})
+    location.reload();
+    return res;
+  }
+
+  async function update_comment(commentId : string){
+    const res = await fetcher("api/v1/comment/" + commentId,"PUT",{
+      id: commentId,
+      content: content_update_c,
+      user_id: $store_userid,
+      user_name: $store_username,
+      date: "2023-03-04 14:00:05.0",
+    })
+
+    location.reload();
+    return res;
   }
 
   async function scrollTimeout() {
     canScroll = !canScroll;
 
-    if (!canScroll) setTimeout(scrollTimeout, 1000);
+    if (!canScroll) setTimeout(scrollTimeout, 500);
   }
 
   onMount(async () => {
@@ -197,7 +182,7 @@
       if (canScroll)
         if (
           window.innerHeight + window.pageYOffset >=
-          document.body.offsetHeight
+          document.body.offsetHeight - 500
         ) {
           page += 1;
           getComments();
@@ -210,7 +195,6 @@
     let bearerToken = await getCookie("tokenValue");
     let myid = await getCookie("userid");
 
-    console.log(bearerToken);
     let requestOptions: any = {
       method: "GET",
       headers: { Authorization: "Bearer " + bearerToken },
@@ -240,8 +224,6 @@
       };
     }
     loadImage();
-
-    console.log(imageSrc);
   });
 
   const handleFileChange = (event: any) => {
@@ -255,23 +237,19 @@
       method: "POST",
       body: formData,
       headers: {
-        Authorization: "Bearer " + tokenValue,
+        Authorization: "Bearer " + $store_token,
       },
     });
-    console.log(res);
   }
 
   async function del_post() {
-    const res = await fetch(ip + "api/v1/post/" + thisID, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + tokenValue,
-      },
-    });
-    console.log(res);
+    const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     await goto("/");
   }
 </script>
+
+
+
 
 <div class="container mx-auto pt-5 max-w-5xl">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
@@ -286,69 +264,76 @@
         </a>
         <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + userID}>{user_name}</a>
         <span class="pl-1 pt-3.5 text-text text-sm">• {date}</span>
+
+        {#if isEdited}
+          <span class="pl-1 pt-3.5 text-text text-sm">• (Bearbeitet)</span>
+        {/if}
       </div>
       
       <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {title}</p>
 
-      <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{content}</p>
-      <br />
-
+      <p class="break-words whitespace-pre-line leading-relaxed">{content}</p>
+    
       {#if imageSrc != undefined}
-        <img class="mt-5" src={imageSrc} alt="image"/>
+        <img class="mt-5 mb-5" src={imageSrc} alt="image"/>
       {/if}
       
-
-      {#if own_user_id_value == userID}
+      {#if $store_userid === userID}
         <div class="py-5">
-          <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={toggle}>Edit Post</button>
-          <button class="text-white bg-ui hover:bg-hover px-4 py-2 rounded" on:click={del_post}>Delete Post</button>
-          <div class={open ? "block" : "hidden"}>
-            <div class="fixed inset-0 flex items-center justify-center">
-              <div class="bg-border p-4 rounded w-96">
-                <h2 class="text-lg font-bold mb-4">Post bearbeiten</h2>
-                <div class="mb-4">
-                  <input class="text-black" placeholder="Titel" required bind:value={title_update} />
-                </div>
-                <div class="mb-4">
-                  <textarea class="text-black" placeholder="Body" bind:value={content_update} style="height: 100px"></textarea>
-                </div>
-                <div class="mb-4">
-                  <input id="AvatarFile" type="file" name="file" bind:this={image_file} on:change={handleFileChange} accept="image/png, image/jpeg, image/jpg" />
-                </div>
-    
-                <div class="flex justify-end">
-                  <button class="bg-ui hover:bg-hover text-white px-4 py-2 rounded" on:click={toggle}>Cancel</button>
-                  <button class="bg-ui hover:bg-hover text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_post} >Post bearbeiten</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={toggle}>Post bearbeiten</button>
+          <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={del_post}>Post löschen</button>
         </div>
       {/if}
     </div>
   </div>
-</div>
 
-<div class="bg-gray-900 text-white p-4">
-  <form>
-    <div class="container mx-auto py-5 max-w-5xl">
-      <h3 class="text-lg font-bold">Kommentare:</h3>
-      <div class="mt-2">
-        <textarea id="comment_text" class="border border-border bg-postBG p-2 rounded w-full" placeholder="Body" bind:value={comment_text} style="height: 100px"></textarea>
-        <div class="flex justify-end mt-1">
-          {#if !buttonPressed}
-          <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
-          {:else}
-          <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
-          {/if}
+  <div class={open ? "block pt-5" : "hidden"}>
+    <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
+      <div class="text-lg font-semibold mb-2">Titel:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={title_update}/>
+      </div>
+
+      <div class="text-lg font-semibold mb-2">Inhalt:</div>
+      <div class="mb-6">
+        <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={content_update}/>
+      </div>
+    
+      <hr class="h-0.5 border-t-0 bg-text" />
+    
+      <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
+        <div class="mb-4">
+          <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+        </div>
+    
+        <div class="flex justify-end">
+          <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={toggle}>Abbrechen</button>
+          <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_post}>Post aktualisieren</button>
         </div>
       </div>
     </div>
-  </form>
-</div>
+  </div>
+
+  <div class="bg-gray-900 text-white pt-5">
+    <form>
+      <div class="container mx-auto max-w-5xl">
+        <h3 class="text-lg font-bold py-3">Kommentare:</h3>
+        <div class="mt-2">
+          <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
+          <div class="flex justify-end mt-3">
+            {#if !buttonPressed}
+              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
+            {:else}
+              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
+            {/if}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 
 {#each comment_list as comment (comment.id)}
-  <div class="container mx-auto max-h-96 py-5 max-w-5xl">
+  <div class="container mx-auto py-5 max-w-5xl">
     <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover">
       <div>
         <div class="font-semibold text-xl flex">
@@ -359,13 +344,40 @@
               <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
             {/if} 
           </a>
-          <a class="pl-5 pt-3.5 text-text text-sm" href={"/profile/" + comment.user_id}>{comment.user_name}</a>
+          <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + comment.user_id}>{comment.user_name}</a>
           <span class="pl-1 pt-3.5 text-text text-sm">• {comment.date}</span>
+
+          {#if comment.edited}
+            <span class="pl-1 pt-3.5 text-text text-sm">• (Bearbeitet)</span>
+          {/if}
         </div>
     
-        <p class="break-words whitespace-pre-line pt-3 leading-relaxed line-clamp-5">{comment.content}</p>
-        <br />
+        <p class="break-words whitespace-pre-line leading-relaxed">{comment.content}</p>
+
+        {#if $store_userid === userID}
+          <div class="py-5">
+            <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={() => toggle_c[comment.id]()}>Kommentar bearbeiten</button>
+            <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={() => del_comment(comment.id)}>Kommentar löschen</button>
+          </div>
+        {/if}
+      </div>
+    </div>
+
+    <div class={open_c[comment.id] ? "block pt-5" : "hidden"}>
+      <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
+  
+        <div class="text-lg font-semibold mb-2">Inhalt:</div>
+        <div class="mb-6">
+          <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={content_update_c}/>
+        </div>
+      
+        <div class="flex justify-end">
+          <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={() => toggle_c[comment.id]()}>Abbrechen</button>
+            <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={() => toggle_c[comment.id]} on:click={() => update_comment(comment.id)}>Kommentar aktualisieren</button>
+        </div>
       </div>
     </div>
   </div>
-{/each}
+  {/each}
+
+

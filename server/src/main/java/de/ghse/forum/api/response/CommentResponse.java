@@ -23,6 +23,7 @@ public class CommentResponse {
   private String user_id;
   private String user_name;
   private String date;
+  private boolean edited;
 
   /**
    * Converts a List of Comment objects to a List of CommentResponse objects.
@@ -51,6 +52,7 @@ public class CommentResponse {
         .user_id(comment.getUser().getId().toString())
         .user_name(comment.getUser().getUsername())
         .date(comment.getDate().toString())
+        .edited(comment.isEdited())
         .build();
   }
 }

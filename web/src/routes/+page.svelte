@@ -1,24 +1,20 @@
 <script lang="ts">
   import Login from "../lib/Login/login.svelte";
-  import { token } from "../lib/Login/login";
   import Post_List from "./post_list/+page.svelte";
-  import { onMount } from "svelte";
+  import { store_token } from "$lib/stores";
+  import { getCookie } from "$lib/functions";
 
+  async function getPromise() {
+    return await getCookie("tokenValue");
+  }
 
-  let tokenValue: string;
-
-
-  token.subscribe((value: string) => {
-    tokenValue = value;
-  });  
-
+  let promise = getPromise();
 </script>
 
-
-<Login show_sign_up="false" />
-
-{#if tokenValue != undefined}
-  <Post_List />
-  {:else}
-  <Login show_sign_up="false" />
-{/if}
+{#await promise then token}
+    {#if token != undefined}
+      <Post_List />
+      {:else}
+        <Login show_sign_up="false" />
+    {/if}
+{/await}

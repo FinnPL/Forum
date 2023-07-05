@@ -43,7 +43,7 @@ export async function signOut() {
   document.cookie.split(";").forEach(function (c) {
     document.cookie = c
       .replace(/^ +/, "")
-      .replace(/[=].*/, "=;expires=" + new Date().toUTCString() + ";path=/"); // Sets every cookie as expired to delete them
+      .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); // Sets every cookie as expired to delete them
   });
   await goto("/");
   location.reload();
@@ -69,10 +69,41 @@ export async function formatDate(dateString) {
 
   for (const duration of durations) {
     const value = Math.floor(diff / duration.value);
+    const suffix =
+      duration.unit === "Monat" || duration.unit === "Tag" ? "en" : "n";
+
     if (value > 0) {
-      return `vor ${value} ${duration.unit}${value > 1 ? "n" : ""}`;
+      return `vor ${value} ${duration.unit}${value > 1 ? suffix : ""}`;
     }
   }
 
   return "vor weniger als eine Minute";
+}
+
+export async function fetcher(url, method, body) {
+  const res = await fetch("http://" + location.hostname + ":8080/" + url, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + (await getCookie("tokenValue")),
+    },
+    body: JSON.stringify(body),
+  });
+
+  return await res.json();
+}
+
+export async function fetchPage(url, method, page) {
+  const res = await fetch(
+    "http://" + location.hostname + ":8080/" + url + page,
+    {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + (await getCookie("tokenValue")),
+      },
+    }
+  );
+
+  return await res.json();
 }
