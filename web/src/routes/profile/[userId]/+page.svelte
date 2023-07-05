@@ -36,7 +36,6 @@
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    console.log(avatarSrc);
     getUserDetails();
     getPostList();
   });
@@ -51,7 +50,6 @@
     }
 
     const fetchedData = await fetchedDataRes.json();
-    console.log(fetchedDataRes);
     user_name = fetchedData.user_name;
     bio = fetchedData.bio;
     if (bio != "null" && bio != null) {
@@ -59,8 +57,6 @@
     } else {
       bio_update = "";
     }
-    console.log(bio);
-    console.log(user_name);
   }
 
   async function getPostList() {
@@ -77,7 +73,7 @@
   async function scrollTimeout() {
     canScroll = !canScroll;
 
-    if (!canScroll) setTimeout(scrollTimeout, 1000);
+    if (!canScroll) setTimeout(scrollTimeout, 500);
   }
 
   const handleFileChange = (event: any) => {
@@ -94,9 +90,6 @@
         Authorization: "Bearer " + $store_token,
       },
     });
-    console.log(res);
-    await goto("/");
-    await goto("/profile/" + $store_userid);
     location.reload();
   }
 
@@ -111,6 +104,7 @@
     const path = window.location.pathname.split("/");
     const userid = path[path.length - 1]; // Get userid from url path
 
+    
     async function loadAvatar() {
       const res = await fetch(
         ip + "api/v1/file/profile/" + userid + "?" + new Date().getTime(),
@@ -123,11 +117,10 @@
         if (event.target && event.target.result) {
           avatarSrc = event.target.result;
         }
-        console.log(avatarSrc);
       };
     }
     loadAvatar();
-    console.log(avatarSrc);
+    
   });
 
   onMount(async () => {
@@ -135,7 +128,7 @@
       if (canScroll) {
       if (
         window.innerHeight + window.pageYOffset >=
-        document.body.offsetHeight
+        document.body.offsetHeight - 500
       ) {
         page += 1;
         scrollTimeout();
@@ -146,7 +139,6 @@
 
   async function update_bio() {
     const res = await fetcher("api/v1/user/update/" + bio_update, "PUT");
-    console.log(res);
   }
 </script>
 
@@ -161,12 +153,12 @@
     <div class="pl-3">
     <span class="font-semibold">{user_name}</span>
 
-    {#if bio != null && bio != "null"}
+    {#if bio !== null && bio !== "null"}
       <p class="pt-1 mr-1 break-words">{bio}</p>
     {/if}
   </div>
 
-    {#if $store_userid == data.userId}
+    {#if $store_userid === data.userId}
     <div class="flex-1 flex justify-end">
       <button class="hover:bg-hover rounded" on:click={toggle}>
         <svg fill="#ffffff" height="50px" width="50px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-306.64 -306.64 919.92 919.92" xml:space="preserve">

@@ -74,7 +74,7 @@
   async function scrollTimeout() {
     canScroll = !canScroll;
 
-    if (!canScroll) setTimeout(scrollTimeout, 1000);
+    if (!canScroll) setTimeout(scrollTimeout, 500);
   }
 
   onMount(async () => {

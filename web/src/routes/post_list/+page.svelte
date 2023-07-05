@@ -28,7 +28,7 @@
   async function scrollTimeout() {
     canScroll = !canScroll;
 
-    if (!canScroll) setTimeout(scrollTimeout, 1000);
+    if (!canScroll) setTimeout(scrollTimeout, 500);
   }
 
   onMount(async () => {
@@ -41,7 +41,7 @@
       if (canScroll) {
         if (
           window.innerHeight + window.pageYOffset >=
-          document.body.offsetHeight
+          document.body.offsetHeight - 500
         ) {
           page += 1;
           scrollTimeout();

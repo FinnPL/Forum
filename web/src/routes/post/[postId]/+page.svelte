@@ -61,8 +61,8 @@
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    getPost();
-    getComments();
+    await getPost();
+    await getComments();
   });
 
   async function getPost() {
@@ -77,7 +77,6 @@
     }
 
     const fetchedData = await fetchedDataRes.json();
-    console.log(fetchedData);
     title = fetchedData.title;
     content = fetchedData.content;
     date = await formatDate(fetchedData.date);
@@ -111,11 +110,12 @@
       open_c[comment.id] = false;
       toggle_c[comment.id] = createToggleFunction(comment.id);
 
-      console.log(comment)
     }
 
     comment_list = comment_list.concat(fetchedRes);
   }
+
+
 
   async function update_post() {
    
@@ -144,9 +144,7 @@
       content: comment_text,
         post_id: thisID,
       })
-    
-    await goto("/");
-    await goto("/post/" + thisID);
+    location.reload();
     if(!res.ok) {
       buttonPressed = false
     }
@@ -155,8 +153,7 @@
 
   async function del_comment(commentId : string) {
     const res = await fetcher("api/v1/comment/" + commentId ,"DELETE",{})
-    await goto("/");
-    await goto("/post/" + thisID);
+    location.reload();
     return res;
   }
 
@@ -169,15 +166,14 @@
       date: "2023-03-04 14:00:05.0",
     })
 
-    await goto("/");
-    await goto("/post/" + thisID);
+    location.reload();
     return res;
   }
 
   async function scrollTimeout() {
     canScroll = !canScroll;
 
-    if (!canScroll) setTimeout(scrollTimeout, 1000);
+    if (!canScroll) setTimeout(scrollTimeout, 500);
   }
 
   onMount(async () => {
@@ -186,7 +182,7 @@
       if (canScroll)
         if (
           window.innerHeight + window.pageYOffset >=
-          document.body.offsetHeight
+          document.body.offsetHeight - 500
         ) {
           page += 1;
           getComments();
@@ -199,7 +195,6 @@
     let bearerToken = await getCookie("tokenValue");
     let myid = await getCookie("userid");
 
-    console.log(bearerToken);
     let requestOptions: any = {
       method: "GET",
       headers: { Authorization: "Bearer " + bearerToken },
@@ -229,8 +224,6 @@
       };
     }
     loadImage();
-
-    console.log(imageSrc);
   });
 
   const handleFileChange = (event: any) => {
@@ -247,15 +240,16 @@
         Authorization: "Bearer " + $store_token,
       },
     });
-    console.log(res);
   }
 
   async function del_post() {
     const res = await fetcher("api/v1/post/" + thisID,"DELETE")
-    console.log(res);
     await goto("/");
   }
 </script>
+
+
+
 
 <div class="container mx-auto pt-5 max-w-5xl">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
@@ -384,4 +378,6 @@
       </div>
     </div>
   </div>
-{/each}
+  {/each}
+
+
