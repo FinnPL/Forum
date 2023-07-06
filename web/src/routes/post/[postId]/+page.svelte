@@ -17,8 +17,6 @@
 
   export let data: any;
 
-
-
   let userID: string;
   let comment_text: string;
   let comment_list: any = [];
@@ -61,8 +59,8 @@
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    await getPost();
-    await getComments();
+    getPost();
+    getComments();
   });
 
   async function getPost() {
@@ -347,6 +345,7 @@ async function del_post() {
       </div>
     </div>
   </form>
+
 
 {#each comment_list as comment (comment.id)}
   <div class="container mx-auto py-5 w-11/12 sm:max-w-5xl sm:w-full">

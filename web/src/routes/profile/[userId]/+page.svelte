@@ -104,8 +104,13 @@
     const path = window.location.pathname.split("/");
     const userid = path[path.length - 1]; // Get userid from url path
 
-    
-    async function loadAvatar() {
+    /*
+    This code is used to retrieve the user's avatar from the server. The avatar serves as a profile picture stored on the server.
+    To begin, the code sends a request to the server in order to fetch the avatar. The server responds by providing an image file.
+    Next, the code loads the image file as a blob and utilizes the FileReader API to convert it into a data URL.
+    Finally, the data URL is utilized to set the src attribute of the img element, displaying the user's avatar.*/
+
+async function loadAvatar() {
       const res = await fetch(
         ip + "api/v1/file/profile/" + userid + "?" + new Date().getTime(),
         requestOptions

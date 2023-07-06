@@ -26,9 +26,6 @@
 
   async function search_post() {
     searchType = "Post";
-    console.log("api/v1/post/search/" + input + "/",
-      "GET",
-      pageN)
     const dataRes = await fetchPage(
      "api/v1/post/search/" + input + "/",
       "GET",
