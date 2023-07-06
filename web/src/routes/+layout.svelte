@@ -59,6 +59,10 @@
       }
     });
 
+    async function main_page() {
+      await goto("/");
+      location.reload();
+    }
 
 </script>
 
@@ -66,10 +70,10 @@
   <div class="sticky top-0 bg-gradient-to-r from-primary to-secondary p-0.5 px-0 pt-0">
     <nav class="flex w-screen items-center max-h-12 p-4 bg-postBG">
       <div class="flex-1 flex justify-start">
-        <a href="/">
+        <button on:click={main_page}>
           <img src={logoFull} alt="Logo" class="hidden sm:block px-1 h-8 w-auto">
           <img src={logo} alt="Logo" class="sm:hidden px-1 h-8 w-auto">
-        </a>
+        </button>
       </div>
 
       <form class="flex items-center sm:max-w-5xl sm:w-full mx-auto bg-hover border border-border rounded-full">
