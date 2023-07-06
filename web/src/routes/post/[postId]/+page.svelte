@@ -253,7 +253,7 @@
 
 
 
-<div class="container mx-auto pt-5 max-w-5xl">
+<div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
     <div>
       <div class="font-semibold flex">
@@ -316,26 +316,24 @@
     </div>
   </div>
 
-  <div class="bg-gray-900 text-white pt-5">
-    <form>
-      <div class="container mx-auto max-w-5xl">
-        <h3 class="text-lg font-bold py-3">Kommentare:</h3>
-        <div class="mt-2">
-          <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
-          <div class="flex justify-end mt-3">
-            {#if !buttonPressed}
-              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
-            {:else}
-              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
-            {/if}
-          </div>
+  <form>
+    <div class="container mx-auto w-11/12 sm:max-w-5xl sm:w-full bg-gray-900 text-white pt-5">
+      <h3 class="text-lg font-bold py-3">Kommentare:</h3>
+      <div class="mt-2">
+        <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
+        <div class="flex justify-end mt-3">
+          {#if !buttonPressed}
+            <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
+          {:else}
+            <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
+          {/if}
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 
 {#each comment_list as comment (comment.id)}
-  <div class="container mx-auto py-5 max-w-5xl">
+  <div class="container mx-auto py-5 w-11/12 sm:max-w-5xl sm:w-full">
     <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover">
       <div>
         <div class="font-semibold text-xl flex">

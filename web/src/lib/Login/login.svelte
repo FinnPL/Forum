@@ -144,15 +144,15 @@
 </script>
 
 {#if $store_username == "undefined" || $store_username == undefined}
-  <div class="flex flex-col items-center justify-center mx-auto px-60 md:h-screen">
+  <div class="flex flex-col items-center justify-center mx-auto px-60 h-screen">
     <a href="/" class="flex items-center justify-center mb-6">
       <img src={logoFull} class="w-1/2" alt="Forum"/>
     </a>
 
-    <div class="w-full max-w-lg bg-postBG rounded-lg border border-border">
+    <div class="w-screen max-w-lg bg-postBG rounded-lg border border-border">
       <div class="p-6 space-y-4">
 
-          <h1 class="font-bold text-xl leading-tight tracking-tight"> 
+        <h1 class="font-bold text-xl leading-tight tracking-tight"> 
             {#if show_sign_up == "true"}
               Passwort erstellen
             {:else}

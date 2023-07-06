@@ -82,41 +82,32 @@
   <Error />
 {/if}
 
-<div class="container mx-auto py-5 max-w-5xl">
-  <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
-    <form>
-      <div class="text-lg font-semibold mb-2">Titel:</div>
-      <div class="mb-6">
-        <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={post_title}/>
-      </div>
+<div class="container mx-auto mt-5 w-11/12 sm:max-w-5xl sm:w-full bg-postBG border border-border p-4 rounded-lg">
+  <form>
+    <div class="text-lg font-semibold mb-2">Titel:</div>
+    <div class="mb-6">
+      <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={post_title}/>
+    </div>
 
-      <div class="text-lg font-semibold mb-2">Inhalt:</div>
-      <div class="mb-6">
-        <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={post_body}/>
-      </div>
+    <div class="text-lg font-semibold mb-2">Inhalt:</div>
+    <div class="mb-6">
+      <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={post_body}/>
+    </div>
 
-      <hr class="h-0.5 border-t-0 bg-text" />
+    <hr class="h-0.5 border-t-0 bg-text" />
 
-      <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
-      <div class="mb-4">
-        <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
-      </div>
+    <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
+    <div class="mb-4">
+      <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+    </div>
 
 
-      <div class="flex justify-end">
-        {#if buttonPressed === false}
-          <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
-        {:else}
-          <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
-        {/if}
-      </div>
-    </form>
-  </div>
+    <div class="flex justify-end">
+      {#if buttonPressed === false}
+        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
+      {:else}
+        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
+      {/if}
+    </div>
+  </form>
 </div>
-
-
-
-
-  
-
-
