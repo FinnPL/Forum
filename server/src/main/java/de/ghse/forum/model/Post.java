@@ -44,7 +44,8 @@ public class Post {
   private Collection<Comment> comment;
 
   @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  @Builder.Default private final Timestamp date = new Timestamp(System.currentTimeMillis());
+  @Builder.Default
+  private final Timestamp date = new Timestamp(System.currentTimeMillis());
 
   @Builder.Default private boolean edited = false;
 }
