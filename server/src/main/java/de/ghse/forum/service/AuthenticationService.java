@@ -74,6 +74,7 @@ public class AuthenticationService {
             + request.getTimestamp()
             + "}"; // Dont ask 💀
     if (verifyData(data, signature, publicKeyString)) {
+      System.out.println(System.currentTimeMillis());
       if (System.currentTimeMillis() - Long.parseLong(request.getTimestamp()) > 300000) {
         throw new Exception("Timestamp is not valid");
       }
