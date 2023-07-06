@@ -107,6 +107,8 @@
     $store_userid = res.user_id;
     $store_username = user_name;
 
+
+    //saves the details in cookies
     document.cookie = "tokenValue=" + $store_token+";path=/";
     document.cookie = "username=" + $store_username+";path=/";
     document.cookie = "userid=" + $store_userid +";path=/";
@@ -117,7 +119,6 @@
   }
 
   onMount(async () => {
-    // Write in Cookie values in writable stores
     await get_server_ip();
     checkLoggedIn();
     

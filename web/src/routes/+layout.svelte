@@ -37,7 +37,7 @@
       await get_server_ip();
       await initial_load();
       const currentURL = window.location.href
-      if(!currentURL.includes("/noeskauth/")) {
+      if(!currentURL.includes("/noeskauth/")) { //Redirect to login if not logged in
         if ($store_token == undefined && location.pathname != "/") {
           await goto("/");
           location.reload();

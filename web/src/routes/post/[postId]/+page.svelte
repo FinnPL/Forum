@@ -134,6 +134,10 @@
   }
   
 
+/*This is the function that is called when the comment button is pressed.
+ It will send a POST request to the server with the content of the comment and the post id of the post it is associated with.
+ The server will then create the comment and save it to the database. After the request is complete, the page will refresh.*/
+
   async function post_comment() {
     if(comment_text == null) {
       return;
@@ -153,13 +157,16 @@
     return res;
   }
 
-  async function del_comment(commentId : string) {
+   /*This code deletes a comment from the database. It takes a commentId as a parameter and sends a DELETE request to the API with the commentId. 
+   It then reloads the page.*/
+ async function del_comment(commentId : string) {
     const res = await fetcher("api/v1/comment/" + commentId ,"DELETE",{})
     location.reload();
     return res;
   }
 
-  async function update_comment(commentId : string){
+  //This code updates a comment by making a PUT request to the API endpoint. It then reloads the page.
+async function update_comment(commentId : string){
     const res = await fetcher("api/v1/comment/" + commentId,"PUT",{
       id: commentId,
       content: content_update_c,
@@ -172,7 +179,13 @@
     return res;
   }
 
-  async function scrollTimeout() {
+
+
+// This code runs when the user scrolls to the bottom of the page.
+// It checks to see if the user has scrolled to the bottom of the page
+// and if they have, it loads more comments.
+
+async function scrollTimeout() {
     canScroll = !canScroll;
 
     if (!canScroll) setTimeout(scrollTimeout, 500);
@@ -244,7 +257,10 @@
     });
   }
 
-  async function del_post() {
+/*This code deletes a post from the database. This is done by sending a DELETE request to the API endpoint for deleting a post, 
+and then redirecting the user to the home page.*/
+
+async function del_post() {
     const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     await goto("/");
   }
