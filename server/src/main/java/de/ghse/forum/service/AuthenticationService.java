@@ -70,9 +70,9 @@ public class AuthenticationService {
             + request.getClassname()
             + "\",\"login\":\""
             + request.getUser_name()
-            + "\",\"timestamp\":\""
+            + "\",\"timestamp\":"
             + request.getTimestamp()
-            + "\"}"; // Dont ask 💀
+            + "}"; // Dont ask 💀
     if (verifyData(data, signature, publicKeyString)) {
       if (System.currentTimeMillis() - Long.parseLong(request.getTimestamp()) > 300000) {
         throw new Exception("Timestamp is not valid");
