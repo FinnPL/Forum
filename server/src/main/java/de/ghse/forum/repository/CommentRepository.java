@@ -4,6 +4,7 @@ import de.ghse.forum.model.Comment;
 import de.ghse.forum.model.Post;
 import java.util.List;
 import java.util.UUID;
+import de.ghse.forum.model.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,7 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
   @Query("SELECT c FROM Comment c WHERE c.post = ?1 ORDER BY c.date DESC")
   List<Comment> findAllByPost(Post post);
+
+  @Query("SELECT c FROM Comment c WHERE c.user = ?1 ORDER BY c.date DESC")
+  List<Comment> findAllByUser(User user);
 }

@@ -26,6 +26,7 @@ public class AdminService {
                         commentRepository.deleteAll(commentRepository.findAllByPost(post));
                         postRepository.delete(post);
                       });
+              commentRepository.deleteAll(commentRepository.findAllByUser(user));
               userRepository.delete(user);
             });
   }

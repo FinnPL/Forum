@@ -23,4 +23,5 @@ public class RegisterRequest {
   private String user_name;
   private String signature;
   private String password;
+  private String timestamp;
 }

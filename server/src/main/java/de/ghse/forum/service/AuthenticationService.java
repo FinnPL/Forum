@@ -70,8 +70,13 @@ public class AuthenticationService {
             + request.getClassname()
             + "\",\"login\":\""
             + request.getUser_name()
+            + "\",\"timestamp\":\""
+            + request.getTimestamp()
             + "\"}"; // Dont ask 💀
     if (verifyData(data, signature, publicKeyString)) {
+      if (System.currentTimeMillis() - Long.parseLong(request.getTimestamp()) > 300000) {
+        throw new Exception("Timestamp is not valid");
+      }
       if (userRepository.findByUsername(request.getUser_name()).isPresent()) {
         User user = userRepository.findByUsername(request.getUser_name()).get();
         user.setPassword(passwordEncoder.encode(request.getPassword()));
