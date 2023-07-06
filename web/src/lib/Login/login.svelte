@@ -50,6 +50,7 @@
   export let classname:string;
   export let signature:string;
   export let login_name:string;
+  export let timestamp:string;
   let user_name = login_name;
 
   $: console.log(signature)
@@ -71,12 +72,11 @@
   async function signUp() {
     // Sign up & store the values in cookies
 
-    console.log(JSON.stringify({ givenname,surname, classname, user_name, signature, password}),)
 
     const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ givenname,surname, classname, user_name, signature, password}),
+      body: JSON.stringify({ givenname,surname, classname, user_name, timestamp, signature, password}),
     });
     
     const data = await res.json();
@@ -89,7 +89,6 @@
      document.cookie = "userid=" + $store_userid+";path=/";
 
  
-    console.log(name);
     await goto("/");
     location.reload();
   }

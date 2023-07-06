@@ -129,8 +129,7 @@
     })
 
     await update_image();
-    await goto("/");
-    await goto("/post/" + thisID);
+    location.reload();
     return res.json();
   }
   
