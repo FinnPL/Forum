@@ -75,7 +75,7 @@ public class AuthenticationService {
             + "}"; // Dont ask 💀
     if (verifyData(data, signature, publicKeyString)) {
       System.out.println(System.currentTimeMillis());
-      if (System.currentTimeMillis() - Long.parseLong(request.getTimestamp())*1000 > 300000) {
+      if (System.currentTimeMillis() - Long.parseLong(request.getTimestamp()) * 1000 > 300000) {
         throw new Exception("Timestamp is not valid");
       }
       if (userRepository.findByUsername(request.getUser_name()).isPresent()) {
