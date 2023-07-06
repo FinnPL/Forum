@@ -3,7 +3,7 @@ import { writable } from "svelte/store";
 /* The code above does the following:
 1. Creates a writable store called "store */
 
-/*Example code:
+/* Example code:
 if ($store_token === undefined) {
     await goto("/login");
 } */

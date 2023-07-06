@@ -1,6 +1,5 @@
 import { goto } from "$app/navigation";
 
-
 /* This is an example for calling this function: getCookie('cookieName'); */
 export function getCookie(cookieName) {
   const cookie = {};
@@ -10,7 +9,6 @@ export function getCookie(cookieName) {
   });
   return cookie[cookieName];
 }
-
 
 const profilePictureMap = new Map();
 
@@ -93,7 +91,6 @@ export async function formatDate(dateString) {
 1. Creates a function called fetcher that takes three parameters: url, method, and body.
 2. The function fetches the url, with the method and body passed in as parameters.
 3. The function returns a json object of the fetched data. */
-
 
 export async function fetcher(url, method, body) {
   const res = await fetch("http://" + location.hostname + ":8080/" + url, {
