@@ -129,11 +129,14 @@
     })
 
     await update_image();
-    await goto("/");
-    await goto("/post/" + thisID);
+    location.reload();
     return res.json();
   }
   
+
+/*This is the function that is called when the comment button is pressed.
+ It will send a POST request to the server with the content of the comment and the post id of the post it is associated with.
+ The server will then create the comment and save it to the database. After the request is complete, the page will refresh.*/
 
   async function post_comment() {
     if(comment_text == null) {
@@ -144,20 +147,26 @@
       content: comment_text,
         post_id: thisID,
       })
-    location.reload();
+    
     if(!res.ok) {
       buttonPressed = false
     }
+    comment_text = "";
+    location.reload();
+    
     return res;
   }
 
-  async function del_comment(commentId : string) {
+   /*This code deletes a comment from the database. It takes a commentId as a parameter and sends a DELETE request to the API with the commentId. 
+   It then reloads the page.*/
+ async function del_comment(commentId : string) {
     const res = await fetcher("api/v1/comment/" + commentId ,"DELETE",{})
     location.reload();
     return res;
   }
 
-  async function update_comment(commentId : string){
+  //This code updates a comment by making a PUT request to the API endpoint. It then reloads the page.
+async function update_comment(commentId : string){
     const res = await fetcher("api/v1/comment/" + commentId,"PUT",{
       id: commentId,
       content: content_update_c,
@@ -170,7 +179,13 @@
     return res;
   }
 
-  async function scrollTimeout() {
+
+
+// This code runs when the user scrolls to the bottom of the page.
+// It checks to see if the user has scrolled to the bottom of the page
+// and if they have, it loads more comments.
+
+async function scrollTimeout() {
     canScroll = !canScroll;
 
     if (!canScroll) setTimeout(scrollTimeout, 500);
@@ -242,7 +257,10 @@
     });
   }
 
-  async function del_post() {
+/*This code deletes a post from the database. This is done by sending a DELETE request to the API endpoint for deleting a post, 
+and then redirecting the user to the home page.*/
+
+async function del_post() {
     const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     await goto("/");
   }
@@ -251,7 +269,7 @@
 
 
 
-<div class="container mx-auto pt-5 max-w-5xl">
+<div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
     <div>
       <div class="font-semibold flex">
@@ -314,26 +332,24 @@
     </div>
   </div>
 
-  <div class="bg-gray-900 text-white pt-5">
-    <form>
-      <div class="container mx-auto max-w-5xl">
-        <h3 class="text-lg font-bold py-3">Kommentare:</h3>
-        <div class="mt-2">
-          <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
-          <div class="flex justify-end mt-3">
-            {#if !buttonPressed}
-              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
-            {:else}
-              <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
-            {/if}
-          </div>
+  <form>
+    <div class="container mx-auto w-11/12 sm:max-w-5xl sm:w-full bg-gray-900 text-white pt-5">
+      <h3 class="text-lg font-bold py-3">Kommentare:</h3>
+      <div class="mt-2">
+        <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
+        <div class="flex justify-end mt-3">
+          {#if !buttonPressed}
+            <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
+          {:else}
+            <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
+          {/if}
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 
 {#each comment_list as comment (comment.id)}
-  <div class="container mx-auto py-5 max-w-5xl">
+  <div class="container mx-auto py-5 w-11/12 sm:max-w-5xl sm:w-full">
     <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover">
       <div>
         <div class="font-semibold text-xl flex">

@@ -142,7 +142,7 @@
   }
 </script>
 
-<div class="container mx-auto pt-5 pb-3 max-w-5xl ">
+<div class="container mx-auto pt-5 pb-3 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="flex items-center pl-2 py-2.5 bg-ui border border-border rounded-lg w-full">
     {#if avatarSrc}
       <img src={avatarSrc} alt="Avatar" width="75" height="75" class="rounded-full">
@@ -151,26 +151,24 @@
     {/if}
 
     <div class="pl-3">
-    <span class="font-semibold">{user_name}</span>
+      <span class="font-semibold">{user_name}</span>
 
-    {#if bio !== null && bio !== "null"}
-      <p class="pt-1 mr-1 break-words">{bio}</p>
-    {/if}
-  </div>
-
-    {#if $store_userid === data.userId}
-    <div class="flex-1 flex justify-end">
-      <button class="hover:bg-hover rounded" on:click={toggle}>
-        <svg fill="#ffffff" height="50px" width="50px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-306.64 -306.64 919.92 919.92" xml:space="preserve">
-          <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>    
-          <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M12.809,238.52L0,306.637l68.118-12.809l184.277-184.277l-55.309-55.309L12.809,238.52z M60.79,279.943l-41.992,7.896 l7.896-41.992L197.086,75.455l34.096,34.096L60.79,279.943z"/> <path d="M251.329,0l-41.507,41.507l55.308,55.308l41.507-41.507L251.329,0z M231.035,41.507l20.294-20.294l34.095,34.095 L265.13,75.602L231.035,41.507z"/> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g> 
-        </svg>
-      </button>
+      {#if bio !== null && bio !== "null"}
+        <p class="pt-1 mr-1 break-words">{bio}</p>
+      {/if}
     </div>
 
+    {#if $store_userid === data.userId}
+      <div class="flex-1 flex justify-end">
+        <button class="hover:bg-hover rounded" on:click={toggle}>
+          <svg fill="#ffffff" height="50px" width="50px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-306.64 -306.64 919.92 919.92" xml:space="preserve">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>    
+            <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M12.809,238.52L0,306.637l68.118-12.809l184.277-184.277l-55.309-55.309L12.809,238.52z M60.79,279.943l-41.992,7.896 l7.896-41.992L197.086,75.455l34.096,34.096L60.79,279.943z"/> <path d="M251.329,0l-41.507,41.507l55.308,55.308l41.507-41.507L251.329,0z M231.035,41.507l20.294-20.294l34.095,34.095 L265.13,75.602L231.035,41.507z"/> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g> 
+          </svg>
+        </button>
+      </div>
     {/if}
-    
   </div>
 
   <div class={open ? "block pt-5" : "hidden"}>

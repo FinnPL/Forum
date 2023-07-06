@@ -50,6 +50,7 @@
   export let classname:string;
   export let signature:string;
   export let login_name:string;
+  export let timestamp:string;
   let user_name = login_name;
 
   $: console.log(signature)
@@ -71,12 +72,11 @@
   async function signUp() {
     // Sign up & store the values in cookies
 
-    console.log(JSON.stringify({ givenname,surname, classname, user_name, signature, password}),)
 
     const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ givenname,surname, classname, user_name, signature, password}),
+      body: JSON.stringify({ givenname,surname, classname, user_name, timestamp, signature, password}),
     });
     
     const data = await res.json();
@@ -89,7 +89,6 @@
      document.cookie = "userid=" + $store_userid+";path=/";
 
  
-    console.log(name);
     await goto("/");
     location.reload();
   }
@@ -108,6 +107,8 @@
     $store_userid = res.user_id;
     $store_username = user_name;
 
+
+    //saves the details in cookies
     document.cookie = "tokenValue=" + $store_token+";path=/";
     document.cookie = "username=" + $store_username+";path=/";
     document.cookie = "userid=" + $store_userid +";path=/";
@@ -118,7 +119,6 @@
   }
 
   onMount(async () => {
-    // Write in Cookie values in writable stores
     await get_server_ip();
     checkLoggedIn();
     
@@ -145,15 +145,15 @@
 </script>
 
 {#if $store_username == "undefined" || $store_username == undefined}
-  <div class="flex flex-col items-center justify-center mx-auto px-60 md:h-screen">
+  <div class="flex flex-col items-center justify-center mx-auto px-60 h-screen">
     <a href="/" class="flex items-center justify-center mb-6">
       <img src={logoFull} class="w-1/2" alt="Forum"/>
     </a>
 
-    <div class="w-full max-w-lg bg-postBG rounded-lg border border-border">
+    <div class="w-screen max-w-lg bg-postBG rounded-lg border border-border">
       <div class="p-6 space-y-4">
 
-          <h1 class="font-bold text-xl leading-tight tracking-tight"> 
+        <h1 class="font-bold text-xl leading-tight tracking-tight"> 
             {#if show_sign_up == "true"}
               Passwort erstellen
             {:else}

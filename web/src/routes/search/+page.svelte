@@ -130,7 +130,7 @@
   
 </script>
 
-<div class="container pt-5 mx-auto max-w-5xl space-x-2">
+<div class="container pt-5 mx-auto w-11/12 sm:max-w-5xl sm:w-full space-x-2">
   <button class="bg-ui hover:bg-hover rounded-full px-5 py-2" on:click={() => search("post")}>Posts</button>
   <button class="bg-ui hover:bg-hover rounded-full px-5 py-2" on:click={() => search("user")}>Benutzer</button>
 </div>
@@ -151,7 +151,7 @@
 
 {#if searchType == "User" && searchList[0] != "keinErgebnis"}
   {#each searchList as user (user.id)}
-    <div class="container mx-auto pt-5 max-w-5xl">
+    <div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
       <a class="bg-postBG flex flex-col rounded-md px-5 py-2 border-2 border-border hover:border-hover" href={"/profile/" + user.id}>
         <div class="font-semibold text-xl flex">
           {#if user.avatarSrc}

@@ -4,6 +4,7 @@
     import { onMount } from "svelte";
     import { default as defaultAvatar } from "../lib/assets/defaultAvatar.png";
     import logoFull from "../lib/assets/logoFull.png";
+    import logo from "../lib/assets/logo.png";
     import {signOut} from "../lib/functions"
     import "../app.css";
     import { store_token, store_userid, store_username } from "$lib/stores";
@@ -11,6 +12,7 @@
     let avatarSrc: string | null = defaultAvatar;
     let ip: string;
     let input: string;
+    let open = false;
 
     async function get_server_ip() {
         ip = "http://" + location.hostname + ":8080/";
@@ -27,11 +29,15 @@
       window.location.href = `/search?q=${input}`;
     }
 
+    function toggle() {
+      open = !open;
+    }
+
   onMount(async () => {
       await get_server_ip();
       await initial_load();
       const currentURL = window.location.href
-      if(!currentURL.includes("/noeskauth/")) {
+      if(!currentURL.includes("/noeskauth/")) { //Redirect to login if not logged in
         if ($store_token == undefined && location.pathname != "/") {
           await goto("/");
           location.reload();
@@ -58,15 +64,16 @@
 
 {#if $store_userid != undefined && $store_userid != "undefined"}
   <div class="sticky top-0 bg-gradient-to-r from-primary to-secondary p-0.5 px-0 pt-0">
-    <nav class="flex w-full items-center max-h-12 p-4 bg-postBG">
+    <nav class="flex w-screen items-center max-h-12 p-4 bg-postBG">
       <div class="flex-1 flex justify-start">
         <a href="/">
-          <img src={logoFull} alt="Logo" class="px-1 h-8 w-auto">
+          <img src={logoFull} alt="Logo" class="hidden sm:block px-1 h-8 w-auto">
+          <img src={logo} alt="Logo" class="sm:hidden px-1 h-8 w-auto">
         </a>
       </div>
 
-      <form class="flex items-center max-w-5xl mx-auto bg-hover border border-border rounded-full">
-        <input id="search" type="text" class="w-screen bg-border outline-none rounded-full" placeholder="Suchen..." bind:value={input}>
+      <form class="flex items-center sm:max-w-5xl sm:w-full mx-auto bg-hover border border-border rounded-full">
+        <input id="search" type="text" class="sm:w-screen bg-border outline-none rounded-full" placeholder="Suchen..." bind:value={input}>
         <button id="searchButton" class="pl-1 pr-2.5 rounded-full text-white" on:click={gotoSearch}>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
@@ -77,15 +84,16 @@
 
       <div class="flex-1 flex justify-end">
         <div class="group">
-          <div class="flex items-center">
-            <span class="mr-2">{$store_username}</span>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <div class="flex items-center" on:click={toggle}>
+            <span class="mr-2 hidden sm:block">{$store_username}</span>
             {#if avatarSrc}
               <img src={avatarSrc} alt="Avatar" class="h-10 w-10 rounded-full">
             {:else}
               <img src={defaultAvatar} alt="Avatar" class="h-10 w-10 rounded-full">
             {/if}
           </div>
-          <div class="absolute hidden group-hover:block pt-2 right-3">
+          <div class={`absolute sm:group-hover:block pt-2 right-3 ${open ? "block" : "hidden"} sm:hidden`}>
             <div class="bg-ui border border-border rounded-md">
               <ul>
                 <a href={"/profile/" + $store_userid} >

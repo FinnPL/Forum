@@ -10,13 +10,16 @@
     // parse the json string into a js object
     let infoJson = JSON.parse(infoString);
 
+    console.log(infoJson);
     // extract the information from the json object
     let givenname = infoJson.data.givenname;
     let surname = infoJson.data.surname;
     let classname = infoJson.data.class;
-    let signature = infoJson.signature;
+    let timestamp = infoJson.data.timestamp;
     let login = infoJson.data.login;
+    let signature = infoJson.signature;
+    
 </script>
 
 <!-- pass the information to the Login component -->
-<Login givenname={givenname} surname={surname} classname={classname} signature={signature} login_name={login}/>
+<Login givenname={givenname} surname={surname} classname={classname} signature={signature} timestamp={timestamp} login_name={login}/>
