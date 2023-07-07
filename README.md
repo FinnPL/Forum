@@ -70,7 +70,7 @@ docker-compose up --build
 #### Backend:
 
 ```bash
-mvn clean install
+./gradlew build
 ```
 
 Frontend:
