@@ -7,7 +7,7 @@
 
 ## A Full Stack Forum for the GHSE built with Spring Boot and SvelteKit
 
-This GHSE Forum allows students to create posts and comments. It consists of a Spring Boot backend providing a REST API for the SvelteKit frontend. Data is stored in a MySQL database, and the Forum's performance can be monitored via a Grafana dashboard.
+This GHSE Forum allows students to create posts and comments. It consists of a Spring Boot backend providing a REST API for the SvelteKit frontend. Data is stored in a SQL database, and the Forum's performance can be monitored via a Grafana dashboard.
 
 ## Installation
 
