@@ -9,6 +9,10 @@
 
 This GHSE Forum allows students to create posts and comments. It consists of a Spring Boot backend providing a REST API for the SvelteKit frontend. Data is stored in a SQL database, and the Forum's performance can be monitored via a Grafana dashboard.
 
+## Showcase
+
+https://github.com/FinnPL/Forum/assets/108749108/8b46fe5c-b8a0-49eb-9e29-9ced77de35ce
+
 ## Installation
 
 Clone Project
