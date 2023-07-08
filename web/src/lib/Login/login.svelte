@@ -146,12 +146,13 @@
 
 {#if $store_username == "undefined" || $store_username == undefined}
   <div class="flex flex-col items-center justify-center mx-auto px-60 h-screen">
-    <a href="/" class="flex items-center justify-center mb-6">
-      <img src={logoFull} class="w-1/2" alt="Forum"/>
-    </a>
 
-    <div class="w-screen max-w-lg bg-postBG rounded-lg border border-border">
-      <div class="p-6 space-y-4">
+    <div class="w-screen max-w-lg ">
+      <a href="/" class="flex items-center justify-center mb-6">
+        <img src={logoFull} class="w-1/2" alt="Forum"/>
+      </a>
+
+      <div class="p-6 space-y-4 bg-postBG rounded-lg border border-border">
 
         <h1 class="font-bold text-xl leading-tight tracking-tight"> 
             {#if show_sign_up == "true"}
