@@ -194,9 +194,9 @@ async function loadAvatar() {
         <input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange}/>
       </div>
 
-      <div class="flex justify-end">
-        <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={toggle}>Abbrechen</button>
-        <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Profil aktualisieren</button>
+      <div class="flex justify-end space-x-2">
+        <button class="dangerButton" on:click={toggle}>Abbrechen</button>
+        <button class="primaryButton" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Profil aktualisieren</button>
       </div>
     </div>
   </div>

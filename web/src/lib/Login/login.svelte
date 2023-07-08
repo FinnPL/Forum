@@ -208,13 +208,13 @@
             </div>
 
             <div class="pt-2">
-              <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={signUp} disabled={passwordStrengthValue !== "Mittel" && passwordStrengthValue !== "Stark" || password != confirmPassword || password == undefined}>Sign Up</button>
+              <button class="loginPageButton" on:click={signUp} disabled={passwordStrengthValue !== "Mittel" && passwordStrengthValue !== "Stark" || password != confirmPassword || password == undefined}>Sign Up</button>
             </div>
           {:else}
             <div class="flex items-end justify-end">
               <button class="hover:underline text-primary" on:click={submitForm}>Passwort vergessen?</button>
             </div>
-            <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={login} disabled={password == undefined || password == ""}>Login</button>
+            <button class="loginPageButton" on:click={login} disabled={password == undefined || password == ""}>Login</button>
             
             {#if login_error}
               <div class="pt-5 flex items-center">
@@ -232,7 +232,7 @@
             <hr class="h-0.5 border-t-0 bg-text" />
           </div>
           <h1 class="py-3 font-bold text-xl leading-tight tracking-tight">Erstelle einen neuen Account</h1>
-          <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={submitForm} >Authentifizierung</button>  
+          <button class="loginPageButton" on:click={submitForm} >Authentifizierung</button>  
           <form id="oauthTriggerForm" action="https://ghse.de/auth/auth.php" method="post" on:keydown={handleKeyDown} >
             <input type="hidden" name="application" value="GHSE_TGI_Forum"/>
             <input type="hidden" name="clientID" value="GHSE_TGI_Forum"/>

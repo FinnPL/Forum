@@ -101,13 +101,8 @@
       <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
     </div>
 
-
     <div class="flex justify-end">
-      {#if buttonPressed === false}
-        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" on:click={post}>Post</button>
-      {:else}
-        <button class="bg-border hover:bg-hover py-2 px-4 rounded-md" disabled>Post</button>
-      {/if}
+      <button class="primaryButton" on:click={post} disabled={buttonPressed}>Posten</button>
     </div>
   </form>
 </div>

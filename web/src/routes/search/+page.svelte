@@ -7,6 +7,7 @@
   import { fetchProfilePicture } from "../../lib/functions";
   import { goto } from "$app/navigation";
   import { store_search_input } from "$lib/stores";
+  import ScrollButton from "$lib/ScrollButton/+page.svelte";
   let ip: string;
 
  
@@ -136,13 +137,7 @@
   <button class="bg-ui hover:bg-hover rounded-full px-5 py-2" on:click={() => search("user")}>Benutzer</button>
 </div>
 
-<div class="fixed py-2 bottom-0 right-4 text-white">
-  <button class="bg-ui px-3 py-3 rounded-full hover:bg-hover" on:click={scrollToTop}>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
-      <path d="M12 19V5M5 12l7-7 7 7" />
-    </svg>
-  </button>
-</div>
+<ScrollButton></ScrollButton>
 
 {#if searchType === "Post" && searchList[0] !== "keinErgebnis"}
   {#each searchList as post (post.id)}
