@@ -83,7 +83,7 @@
         </button>
       </div>
 
-      <form class="flex items-center sm:max-w-5xl sm:w-full mx-auto bg-hover border border-border rounded-full">
+      <form class="flex items-center md:max-w-sm lg:max-w-xl xl:max-w-5xl sm:w-full mx-auto bg-hover border border-border rounded-full">
         <input id="search" type="text" class="sm:w-screen bg-border outline-none rounded-full" placeholder="Suchen..." bind:value={$store_search_input}>
         <button id="searchButton" class="pl-1 pr-2.5 rounded-full text-white" on:click={gotoSearch}>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,7 +104,7 @@
               <img src={defaultAvatar} alt="Avatar" class="h-10 w-10 rounded-full">
             {/if}
           </div>
-          <div class={`absolute sm:group-hover:block pt-2 right-3 ${open ? "block" : "hidden"} sm:hidden`}>
+          <div class={`absolute xl:group-hover:block pt-2 right-3 ${open ? "block" : "hidden"} xl:hidden`}>
             <div class="bg-ui border border-border rounded-md">
               <ul>
                 <a href={"/profile/" + $store_userid} on:click={profile} >

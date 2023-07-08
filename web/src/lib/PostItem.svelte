@@ -10,7 +10,7 @@
 </script>
   
 
-<div class="container mx-auto max-h-96 pt-5 w-11/12 sm:max-w-5xl sm:w-full">
+<div class="container mx-auto max-h-96 pt-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
     <a class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover" href={"/post/" + post.id}>
       <div>
         <div class="font-semibold flex">

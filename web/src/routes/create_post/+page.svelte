@@ -82,7 +82,7 @@
   <Error />
 {/if}
 
-<div class="container mx-auto mt-5 w-11/12 sm:max-w-5xl sm:w-full bg-postBG border border-border p-4 rounded-lg">
+<div class="container mx-auto mt-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full bg-postBG border border-border p-4 rounded-lg">
   <form>
     <div class="text-lg font-semibold mb-2">Titel:</div>
     <div class="mb-6">

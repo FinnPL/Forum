@@ -265,7 +265,7 @@ async function del_post() {
 </script>
 
 
-<div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
+<div class="container mx-auto pt-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
     <div>
       <div class="font-semibold flex items-center text-sm text-text space-x-1">
@@ -322,7 +322,7 @@ async function del_post() {
   </div>
 
   <form>
-    <div class="container mx-auto w-11/12 sm:max-w-5xl sm:w-full bg-gray-900 text-white pt-5">
+    <div class="container mx-auto w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full bg-gray-900 text-white pt-5">
       <h3 class="text-lg font-bold py-3">Kommentare:</h3>
       <div class="mt-2">
         <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
@@ -335,7 +335,7 @@ async function del_post() {
 
 
 {#each comment_list as comment (comment.id)}
-  <div class="container mx-auto py-5 w-11/12 sm:max-w-5xl sm:w-full">
+  <div class="container mx-auto py-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
     <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover">
       <div>
         <div class="font-semibold text-xl flex">
