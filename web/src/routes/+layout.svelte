@@ -7,7 +7,7 @@
     import logo from "../lib/assets/logo.png";
     import {signOut} from "../lib/functions"
     import "../app.css";
-    import { store_token, store_userid, store_username, store_search_input } from "$lib/stores";
+    import { store_token, store_userid, store_username, store_search_input, store_user_role} from "$lib/stores";
 
     let avatarSrc: string | null = defaultAvatar;
     let ip: string;
@@ -22,6 +22,7 @@
         $store_token = await getCookie("tokenValue");
         $store_userid = await getCookie("userid");
         $store_username = await getCookie("username");
+        $store_user_role = await getCookie("role");
     }
 
     async function gotoSearch() {

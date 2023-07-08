@@ -5,7 +5,7 @@
   import {signOut} from "../functions";
   import { passwordStrength } from 'check-password-strength'
   import logoFull from "../assets/logoFull.png";
-  import {store_username,store_userid, store_token} from "../stores";
+  import {store_username,store_userid, store_token, store_user_role} from "../stores";
 
   
   let password: string;
@@ -83,12 +83,15 @@
     $store_token = data.token;
     $store_userid = data.user_id;
     $store_username = user_name;
+    $store_user_role = data.role;
 
+     console.log(data)
      document.cookie = "tokenValue=" + $store_token+";path=/";
      document.cookie = "username=" + $store_username+";path=/";
      document.cookie = "userid=" + $store_userid+";path=/";
+     document.cookie = "role=" + $store_user_role+";path=/";
 
- 
+    
     await goto("/");
     location.reload();
   }
@@ -106,12 +109,13 @@
     $store_token = res.token;
     $store_userid = res.user_id;
     $store_username = user_name;
-
+    $store_user_role = res.role;
 
     //saves the details in cookies
     document.cookie = "tokenValue=" + $store_token+";path=/";
     document.cookie = "username=" + $store_username+";path=/";
     document.cookie = "userid=" + $store_userid +";path=/";
+    document.cookie = "role=" + $store_user_role+";path=/";
 
  
     await goto("/");
