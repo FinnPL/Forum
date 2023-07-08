@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fetchPage, fetcher, getCookie } from "../../../lib/functions";
+  import { fetchPage, fetcher, formatDate, getCookie } from "../../../lib/functions";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import PostItem from "$lib/PostItem.svelte";
@@ -64,6 +64,7 @@
 
     for(const post of fetchedDataRes) {
       post.avatarSrc = avatarSrc;
+      post.date = await formatDate(post.date);
     }
 
     postList = postList.concat(fetchedDataRes);
