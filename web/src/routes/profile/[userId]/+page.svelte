@@ -22,6 +22,11 @@
   let ip: string;
   let canScroll = true;
 
+
+  $: {
+    if(avatarSrc === "data:") avatarSrc = undefined;
+  }
+
   async function get_server_ip() {
     ip = "http://" + location.hostname + ":8080/";
   }
@@ -154,7 +159,7 @@ async function loadAvatar() {
 
 <div class="container mx-auto pt-5 pb-3 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
   <div class="flex items-center pl-2 py-2.5 bg-ui border border-border rounded-lg w-full">
-    {#if avatarSrc !== "data:"}
+    {#if avatarSrc !== undefined}
       <img src={avatarSrc} alt="Avatar" width="75" height="75" class="rounded-full">
     {:else}
       <img src={defaultAvatar} alt="Avatar" width="75" height="75" class="rounded-full">
