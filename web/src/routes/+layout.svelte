@@ -7,7 +7,7 @@
     import logo from "../lib/assets/logo.png";
     import {signOut} from "../lib/functions"
     import "../app.css";
-    import { store_token, store_userid, store_username, store_search_input } from "$lib/stores";
+    import { store_token, store_userid, store_username, store_search_input, store_user_role} from "$lib/stores";
 
     let avatarSrc: string | null = defaultAvatar;
     let ip: string;
@@ -22,6 +22,7 @@
         $store_token = await getCookie("tokenValue");
         $store_userid = await getCookie("userid");
         $store_username = await getCookie("username");
+        $store_user_role = await getCookie("role");
     }
 
     async function gotoSearch() {
@@ -59,6 +60,12 @@
       }
     });
 
+    async function profile() {
+      await goto("/profile/" + $store_userid);
+      location.reload();
+      
+    }
+
     async function main_page() {
       await goto("/");
       location.reload();
@@ -76,7 +83,7 @@
         </button>
       </div>
 
-      <form class="flex items-center sm:max-w-5xl sm:w-full mx-auto bg-hover border border-border rounded-full">
+      <form class="flex items-center md:max-w-sm lg:max-w-xl xl:max-w-5xl sm:w-full mx-auto bg-hover border border-border rounded-full">
         <input id="search" type="text" class="sm:w-screen bg-border outline-none rounded-full" placeholder="Suchen..." bind:value={$store_search_input}>
         <button id="searchButton" class="pl-1 pr-2.5 rounded-full text-white" on:click={gotoSearch}>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -97,10 +104,10 @@
               <img src={defaultAvatar} alt="Avatar" class="h-10 w-10 rounded-full">
             {/if}
           </div>
-          <div class={`absolute sm:group-hover:block pt-2 right-3 ${open ? "block" : "hidden"} sm:hidden`}>
+          <div class={`absolute xl:group-hover:block pt-2 right-3 ${open ? "block" : "hidden"} xl:hidden`}>
             <div class="bg-ui border border-border rounded-md">
               <ul>
-                <a href={"/profile/" + $store_userid} >
+                <a href={"/profile/" + $store_userid} on:click={profile} >
                   <li class="hover:bg-hover pr-4 flex items-center">
                     <svg fill="#ffffff" height="50px" width="50px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-482.9 -482.9 1448.70 1448.70" xml:space="preserve">
                       <g id="SVGRepo_bgCarrier" stroke-width="0"/>

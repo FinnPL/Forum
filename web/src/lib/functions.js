@@ -126,3 +126,14 @@ export async function fetchPage(url, method, page) {
 
   return await res.json();
 }
+
+/**
+ * @param {string} content
+ */
+export function formatContentWithLinks(content) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return content.replace(
+    urlRegex,
+    '<a class="text-primary underline" href="$1" target="_blank">$1</a>',
+  );
+}

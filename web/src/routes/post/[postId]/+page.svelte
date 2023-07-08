@@ -1,13 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fetchPage, fetcher, formatDate, getCookie } from "../../../lib/functions";
+  import { fetchPage, fetcher, formatContentWithLinks, formatDate, getCookie } from "../../../lib/functions";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { fetchProfilePicture } from "../../../lib/functions";
-  import { store_token, store_userid, store_username } from "$lib/stores";
-  import ScrollButton from "$lib/ScrollButton/+page.svelte";
+  import { store_token, store_user_role, store_userid, store_username } from "$lib/stores";
   let ip: string;
   let canScroll = true;
 
@@ -77,7 +76,7 @@
 
     const fetchedData = await fetchedDataRes.json();
     title = fetchedData.title;
-    content = fetchedData.content;
+    content = formatContentWithLinks( fetchedData.content);
     date = await formatDate(fetchedData.date);
     user_name = fetchedData.user_name;
     userID = fetchedData.user_id;
@@ -263,14 +262,10 @@ async function del_post() {
     const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     await goto("/");
   }
-
-
-  
 </script>
 
-<ScrollButton></ScrollButton>
 
-<div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
+<div class="container mx-auto pt-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
     <div>
       <div class="font-semibold flex items-center text-sm text-text space-x-1">
@@ -285,14 +280,14 @@ async function del_post() {
       
       <div class="break-words whitespace-pre-line leading-relaxed">
         <p class="text-xl py-2 font-semibold">{title}</p>
-        <p>{content}</p>
+        <p class="pb-4">{@html content}</p>
       </div>
 
-      <img class="mt-4 mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
+      <img class="mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
       
-      {#if $store_userid === userID}
+      {#if $store_userid === userID || $store_user_role === "ADMIN"}
         <div class="pb-4 space-x-2 text-sm">
-          <button class="primaryButton" on:click={toggle}>Bearbeiten</button>
+          <button class="primaryButton" hidden={$store_userid !== userID} on:click={toggle}>Bearbeiten</button>
           <button class="dangerButton" on:click={del_post}>Löschen</button>
         </div>
       {/if}
@@ -327,7 +322,7 @@ async function del_post() {
   </div>
 
   <form>
-    <div class="container mx-auto w-11/12 sm:max-w-5xl sm:w-full bg-gray-900 text-white pt-5">
+    <div class="container mx-auto w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full bg-gray-900 text-white pt-5">
       <h3 class="text-lg font-bold py-3">Kommentare:</h3>
       <div class="mt-2">
         <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
@@ -340,7 +335,7 @@ async function del_post() {
 
 
 {#each comment_list as comment (comment.id)}
-  <div class="container mx-auto py-5 w-11/12 sm:max-w-5xl sm:w-full">
+  <div class="container mx-auto py-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
     <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover">
       <div>
         <div class="font-semibold text-xl flex">
@@ -352,11 +347,11 @@ async function del_post() {
           <span class="pl-1 pt-3.5 text-text text-sm" hidden={!comment.edited}>• (Bearbeitet)</span>
         </div>
     
-        <p class="break-words whitespace-pre-line leading-relaxed py-2">{comment.content}</p>
+        <p class="break-words whitespace-pre-line leading-relaxed py-2">{@html formatContentWithLinks(comment.content)}</p>
 
-        {#if $store_userid === userID}
+        {#if $store_userid === comment.user_id || $store_user_role === "ADMIN"}
           <div class="pt-2 pb-4 space-x-2 text-sm">
-            <button class="primaryButton" on:click={() => toggle_c[comment.id]()}>Bearbeiten</button>
+            <button class="primaryButton" hidden={$store_userid !== comment.user_id} on:click={() => toggle_c[comment.id]()}>Bearbeiten</button>
             <button class="dangerButton" on:click={() => del_comment(comment.id)}>Löschen</button>
           </div>
         {/if}

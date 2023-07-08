@@ -1,15 +1,16 @@
 <script lang="ts">
     import { default as defaultAvatar } from "./assets/defaultAvatar.png";
+    import { formatContentWithLinks } from "./functions";
 
     /**
-    * @type {{ id: string; user_id: string; avatarSrc: any; title: any; user_name: any; date: any; content: any; }}
+    * @type {{ id: string; user_id: string; avatarSrc: any; title: string; user_name: string; date: any; content: string; }}
     */
     export let post:any ;
     export let avatarSrc:any;
 </script>
   
 
-<div class="container mx-auto max-h-96 pt-5 w-11/12 sm:max-w-5xl sm:w-full">
+<div class="container mx-auto max-h-96 pt-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
     <a class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border hover:border-hover" href={"/post/" + post.id}>
       <div>
         <div class="font-semibold flex">
@@ -31,9 +32,9 @@
           {/if}
         </div>
         
-        <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {post.title}</p>
+        <p class="break-words whitespace-pre-line font-semibold text-xl py-2"> {post.title}</p>
   
-        <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{post.content}</p>
+        <p class="break-words whitespace-pre-line leading-relaxed line-clamp-5">{@html formatContentWithLinks(post.content)}</p>
         <br />
       </div>
     </a>

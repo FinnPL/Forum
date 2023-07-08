@@ -1,5 +1,6 @@
 package de.ghse.forum.api.response;
 
+import de.ghse.forum.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,5 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
   private String token;
   private String user_id;
+  private Role role;
 }
