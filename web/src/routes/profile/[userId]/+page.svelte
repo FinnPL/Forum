@@ -5,6 +5,7 @@
   import PostItem from "$lib/PostItem.svelte";
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { store_token, store_userid } from "$lib/stores";
+  import  ScrollButton from "$lib/ScrollButton/+page.svelte";
   export let data: any;
 
   let postList: any = [];
@@ -147,6 +148,8 @@ async function loadAvatar() {
     const res = await fetcher("api/v1/user/update/" + bio_update, "PUT");
   }
 </script>
+
+<ScrollButton></ScrollButton>
 
 <div class="container mx-auto pt-5 pb-3 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="flex items-center pl-2 py-2.5 bg-ui border border-border rounded-lg w-full">

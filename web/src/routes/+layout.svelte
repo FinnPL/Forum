@@ -26,7 +26,6 @@
 
     async function gotoSearch() {
       if($store_search_input == "" || $store_search_input == undefined) return false;
-      //window.location.href = `/search?q=${input}`;
       window.location.href = "/search?q=" + $store_search_input;
     }
 

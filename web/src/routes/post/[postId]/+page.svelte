@@ -7,6 +7,7 @@
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { fetchProfilePicture } from "../../../lib/functions";
   import { store_token, store_userid, store_username } from "$lib/stores";
+  import ScrollButton from "$lib/ScrollButton/+page.svelte";
   let ip: string;
   let canScroll = true;
 
@@ -262,8 +263,12 @@ async function del_post() {
     const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     await goto("/");
   }
+
+
+  
 </script>
 
+<ScrollButton></ScrollButton>
 
 <div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
