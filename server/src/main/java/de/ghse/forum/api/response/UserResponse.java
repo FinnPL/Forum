@@ -1,5 +1,6 @@
 package de.ghse.forum.api.response;
 
+import de.ghse.forum.model.Role;
 import de.ghse.forum.model.User;
 import java.util.ArrayList;
 import java.util.List;
