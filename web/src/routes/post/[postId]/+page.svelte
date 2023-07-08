@@ -1,13 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fetchPage, fetcher, formatDate, getCookie } from "../../../lib/functions";
+  import { fetchPage, fetcher, formatContentWithLinks, formatDate, getCookie } from "../../../lib/functions";
   import { error } from "@sveltejs/kit";
   import { goto } from "$app/navigation";
   import type { Snapshot } from "@sveltejs/kit";
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { fetchProfilePicture } from "../../../lib/functions";
   import { store_token, store_userid, store_username } from "$lib/stores";
-  import ScrollButton from "$lib/ScrollButton/+page.svelte";
   let ip: string;
   let canScroll = true;
 
@@ -77,7 +76,7 @@
 
     const fetchedData = await fetchedDataRes.json();
     title = fetchedData.title;
-    content = fetchedData.content;
+    content = formatContentWithLinks( fetchedData.content);
     date = await formatDate(fetchedData.date);
     user_name = fetchedData.user_name;
     userID = fetchedData.user_id;
@@ -263,12 +262,8 @@ async function del_post() {
     const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     await goto("/");
   }
-
-
-  
 </script>
 
-<ScrollButton></ScrollButton>
 
 <div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
@@ -285,10 +280,10 @@ async function del_post() {
       
       <div class="break-words whitespace-pre-line leading-relaxed">
         <p class="text-xl py-2 font-semibold">{title}</p>
-        <p>{content}</p>
+        <p class="pb-2">{@html content}</p>
       </div>
 
-      <img class="mt-4 mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
+      <img class="mt-2 mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
       
       {#if $store_userid === userID}
         <div class="pb-4 space-x-2 text-sm">
@@ -352,7 +347,7 @@ async function del_post() {
           <span class="pl-1 pt-3.5 text-text text-sm" hidden={!comment.edited}>• (Bearbeitet)</span>
         </div>
     
-        <p class="break-words whitespace-pre-line leading-relaxed py-2">{comment.content}</p>
+        <p class="break-words whitespace-pre-line leading-relaxed py-2">{@html formatContentWithLinks(comment.content)}</p>
 
         {#if $store_userid === userID}
           <div class="pt-2 pb-4 space-x-2 text-sm">
