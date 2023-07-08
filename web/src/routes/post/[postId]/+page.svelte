@@ -6,7 +6,7 @@
   import type { Snapshot } from "@sveltejs/kit";
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { fetchProfilePicture } from "../../../lib/functions";
-  import { store_token, store_userid, store_username } from "$lib/stores";
+  import { store_token, store_user_role, store_userid, store_username } from "$lib/stores";
   let ip: string;
   let canScroll = true;
 
@@ -280,14 +280,14 @@ async function del_post() {
       
       <div class="break-words whitespace-pre-line leading-relaxed">
         <p class="text-xl py-2 font-semibold">{title}</p>
-        <p class="pb-2">{@html content}</p>
+        <p class="pb-4">{@html content}</p>
       </div>
 
-      <img class="mt-2 mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
+      <img class="mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
       
-      {#if $store_userid === userID}
+      {#if $store_userid === userID || $store_user_role === "ADMIN"}
         <div class="pb-4 space-x-2 text-sm">
-          <button class="primaryButton" on:click={toggle}>Bearbeiten</button>
+          <button class="primaryButton" hidden={$store_userid !== userID} on:click={toggle}>Bearbeiten</button>
           <button class="dangerButton" on:click={del_post}>Löschen</button>
         </div>
       {/if}
@@ -349,9 +349,9 @@ async function del_post() {
     
         <p class="break-words whitespace-pre-line leading-relaxed py-2">{@html formatContentWithLinks(comment.content)}</p>
 
-        {#if $store_userid === userID}
+        {#if $store_userid === comment.user_id || $store_user_role === "ADMIN"}
           <div class="pt-2 pb-4 space-x-2 text-sm">
-            <button class="primaryButton" on:click={() => toggle_c[comment.id]()}>Bearbeiten</button>
+            <button class="primaryButton" hidden={$store_userid !== comment.user_id} on:click={() => toggle_c[comment.id]()}>Bearbeiten</button>
             <button class="dangerButton" on:click={() => del_comment(comment.id)}>Löschen</button>
           </div>
         {/if}
