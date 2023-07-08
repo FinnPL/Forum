@@ -11,8 +11,6 @@
   let password: string;
   let confirmPassword: string;
   let tokenValue: string;
-  let cookie_name_value: string;
-  let own_user_id_value: string;
   let ip: string;
   let passwordStrengthValue: string;
   let login_error: boolean = false;
