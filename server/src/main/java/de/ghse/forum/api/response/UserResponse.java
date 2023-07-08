@@ -22,6 +22,7 @@ public class UserResponse {
   private String user_name;
   private UUID id;
   private String bio;
+  private Role role;
 
   /**
    * Converts a List of User objects to a List of UserResponse objects.
@@ -48,6 +49,7 @@ public class UserResponse {
         .id(user.getId())
         .user_name(user.getUsername())
         .bio(user.getBio())
+        .role(user.getRole())
         .build();
   }
 }
