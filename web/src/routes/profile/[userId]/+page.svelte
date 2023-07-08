@@ -13,7 +13,7 @@
   let bio: string;
   let bio_update: string;
   let file: any;
-  let avatarSrc: any = null;
+  let avatarSrc: any = undefined;
   let user_name: string;
   let avatar_file: any;
   //Modal
@@ -127,6 +127,7 @@ async function loadAvatar() {
       };
     }
     loadAvatar();
+   
     
   });
 
@@ -153,7 +154,7 @@ async function loadAvatar() {
 
 <div class="container mx-auto pt-5 pb-3 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="flex items-center pl-2 py-2.5 bg-ui border border-border rounded-lg w-full">
-    {#if avatarSrc}
+    {#if avatarSrc !== "data:"}
       <img src={avatarSrc} alt="Avatar" width="75" height="75" class="rounded-full">
     {:else}
       <img src={defaultAvatar} alt="Avatar" width="75" height="75" class="rounded-full">
