@@ -1,6 +1,5 @@
 package de.ghse.forum.api.response;
 
-import de.ghse.forum.model.Role;
 import de.ghse.forum.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,6 @@ public class UserResponse {
   private String user_name;
   private UUID id;
   private String bio;
-  private Role role;
 
   /**
    * Converts a List of User objects to a List of UserResponse objects.
@@ -50,7 +48,6 @@ public class UserResponse {
         .id(user.getId())
         .user_name(user.getUsername())
         .bio(user.getBio())
-        .role(user.getRole())
         .build();
   }
 }
