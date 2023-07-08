@@ -59,6 +59,12 @@
       }
     });
 
+    async function profile() {
+      await goto("/profile/" + $store_userid);
+      location.reload();
+      
+    }
+
     async function main_page() {
       await goto("/");
       location.reload();
@@ -100,7 +106,7 @@
           <div class={`absolute sm:group-hover:block pt-2 right-3 ${open ? "block" : "hidden"} sm:hidden`}>
             <div class="bg-ui border border-border rounded-md">
               <ul>
-                <a href={"/profile/" + $store_userid} >
+                <a href={"/profile/" + $store_userid} on:click={profile} >
                   <li class="hover:bg-hover pr-4 flex items-center">
                     <svg fill="#ffffff" height="50px" width="50px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-482.9 -482.9 1448.70 1448.70" xml:space="preserve">
                       <g id="SVGRepo_bgCarrier" stroke-width="0"/>
