@@ -72,7 +72,7 @@
   async function signUp() {
     // Sign up & store the values in cookies
 
-
+    console.log(JSON.stringify({ givenname,surname, classname, user_name, timestamp, signature, password}))
     const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -146,12 +146,13 @@
 
 {#if $store_username == "undefined" || $store_username == undefined}
   <div class="flex flex-col items-center justify-center mx-auto px-60 h-screen">
-    <a href="/" class="flex items-center justify-center mb-6">
-      <img src={logoFull} class="w-1/2" alt="Forum"/>
-    </a>
 
-    <div class="w-screen max-w-lg bg-postBG rounded-lg border border-border">
-      <div class="p-6 space-y-4">
+    <div class="w-screen max-w-lg ">
+      <a href="/" class="flex items-center justify-center mb-6">
+        <img src={logoFull} class="w-1/2" alt="Forum"/>
+      </a>
+
+      <div class="p-6 space-y-4 bg-postBG rounded-lg border border-border">
 
         <h1 class="font-bold text-xl leading-tight tracking-tight"> 
             {#if show_sign_up == "true"}
@@ -207,13 +208,13 @@
             </div>
 
             <div class="pt-2">
-              <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={signUp} disabled={passwordStrengthValue !== "Mittel" && passwordStrengthValue !== "Stark" || password != confirmPassword || password == undefined}>Sign Up</button>
+              <button class="loginPageButton" on:click={signUp} disabled={passwordStrengthValue !== "Mittel" && passwordStrengthValue !== "Stark" || password != confirmPassword || password == undefined}>Sign Up</button>
             </div>
           {:else}
             <div class="flex items-end justify-end">
               <button class="hover:underline text-primary" on:click={submitForm}>Passwort vergessen?</button>
             </div>
-            <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75" on:click={login} disabled={password == undefined || password == ""}>Login</button>
+            <button class="loginPageButton" on:click={login} disabled={password == undefined || password == ""}>Login</button>
             
             {#if login_error}
               <div class="pt-5 flex items-center">
@@ -231,7 +232,7 @@
             <hr class="h-0.5 border-t-0 bg-text" />
           </div>
           <h1 class="py-3 font-bold text-xl leading-tight tracking-tight">Erstelle einen neuen Account</h1>
-          <button class="bg-primary py-3 rounded-lg w-full hover:brightness-75" on:click={submitForm} >Authentifizierung</button>  
+          <button class="loginPageButton" on:click={submitForm} >Authentifizierung</button>  
           <form id="oauthTriggerForm" action="https://ghse.de/auth/auth.php" method="post" on:keydown={handleKeyDown} >
             <input type="hidden" name="application" value="GHSE_TGI_Forum"/>
             <input type="hidden" name="clientID" value="GHSE_TGI_Forum"/>

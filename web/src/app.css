@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .dangerButton {
+    @apply bg-red-500 text-sm text-white px-4 py-2 rounded hover:brightness-75;
+  }
+
+  .primaryButton {
+    @apply bg-primary text-sm text-white px-4 py-2 rounded hover:brightness-75;
+  }
+
+  .loginPageButton {
+    @apply bg-primary py-3 rounded-lg w-full hover:brightness-75 disabled:opacity-75;
+  }
+}

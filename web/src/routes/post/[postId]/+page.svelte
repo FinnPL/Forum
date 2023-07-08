@@ -7,6 +7,7 @@
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { fetchProfilePicture } from "../../../lib/functions";
   import { store_token, store_userid, store_username } from "$lib/stores";
+  import ScrollButton from "$lib/ScrollButton/+page.svelte";
   let ip: string;
   let canScroll = true;
 
@@ -16,8 +17,6 @@
   };
 
   export let data: any;
-
-
 
   let userID: string;
   let comment_text: string;
@@ -61,8 +60,8 @@
   onMount(async () => {
     await get_server_ip();
     await checkLoggedIn();
-    await getPost();
-    await getComments();
+    getPost();
+    getComments();
   });
 
   async function getPost() {
@@ -264,42 +263,37 @@ async function del_post() {
     const res = await fetcher("api/v1/post/" + thisID,"DELETE")
     await goto("/");
   }
+
+
+  
 </script>
 
-
-
+<ScrollButton></ScrollButton>
 
 <div class="container mx-auto pt-5 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
     <div>
-      <div class="font-semibold flex">
+      <div class="font-semibold flex items-center text-sm text-text space-x-1">
         <a href={"/profile/" + userID}>
-          {#if avatarSrc}
-            <img class="rounded-full" src={avatarSrc} alt="Avatar" width="50" height="50" />
-          {:else}
-            <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
-          {/if} 
+          <img class="rounded-full" src={avatarSrc ? avatarSrc : defaultAvatar} alt="Avatar" width="50" height="50" />
         </a>
-        <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + userID}>{user_name}</a>
-        <span class="pl-1 pt-3.5 text-text text-sm">• {date}</span>
-
-        {#if isEdited}
-          <span class="pl-1 pt-3.5 text-text text-sm">• (Bearbeitet)</span>
-        {/if}
+        <a class="pl-1" href={"/profile/" + userID}>{user_name}</a>
+        <span>• {date}</span>
+        
+        <span hidden={!isEdited}>• (Bearbeitet)</span>
       </div>
       
-      <p class="break-words whitespace-pre-line leading-relaxed font-semibold text-xl py-2"> {title}</p>
+      <div class="break-words whitespace-pre-line leading-relaxed">
+        <p class="text-xl py-2 font-semibold">{title}</p>
+        <p>{content}</p>
+      </div>
 
-      <p class="break-words whitespace-pre-line leading-relaxed">{content}</p>
-    
-      {#if imageSrc != undefined}
-        <img class="mt-5 mb-5" src={imageSrc} alt="image"/>
-      {/if}
+      <img class="mt-4 mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
       
       {#if $store_userid === userID}
-        <div class="py-5">
-          <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={toggle}>Post bearbeiten</button>
-          <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={del_post}>Post löschen</button>
+        <div class="pb-4 space-x-2 text-sm">
+          <button class="primaryButton" on:click={toggle}>Bearbeiten</button>
+          <button class="dangerButton" on:click={del_post}>Löschen</button>
         </div>
       {/if}
     </div>
@@ -324,9 +318,9 @@ async function del_post() {
           <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
         </div>
     
-        <div class="flex justify-end">
-          <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={toggle}>Abbrechen</button>
-          <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_post}>Post aktualisieren</button>
+        <div class="flex justify-end space-x-2">
+          <button class="dangerButton" on:click={toggle}>Abbrechen</button>
+          <button class="primaryButton" on:click={toggle} on:click={update_post}>Post aktualisieren</button>
         </div>
       </div>
     </div>
@@ -338,15 +332,12 @@ async function del_post() {
       <div class="mt-2">
         <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
         <div class="flex justify-end mt-3">
-          {#if !buttonPressed}
-            <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment}>Post Comment</button>
-          {:else}
-            <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled>Post Comment</button>
-          {/if}
+          <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled={buttonPressed}>Kommentar posten</button>
         </div>
       </div>
     </div>
   </form>
+
 
 {#each comment_list as comment (comment.id)}
   <div class="container mx-auto py-5 w-11/12 sm:max-w-5xl sm:w-full">
@@ -354,26 +345,19 @@ async function del_post() {
       <div>
         <div class="font-semibold text-xl flex">
           <a href={"/profile/" + comment.user_id}>
-            {#if comment.avatarSrc}
-              <img class="rounded-full" src={comment.avatarSrc} alt="Avatar" width="50" height="50" />
-            {:else}
-              <img class="rounded-full" src={defaultAvatar} alt="Avatar" width="50" height="50" />
-            {/if} 
+            <img class="rounded-full" src={comment.avatarSrc ? comment.avatarSrc : defaultAvatar} alt="Avatar" width="50" height="50" />
           </a>
           <a class="pl-2 pt-3.5 text-text text-sm" href={"/profile/" + comment.user_id}>{comment.user_name}</a>
           <span class="pl-1 pt-3.5 text-text text-sm">• {comment.date}</span>
-
-          {#if comment.edited}
-            <span class="pl-1 pt-3.5 text-text text-sm">• (Bearbeitet)</span>
-          {/if}
+          <span class="pl-1 pt-3.5 text-text text-sm" hidden={!comment.edited}>• (Bearbeitet)</span>
         </div>
     
-        <p class="break-words whitespace-pre-line leading-relaxed">{comment.content}</p>
+        <p class="break-words whitespace-pre-line leading-relaxed py-2">{comment.content}</p>
 
         {#if $store_userid === userID}
-          <div class="py-5">
-            <button class="text-white bg-primary hover:brightness-75 px-4 py-2 rounded" on:click={() => toggle_c[comment.id]()}>Kommentar bearbeiten</button>
-            <button class="text-white bg-red-500 hover:brightness-75 px-4 py-2 rounded ml-2" on:click={() => del_comment(comment.id)}>Kommentar löschen</button>
+          <div class="pt-2 pb-4 space-x-2 text-sm">
+            <button class="primaryButton" on:click={() => toggle_c[comment.id]()}>Bearbeiten</button>
+            <button class="dangerButton" on:click={() => del_comment(comment.id)}>Löschen</button>
           </div>
         {/if}
       </div>
@@ -387,13 +371,13 @@ async function del_post() {
           <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={content_update_c}/>
         </div>
       
-        <div class="flex justify-end">
-          <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={() => toggle_c[comment.id]()}>Abbrechen</button>
-            <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={() => toggle_c[comment.id]} on:click={() => update_comment(comment.id)}>Kommentar aktualisieren</button>
+        <div class="flex justify-end space-x-2 text-sm">
+          <button class="dangerButton" on:click={() => toggle_c[comment.id]()}>Abbrechen</button>
+          <button class="primaryButton" on:click={() => toggle_c[comment.id]} on:click={() => update_comment(comment.id)}>Kommentar aktualisieren</button>
         </div>
       </div>
     </div>
   </div>
-  {/each}
+{/each}
 
 

@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { fetchPage, fetcher, getCookie } from "../../../lib/functions";
+  import { fetchPage, fetcher, formatDate, getCookie } from "../../../lib/functions";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import PostItem from "$lib/PostItem.svelte";
   import { default as defaultAvatar } from "../../../lib/assets/defaultAvatar.png";
   import { store_token, store_userid } from "$lib/stores";
+  import  ScrollButton from "$lib/ScrollButton/+page.svelte";
   export let data: any;
 
   let postList: any = [];
@@ -64,6 +65,7 @@
 
     for(const post of fetchedDataRes) {
       post.avatarSrc = avatarSrc;
+      post.date = await formatDate(post.date);
     }
 
     postList = postList.concat(fetchedDataRes);
@@ -104,8 +106,13 @@
     const path = window.location.pathname.split("/");
     const userid = path[path.length - 1]; // Get userid from url path
 
-    
-    async function loadAvatar() {
+    /*
+    This code is used to retrieve the user's avatar from the server. The avatar serves as a profile picture stored on the server.
+    To begin, the code sends a request to the server in order to fetch the avatar. The server responds by providing an image file.
+    Next, the code loads the image file as a blob and utilizes the FileReader API to convert it into a data URL.
+    Finally, the data URL is utilized to set the src attribute of the img element, displaying the user's avatar.*/
+
+async function loadAvatar() {
       const res = await fetch(
         ip + "api/v1/file/profile/" + userid + "?" + new Date().getTime(),
         requestOptions
@@ -141,6 +148,8 @@
     const res = await fetcher("api/v1/user/update/" + bio_update, "PUT");
   }
 </script>
+
+<ScrollButton></ScrollButton>
 
 <div class="container mx-auto pt-5 pb-3 w-11/12 sm:max-w-5xl sm:w-full">
   <div class="flex items-center pl-2 py-2.5 bg-ui border border-border rounded-lg w-full">
@@ -185,9 +194,9 @@
         <input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange}/>
       </div>
 
-      <div class="flex justify-end">
-        <button class="bg-red-500 hover:brightness-75 text-white px-4 py-2 rounded" on:click={toggle}>Abbrechen</button>
-        <button class="bg-primary hover:brightness-75 text-white px-4 py-2 rounded ml-2" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Profil aktualisieren</button>
+      <div class="flex justify-end space-x-2">
+        <button class="dangerButton" on:click={toggle}>Abbrechen</button>
+        <button class="primaryButton" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Profil aktualisieren</button>
       </div>
     </div>
   </div>

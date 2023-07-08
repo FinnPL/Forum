@@ -26,7 +26,7 @@ export async function fetchProfilePicture(ip, tokenValue, entity) {
       {
         method: "GET",
         headers: { Authorization: "Bearer " + tokenValue },
-      }
+      },
     );
 
     if (profilePictureRes.ok) {
@@ -121,7 +121,7 @@ export async function fetchPage(url, method, page) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + (await getCookie("tokenValue")),
       },
-    }
+    },
   );
 
   return await res.json();
