@@ -11,3 +11,4 @@ if ($store_token === undefined) {
 export const store_token = writable(undefined);
 export const store_username = writable(undefined);
 export const store_userid = writable(undefined);
+export const store_search_input = writable(undefined);

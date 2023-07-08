@@ -7,7 +7,7 @@
     import logo from "../lib/assets/logo.png";
     import {signOut} from "../lib/functions"
     import "../app.css";
-    import { store_token, store_userid, store_username } from "$lib/stores";
+    import { store_token, store_userid, store_username, store_search_input } from "$lib/stores";
 
     let avatarSrc: string | null = defaultAvatar;
     let ip: string;
@@ -25,8 +25,9 @@
     }
 
     async function gotoSearch() {
-      if(input == "" || input == undefined) return false;
-      window.location.href = `/search?q=${input}`;
+      if($store_search_input == "" || $store_search_input == undefined) return false;
+      //window.location.href = `/search?q=${input}`;
+      window.location.href = "/search?q=" + $store_search_input;
     }
 
     function toggle() {
@@ -77,7 +78,7 @@
       </div>
 
       <form class="flex items-center sm:max-w-5xl sm:w-full mx-auto bg-hover border border-border rounded-full">
-        <input id="search" type="text" class="sm:w-screen bg-border outline-none rounded-full" placeholder="Suchen..." bind:value={input}>
+        <input id="search" type="text" class="sm:w-screen bg-border outline-none rounded-full" placeholder="Suchen..." bind:value={$store_search_input}>
         <button id="searchButton" class="pl-1 pr-2.5 rounded-full text-white" on:click={gotoSearch}>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>

@@ -6,6 +6,7 @@
   import PostItem from "$lib/PostItem.svelte";
   import { fetchProfilePicture } from "../../lib/functions";
   import { goto } from "$app/navigation";
+  import { store_search_input } from "$lib/stores";
   let ip: string;
 
  
@@ -19,15 +20,18 @@
   let searchType: string;
   let tokenValue: string;
   let canScroll = true;
-  $: input = $page.url.searchParams.get("q") || '';
+  $: $store_search_input = $page.url.searchParams.get("q") || '';
   $: type = $page.url.searchParams.get("type") || '';
+
+
 
   $: console.log(pageN)
 
   async function search_post() {
+    console.log("Der Input "+$store_search_input)
     searchType = "Post";
     const dataRes = await fetchPage(
-     "api/v1/post/search/" + input + "/",
+     "api/v1/post/search/" + $store_search_input + "/",
       "GET",
       pageN
     );
@@ -50,7 +54,7 @@
   async function search_user() {
     searchType = "User";
     const dataRes = await fetchPage(
-      "api/v1/user/search/" + input + "/",
+      "api/v1/user/search/" + $store_search_input + "/",
       "GET",
       pageN
     );
