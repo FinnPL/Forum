@@ -157,14 +157,14 @@
 
    /*This code deletes a comment from the database. It takes a commentId as a parameter and sends a DELETE request to the API with the commentId. 
    It then reloads the page.*/
- async function del_comment(commentId : string) {
-    const res = await fetcher("api/v1/comment/" + commentId ,"DELETE",{})
+  async function del_comment(commentId : string) {
+    const res = await fetcher($store_user_role === 'ADMIN' ? `api/v1/admin/comment/${commentId}` : `api/v1/comment/${commentId}`, "DELETE");
     location.reload();
     return res;
   }
 
   //This code updates a comment by making a PUT request to the API endpoint. It then reloads the page.
-async function update_comment(commentId : string){
+  async function update_comment(commentId : string){
     const res = await fetcher("api/v1/comment/" + commentId,"PUT",{
       id: commentId,
       content: content_update_c,
@@ -183,7 +183,7 @@ async function update_comment(commentId : string){
 // It checks to see if the user has scrolled to the bottom of the page
 // and if they have, it loads more comments.
 
-async function scrollTimeout() {
+  async function scrollTimeout() {
     canScroll = !canScroll;
 
     if (!canScroll) setTimeout(scrollTimeout, 500);
@@ -206,7 +206,6 @@ async function scrollTimeout() {
 
   onMount(async () => {
     let bearerToken = await getCookie("tokenValue");
-    let myid = await getCookie("userid");
 
     let requestOptions: any = {
       method: "GET",
@@ -258,8 +257,8 @@ async function scrollTimeout() {
 /*This code deletes a post from the database. This is done by sending a DELETE request to the API endpoint for deleting a post, 
 and then redirecting the user to the home page.*/
 
-async function del_post() {
-    const res = await fetcher("api/v1/post/" + thisID,"DELETE")
+  async function del_post() {
+    const res = await fetcher($store_user_role === 'ADMIN' ? `api/v1/admin/post/${thisID}` : `api/v1/post/${thisID}`, "DELETE");
     await goto("/");
   }
 </script>
