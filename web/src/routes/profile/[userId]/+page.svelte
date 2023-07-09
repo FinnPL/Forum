@@ -144,7 +144,6 @@
 
   onMount(async () => {
     let bearerToken = await getCookie("tokenValue");
-    console.log(bearerToken);
     let requestOptions: any = {
       method: "GET",
       headers: { Authorization: "Bearer " + bearerToken },
