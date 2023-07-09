@@ -15,6 +15,8 @@
     return await getCookie("tokenValue");
   }
 
+  
+
   let promise = getPromise();
 </script>
 

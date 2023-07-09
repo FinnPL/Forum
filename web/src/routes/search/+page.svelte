@@ -26,10 +26,8 @@
 
 
 
-  $: console.log(pageN)
 
   async function search_post() {
-    console.log("Der Input "+$store_search_input)
     searchType = "Post";
     const dataRes = await fetchPage(
      "api/v1/post/search/" + $store_search_input + "/",
@@ -48,7 +46,6 @@
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
     } 
-    console.log(searchList);
   }
 
   
@@ -70,7 +67,6 @@
     if (searchList.length == 0) {
       searchList[0] = "keinErgebnis";
     }
-    console.log(searchList);
   }
 
   async function scrollTimeout() {
@@ -163,4 +159,10 @@
       </a>
     </div>
   {/each}
+{/if}
+
+{#if searchList[0] == "keinErgebnis"}
+  <div class="flex justify-center text-text">
+    <p>{searchType === "Post" ? "Keine Posts gefunden" : "Keine Benutzer gefunden"}</p>
+  </div>
 {/if}

@@ -73,6 +73,7 @@
 
 </script>
 
+
 {#if $store_userid != undefined && $store_userid != "undefined"}
   <div class="sticky top-0 bg-gradient-to-r from-primary to-secondary p-0.5 px-0 pt-0">
     <nav class="flex w-screen items-center max-h-12 p-4 bg-postBG">

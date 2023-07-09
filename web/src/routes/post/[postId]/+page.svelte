@@ -264,75 +264,75 @@ async function del_post() {
   }
 </script>
 
-
-<div class="container mx-auto pt-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
-  <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
-    <div>
-      <div class="font-semibold flex items-center text-sm text-text space-x-1">
-        <a href={"/profile/" + userID}>
-          <img class="rounded-full" src={avatarSrc ? avatarSrc : defaultAvatar} alt="Avatar" width="50" height="50" />
-        </a>
-        <a class="pl-1" href={"/profile/" + userID}>{user_name}</a>
-        <span>• {date}</span>
+{#if content !== undefined}
+  <div class="container mx-auto pt-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
+    <div class="bg-postBG flex rounded-md px-5 pt-5 border-2 border-border">
+      <div>
+        <div class="font-semibold flex items-center text-sm text-text space-x-1">
+          <a href={"/profile/" + userID}>
+            <img class="rounded-full" src={avatarSrc ? avatarSrc : defaultAvatar} alt="Avatar" width="50" height="50" />
+          </a>
+          <a class="pl-1" href={"/profile/" + userID}>{user_name}</a>
+          <span>• {date}</span>
         
-        <span hidden={!isEdited}>• (Bearbeitet)</span>
-      </div>
+          <span hidden={!isEdited}>• (Bearbeitet)</span>
+        </div>
       
-      <div class="break-words whitespace-pre-line leading-relaxed">
-        <p class="text-xl py-2 font-semibold">{title}</p>
-        <p class="pb-4">{@html content}</p>
-      </div>
+        <div class="break-words whitespace-pre-line leading-relaxed">
+          <p class="text-xl py-2 font-semibold">{title}</p>
+          <p class="pb-4">{@html content}</p>
+        </div>
 
-      <img class="mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
+        <img class="mb-4" hidden={!imageSrc} src={imageSrc} alt="image"/>
+        
+        {#if $store_userid === userID || $store_user_role === "ADMIN"}
+          <div class="pb-4 space-x-2 text-sm">
+            <button class="primaryButton" hidden={$store_userid !== userID} on:click={toggle}>Bearbeiten</button>
+            <button class="dangerButton" on:click={del_post}>Löschen</button>
+          </div>
+        {/if}
+      </div>
+    </div>
+
+    <div class={open ? "block pt-5" : "hidden"}>
+      <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
+        <div class="text-lg font-semibold mb-2">Titel:</div>
+        <div class="mb-6">
+          <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={title_update}/>
+        </div>
+
+        <div class="text-lg font-semibold mb-2">Inhalt:</div>
+        <div class="mb-6">
+          <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={content_update}/>
+        </div>
       
-      {#if $store_userid === userID || $store_user_role === "ADMIN"}
-        <div class="pb-4 space-x-2 text-sm">
-          <button class="primaryButton" hidden={$store_userid !== userID} on:click={toggle}>Bearbeiten</button>
-          <button class="dangerButton" on:click={del_post}>Löschen</button>
-        </div>
-      {/if}
-    </div>
-  </div>
-
-  <div class={open ? "block pt-5" : "hidden"}>
-    <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
-      <div class="text-lg font-semibold mb-2">Titel:</div>
-      <div class="mb-6">
-        <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={title_update}/>
-      </div>
-
-      <div class="text-lg font-semibold mb-2">Inhalt:</div>
-      <div class="mb-6">
-        <textarea class="text-white bg-ui border border-border rounded-lg w-full" bind:value={content_update}/>
-      </div>
-    
-      <hr class="h-0.5 border-t-0 bg-text" />
-    
-      <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
-        <div class="mb-4">
-          <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
-        </div>
-    
-        <div class="flex justify-end space-x-2">
-          <button class="dangerButton" on:click={toggle}>Abbrechen</button>
-          <button class="primaryButton" on:click={toggle} on:click={update_post}>Post aktualisieren</button>
+        <hr class="h-0.5 border-t-0 bg-text" />
+      
+        <div class="text-lg font-semibold pt-3 mb-2">Bild:</div>
+          <div class="mb-4">
+            <input type="file" name="file" id="AvatarFile" bind:this={image_file} on:change={handleFileChange}/>
+          </div>
+      
+          <div class="flex justify-end space-x-2">
+            <button class="dangerButton" on:click={toggle}>Abbrechen</button>
+            <button class="primaryButton" on:click={toggle} on:click={update_post}>Post aktualisieren</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <form>
-    <div class="container mx-auto w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full bg-gray-900 text-white pt-5">
-      <h3 class="text-lg font-bold py-3">Kommentare:</h3>
-      <div class="mt-2">
-        <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
-        <div class="flex justify-end mt-3">
-          <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled={buttonPressed}>Kommentar posten</button>
+    <form>
+      <div class="container mx-auto w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full bg-gray-900 text-white py-5">
+        <h3 class="text-lg font-bold py-3">Kommentare:</h3>
+        <div class="mt-2">
+          <textarea id="comment_text" class="border border-border bg-postBG rounded w-full" placeholder="Kommentar hinzufügen…" bind:value={comment_text} style="height: 100px"></textarea>
+          <div class="flex justify-end mt-3">
+            <button class="bg-ui hover:bg-hover py-2 px-4 rounded-full" on:click={post_comment} disabled={buttonPressed}>Kommentar posten</button>
+          </div>
         </div>
       </div>
-    </div>
-  </form>
-
+    </form>
+{/if}
 
 {#each comment_list as comment (comment.id)}
   <div class="container mx-auto py-5 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">

@@ -51,8 +51,6 @@
   export let timestamp:string;
   let user_name = login_name;
 
-  $: console.log(signature)
-
   export let show_sign_up = "true";
   
 
@@ -70,7 +68,6 @@
   async function signUp() {
     // Sign up & store the values in cookies
 
-    console.log(JSON.stringify({ givenname,surname, classname, user_name, timestamp, signature, password}))
     const res = await fetch(ip + "api/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -83,7 +80,6 @@
     $store_username = user_name;
     $store_user_role = data.role;
 
-     console.log(data)
      document.cookie = "tokenValue=" + $store_token+";path=/";
      document.cookie = "username=" + $store_username+";path=/";
      document.cookie = "userid=" + $store_userid+";path=/";
