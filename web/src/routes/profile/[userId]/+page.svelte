@@ -199,56 +199,58 @@ async function loadAvatar() {
 
 <ScrollButton></ScrollButton>
 
-<div class="container mx-auto pt-5 pb-3 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
-  <div class="flex items-center pl-2 py-2.5 bg-ui border border-border rounded-lg w-full">
-    {#if avatarSrc !== undefined}
-      <img src={avatarSrc} alt="Avatar" width="75" height="75" class="rounded-full">
-    {:else}
-      <img src={defaultAvatar} alt="Avatar" width="75" height="75" class="rounded-full">
-    {/if}
+{#if user_name !== undefined}
+  <div class="container mx-auto pt-5 pb-3 w-11/12 md:max-w-3xl lg:max-w-5xl sm:w-full">
+    <div class="flex items-center pl-2 py-2.5 bg-ui border border-border rounded-lg w-full">
+      {#if avatarSrc !== undefined}
+        <img src={avatarSrc} alt="Avatar" width="75" height="75" class="rounded-full">
+      {:else}
+        <img src={defaultAvatar} alt="Avatar" width="75" height="75" class="rounded-full">
+      {/if}
 
-    <div class="pl-3">
-      <span class="font-semibold">{user_name}</span>
+      <div class="pl-3">
+        <span class="font-semibold">{user_name}</span>
 
-      {#if bio !== null && bio !== "null"}
-        <p class="pt-1 mr-1 break-words">{bio}</p>
+        {#if bio !== null && bio !== "null"}
+          <p class="pt-1 mr-1 break-words">{bio}</p>
+        {/if}
+      </div>
+
+      {#if $store_userid === data.userId}
+        <div class="flex-1 flex justify-end">
+          <button class="hover:bg-hover rounded" on:click={toggle}>
+            <svg fill="#ffffff" height="50px" width="50px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-306.64 -306.64 919.92 919.92" xml:space="preserve">
+              <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>    
+              <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M12.809,238.52L0,306.637l68.118-12.809l184.277-184.277l-55.309-55.309L12.809,238.52z M60.79,279.943l-41.992,7.896 l7.896-41.992L197.086,75.455l34.096,34.096L60.79,279.943z"/> <path d="M251.329,0l-41.507,41.507l55.308,55.308l41.507-41.507L251.329,0z M231.035,41.507l20.294-20.294l34.095,34.095 L265.13,75.602L231.035,41.507z"/> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g> 
+            </svg>
+          </button>
+        </div>
       {/if}
     </div>
 
-    {#if $store_userid === data.userId}
-      <div class="flex-1 flex justify-end">
-        <button class="hover:bg-hover rounded" on:click={toggle}>
-          <svg fill="#ffffff" height="50px" width="50px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="-306.64 -306.64 919.92 919.92" xml:space="preserve">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>    
-            <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M12.809,238.52L0,306.637l68.118-12.809l184.277-184.277l-55.309-55.309L12.809,238.52z M60.79,279.943l-41.992,7.896 l7.896-41.992L197.086,75.455l34.096,34.096L60.79,279.943z"/> <path d="M251.329,0l-41.507,41.507l55.308,55.308l41.507-41.507L251.329,0z M231.035,41.507l20.294-20.294l34.095,34.095 L265.13,75.602L231.035,41.507z"/> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g> 
-          </svg>
-        </button>
-      </div>
-    {/if}
-  </div>
+    <div class={open ? "block pt-5" : "hidden"}>
+      <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
+        <div class="text-lg font-semibold mb-2">Beschreibung bearbeiten:</div>
+          <div class="mb-6">
+            <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={bio_update}/>
+          </div>
 
-  <div class={open ? "block pt-5" : "hidden"}>
-    <div class="bg-postBG border border-border p-4 rounded-lg max-w-5xl">
-      <div class="text-lg font-semibold mb-2">Beschreibung bearbeiten:</div>
-        <div class="mb-6">
-          <textarea class="text-white bg-ui border border-border rounded-lg w-full resize-none" maxlength="255" bind:value={bio_update}/>
+        <hr class="h-0.5 border-t-0 bg-text" />
+
+        <div class="text-lg font-semibold pt-3 mb-2">Profilbild bearbeiten:</div>
+        <div class="mb-4">
+          <input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange}/>
         </div>
 
-      <hr class="h-0.5 border-t-0 bg-text" />
-
-      <div class="text-lg font-semibold pt-3 mb-2">Profilbild bearbeiten:</div>
-      <div class="mb-4">
-        <input type="file" name="file" id="AvatarFile" bind:this={avatar_file} on:change={handleFileChange}/>
-      </div>
-
-      <div class="flex justify-end space-x-2">
-        <button class="dangerButton" on:click={toggle}>Abbrechen</button>
-        <button class="primaryButton" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Profil aktualisieren</button>
+        <div class="flex justify-end space-x-2">
+          <button class="dangerButton" on:click={toggle}>Abbrechen</button>
+          <button class="primaryButton" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Profil aktualisieren</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+{/if}
 
 {#if postList[0] != undefined}
   {#each postList as post (post.id)}

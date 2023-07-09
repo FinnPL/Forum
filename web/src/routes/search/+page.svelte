@@ -164,3 +164,9 @@
     </div>
   {/each}
 {/if}
+
+{#if searchList[0] == "keinErgebnis"}
+  <div class="flex justify-center text-text">
+    <p>{searchType === "Post" ? "Keine Posts gefunden" : "Keine Benutzer gefunden"}</p>
+  </div>
+{/if}
