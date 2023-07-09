@@ -193,6 +193,21 @@ async function loadAvatar() {
 
   async function update_bio() {
     const res = await fetcher("api/v1/user/update/" + bio_update, "PUT");
+    
+
+  }
+
+  async function handleClick() {
+    try {
+      if (file) {
+        await upload_avatar();
+      }
+      if (bio_update != bio) {
+        await update_bio();
+      }
+    } catch (error) {
+      console.log(error);
+    }
     location.reload();
   }
 </script>
@@ -245,7 +260,7 @@ async function loadAvatar() {
 
         <div class="flex justify-end space-x-2">
           <button class="dangerButton" on:click={toggle}>Abbrechen</button>
-          <button class="primaryButton" on:click={toggle} on:click={update_bio} on:click={upload_avatar}>Profil aktualisieren</button>
+          <button class="primaryButton" on:click={handleClick}>Profil aktualisieren</button>
         </div>
       </div>
     </div>
