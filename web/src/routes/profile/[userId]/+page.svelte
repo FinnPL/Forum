@@ -193,6 +193,7 @@ async function loadAvatar() {
 
   async function update_bio() {
     const res = await fetcher("api/v1/user/update/" + bio_update, "PUT");
+    location.reload();
   }
 </script>
 
