@@ -88,4 +88,21 @@ public class AdminController {
       return ResponseEntity.badRequest().body("Could not delete file");
     }
   }
+
+  /**
+   * Deletes Comment with the given id.
+   *
+   * @return a ResponseEntity with the status code
+   */
+    @DeleteMapping("comment/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable String id) {
+        logger.info("Deleting comment with id: " + id);
+        try {
+            adminService.deleteComment(UUID.fromString(id));
+            return ResponseEntity.ok("Comment deleted");
+        } catch (Exception e) {
+            logger.error("Could not delete comment with id: " + id);
+            return ResponseEntity.badRequest().body("Could not delete comment");
+        }
+    }
 }

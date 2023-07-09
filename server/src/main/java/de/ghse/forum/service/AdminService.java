@@ -14,6 +14,11 @@ public class AdminService {
   private final PostRepository postRepository;
   public final CommentRepository commentRepository;
 
+  /**
+   * Deletes a user and all of its posts and comments.
+   *
+   * @param id the UUID of the user to be deleted
+   */
   public void recursiveUserDelete(UUID id) {
     userRepository
         .findById(id)
@@ -31,6 +36,11 @@ public class AdminService {
             });
   }
 
+  /**
+   * Deletes a post and all of its comments.
+   *
+   * @param id the UUID of the post to be deleted
+   */
   public void recursivePostDelete(UUID id) {
     postRepository
         .findById(id)
@@ -40,4 +50,12 @@ public class AdminService {
               postRepository.delete(post);
             });
   }
+
+    /**
+     * Deletes a comment.
+     * @param id the UUID of the comment to be deleted
+     */
+    public void deleteComment(UUID id) {
+        commentRepository.deleteById(id);
+    }
 }
