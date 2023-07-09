@@ -10,7 +10,6 @@
     // parse the json string into a js object
     let infoJson = JSON.parse(infoString);
 
-    console.log(infoJson);
     // extract the information from the json object
     let givenname = infoJson.data.givenname;
     let surname = infoJson.data.surname;
