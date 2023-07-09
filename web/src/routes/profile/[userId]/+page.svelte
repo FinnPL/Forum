@@ -89,15 +89,57 @@
 
   async function upload_avatar() {
     const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch(ip + "api/v1/file/profile", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: "Bearer " + $store_token,
-      },
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    await new Promise((resolve) => {
+      fileReader.onload = () => {
+        const img = new Image();
+        img.src = fileReader.result as string;
+
+        img.onload = () => {
+          let canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d")!;
+          let size = Math.min(img.width, img.height);
+          let x = (img.width - size) / 2;
+          let y = (img.height - size) / 2;
+
+          canvas.width = size;
+          canvas.height = size;
+          ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
+
+          if (size > 200) {
+            const scalingFactor = 200 / size;
+            const scaledSize = Math.floor(size * scalingFactor);
+
+            const downscaledCanvas = document.createElement("canvas");
+            const downscaledCtx = downscaledCanvas.getContext("2d")!;
+
+            downscaledCanvas.width = scaledSize;
+            downscaledCanvas.height = scaledSize;
+            downscaledCtx.drawImage(canvas, 0, 0, size, size, 0, 0, scaledSize, scaledSize);
+            canvas = downscaledCanvas; 
+          }
+
+          canvas.toBlob((blob) => {
+            if (blob) {
+              formData.append("file", blob, file.name);
+              fetch(ip + "api/v1/file/profile", {
+                method: "POST",
+                body: formData,
+                headers: {
+                  Authorization: "Bearer " + $store_token,
+                },
+              }).then(() => {
+                location.reload();
+              });
+            }
+          },"image/png", 0.8);
+        };
+      };
+
+      fileReader.onloadend = resolve;
     });
-    location.reload();
   }
 
   onMount(async () => {
