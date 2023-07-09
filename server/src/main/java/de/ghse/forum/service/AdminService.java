@@ -51,11 +51,12 @@ public class AdminService {
             });
   }
 
-    /**
-     * Deletes a comment.
-     * @param id the UUID of the comment to be deleted
-     */
-    public void deleteComment(UUID id) {
-        commentRepository.deleteById(id);
-    }
+  /**
+   * Deletes a comment.
+   *
+   * @param id the UUID of the comment to be deleted
+   */
+  public void deleteComment(UUID id) {
+    commentRepository.deleteById(id);
+  }
 }
