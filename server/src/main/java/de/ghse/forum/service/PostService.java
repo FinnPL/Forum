@@ -33,6 +33,7 @@ public class PostService {
    * @param post The post to add.
    */
   public void addPost(Post post) {
+    if (post.getTitle().isEmpty()) return;
     postRepository.save(post);
   }
 
@@ -62,6 +63,7 @@ public class PostService {
    * @param post The post to update.
    */
   public void updatePost(UUID id, Post post) {
+    if (post.getTitle().isEmpty()) return;
     Optional<Post> post1 = postRepository.findById(id);
     if (post1.isEmpty()) return;
     post1.get().setTitle(post.getTitle());
