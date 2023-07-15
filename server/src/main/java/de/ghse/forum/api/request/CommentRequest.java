@@ -1,6 +1,8 @@
 package de.ghse.forum.api.request;
 
 import java.security.Principal;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +19,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentRequest {
-  private String content;
+  @NotBlank private String content;
   private String post_id;
 }
