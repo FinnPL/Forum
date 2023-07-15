@@ -31,7 +31,7 @@ public class CommentService {
    * @param comment The comment to add.
    */
   public void addComment(Comment comment) {
-    if (comment.getContent().isEmpty()) return;
+    if (comment.getContent().isBlank()) return;
     commentRepository.save(comment);
   }
 
@@ -52,7 +52,7 @@ public class CommentService {
    */
   public void updateComment(UUID id, Comment comment) {
     Optional<Comment> comment1 = commentRepository.findById(id);
-    if (comment.getContent().isEmpty()) return;
+    if (comment.getContent().isBlank()) return;
     if (comment1.isEmpty()) return;
     comment1.get().setContent(comment.getContent());
     commentRepository.save(comment1.get());
