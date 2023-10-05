@@ -25,7 +25,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains:annotations:24.0.1")
 	implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-api:0.12.1")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
