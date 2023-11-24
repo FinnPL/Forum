@@ -1,11 +1,11 @@
-import { sveltekit } from '@sveltejs/kit/vite'
+import { sveltekit } from "@sveltejs/kit/vite";
 
 /** @type {import('vite').UserConfig} */
 const config = {
   plugins: [sveltekit()],
   ssr: {
-    noExternal: ['@popperjs/core']
-  }
-}
+    noExternal: ["@popperjs/core"],
+  },
+};
 
-export default config
+export default config;
