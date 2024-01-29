@@ -28,7 +28,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.4")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
